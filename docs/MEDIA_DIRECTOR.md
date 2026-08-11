@@ -299,13 +299,17 @@ kie-media-mcp --transport http --addr 127.0.0.1:7780
 ```
 
 The HTTP listener intentionally rejects wildcard and non-loopback addresses.
-The twenty-one stable tools are:
+The twenty-five stable tools are:
 
 - `media_brief_start`
 - `media_brief_answer`
 - `media_brief_get`
 - `media_workflow_list`
 - `media_workflow_get`
+- `media_model_list`
+- `media_model_get`
+- `media_model_example`
+- `media_model_validate`
 - `media_reference_add`
 - `media_reference_list`
 - `media_identity_create`

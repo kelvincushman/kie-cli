@@ -15,16 +15,18 @@ func newClaudePromotedCmd(flags *rootFlags) *cobra.Command {
 	var bodyMaxTokens float64
 	var bodyMessages string
 	var bodyModel string
+	var bodyOutputConfigFormatSchema string
+	var bodyOutputConfigFormatType string
 	var bodyStream bool
 	var bodyThinkingFlag bool
 	var bodyTools string
 
 	cmd := &cobra.Command{
 		Use:         "claude",
-		Short:       "When `stream: true` is set in the request, the API returns responses as server-sent events (SSE).",
-		Long:        "When `stream: true` is set in the request, the API returns responses as server-sent events (SSE).",
-		Example:     "  kie-pp-cli claude --model claude-sonnet-5",
-		Annotations: map[string]string{"pp:endpoint": "claude.sonnet-4-8", "pp:method": "POST", "pp:path": "/claude/v1/messages"},
+		Short:       "Shared Kie endpoint.",
+		Long:        "Shared Kie endpoint.",
+		Example:     "  kie-pp-cli claude --model claude-fable-5",
+		Annotations: map[string]string{"pp:endpoint": "claude.messages", "pp:method": "POST", "pp:path": "/claude/v1/messages"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// Bare invocation of a command with a required flag/body prints help
 			// instead of pflag's terse "required flag not set" error. Optional-
@@ -79,6 +81,32 @@ func newClaudePromotedCmd(flags *rootFlags) *cobra.Command {
 			}
 			if cmd.Flags().Changed("model") || bodyModel != "" {
 				bodyMap["model"] = bodyModel
+			}
+			{
+				nestedOutputConfig := map[string]any{}
+				{
+					nestedOutputConfigFormat := map[string]any{}
+					if cmd.Flags().Changed("output-config-format-schema") || bodyOutputConfigFormatSchema != "" {
+						var parsedOutputConfigFormatSchema any
+						if err := json.Unmarshal([]byte(bodyOutputConfigFormatSchema), &parsedOutputConfigFormatSchema); err != nil {
+							return fmt.Errorf("parsing --output-config-format-schema JSON: %w", err)
+						}
+						asMap, ok := parsedOutputConfigFormatSchema.(map[string]any)
+						if !ok {
+							return fmt.Errorf("--output-config-format-schema must be a JSON object, got JSON %T", parsedOutputConfigFormatSchema)
+						}
+						nestedOutputConfigFormat["schema"] = asMap
+					}
+					if cmd.Flags().Changed("output-config-format-type") || bodyOutputConfigFormatType != "" {
+						nestedOutputConfigFormat["type"] = bodyOutputConfigFormatType
+					}
+					if len(nestedOutputConfigFormat) > 0 {
+						nestedOutputConfig["format"] = nestedOutputConfigFormat
+					}
+				}
+				if len(nestedOutputConfig) > 0 {
+					bodyMap["output_config"] = nestedOutputConfig
+				}
 			}
 			if cmd.Flags().Changed("stream") {
 				bodyMap["stream"] = bodyStream
@@ -170,7 +198,9 @@ func newClaudePromotedCmd(flags *rootFlags) *cobra.Command {
 	}
 	cmd.Flags().Float64Var(&bodyMaxTokens, "max-tokens", 4096.000000, "Optional Claude output token limit. Leave empty to use the default of 4096.")
 	cmd.Flags().StringVar(&bodyMessages, "messages", "", "Conversation messages in chronological order.")
-	cmd.Flags().StringVar(&bodyModel, "model", "", "Model name. It must match the current document.")
+	cmd.Flags().StringVar(&bodyModel, "model", "", "Model identifier.")
+	cmd.Flags().StringVar(&bodyOutputConfigFormatSchema, "output-config-format-schema", "", "JSON Schema for constrained output.")
+	cmd.Flags().StringVar(&bodyOutputConfigFormatType, "output-config-format-type", "", "Structured output type.")
 	cmd.Flags().BoolVar(&bodyStream, "stream", false, "If set to true, the response is returned as an SSE stream.")
 	cmd.Flags().BoolVar(&bodyThinkingFlag, "thinking-flag", false, "Project-specific thinking flag used by the current Claude adapter.")
 	cmd.Flags().StringVar(&bodyTools, "tools", "", "Optional callable tools. Each tool includes a name, description, and input_schema.")

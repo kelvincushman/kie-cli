@@ -16,7 +16,8 @@ Implemented and verified in the current local command surface:
 - `kie-media-mcp` as a focused local MCP server.
 - Local reference vault and consented identity-reference bundles.
 - Eight routed production workflows delivered through nine Markdown skills.
-- Seventy generated dedicated API operations and a 122-model Market snapshot.
+- Seventy current API operations and a 129-model Market snapshot with complete
+  embedded request/input schemas and local validation.
 - Local SQLite recall, teach, and playbook state for repeated agent work.
 
 Native storyboard command surface:
@@ -142,13 +143,17 @@ Do not bind HTTP MCP to a wildcard or non-loopback address. The HTTP transport
 implements the finalized MCP `2026-07-28` stateless protocol. Stdio remains the
 recommended local child-process transport.
 
-The implemented focused server exposes twenty-one media tools:
+The implemented focused server exposes twenty-five media tools:
 
 - `media_brief_start`
 - `media_brief_answer`
 - `media_brief_get`
 - `media_workflow_list`
 - `media_workflow_get`
+- `media_model_list`
+- `media_model_get`
+- `media_model_example`
+- `media_model_validate`
 - `media_reference_add`
 - `media_reference_list`
 - `media_identity_create`
@@ -311,6 +316,9 @@ Model behavior differs from the documented plan:
 
 - Run `kie-pp-cli media brief show <brief_id> --agent` and inspect `plan.model`
   plus `plan.input`.
-- Check [MODELS.md](MODELS.md) and the current upstream Kie model page.
+- Run `kie-pp-cli models show <model-id> --agent`, then validate the proposed
+  input with `kie-pp-cli models validate <model-id> --input '<json>' --agent`.
+- Check [MODELS.md](MODELS.md), [MODEL_INPUTS.md](MODEL_INPUTS.md), and the
+  recorded current upstream Kie model page.
 - Use `--model` only when the requested model supports the required reference,
   duration, audio, and output constraints.

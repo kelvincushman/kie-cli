@@ -31,9 +31,10 @@ If `--version` reports "command not found" after install, the runtime cannot see
 
 This skill covers both product layers: the local agent media factory and the
 broad generated Kie.ai CLI. Prefer the director for creative work; use raw
-commands for direct endpoint control. The current tree contains 70 dedicated
-operations, a 122-model Market snapshot, nine media skills, eight compact
-workflow routes, and a focused 21-tool MCP server. Async generation endpoints
+commands for direct endpoint control. The current tree contains 70 current
+operations, a 129-model Market snapshot with complete input/settings schemas,
+nine media skills, eight compact workflow routes, and a focused 25-tool MCP
+server. Async generation endpoints
 return a `taskId`; poll the matching record-info/get-details endpoint or use a
 callback URL.
 
@@ -77,6 +78,19 @@ eight specialized `skills/kie-*` ports when full domain guidance is needed.
 The user-facing guides are `docs/VIBE_CODER_QUICKSTART.md`,
 `docs/MEDIA_DIRECTOR.md`, `docs/SCRIPT_AND_STORYBOARD.md`, and
 `docs/ADVANCED_MEDIA_DIRECTOR.md`.
+
+Before selecting a raw Market model, use the local registry instead of guessing
+fields or loading the full documentation into context:
+
+```bash
+kie-pp-cli models list --search <capability> --agent
+kie-pp-cli models show <model-id> --agent
+kie-pp-cli models example <model-id> --json
+kie-pp-cli models validate <model-id> --input '<json>' --agent
+```
+
+The focused MCP equivalents are `media_model_list`, `media_model_get`,
+`media_model_example`, and `media_model_validate`.
 
 ## Command Reference
 

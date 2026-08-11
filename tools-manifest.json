@@ -1,7 +1,7 @@
 {
   "api_name": "kie",
   "base_url": "https://api.kie.ai",
-  "description": "Unified API for Kie.ai's AI generation platform: image, video, music, and chat models, plus account and file utilities.",
+  "description": "Complete CLI-oriented merge of the OpenAPI fragments indexed by Kie.ai.",
   "mcp_ready": "full",
   "http_transport": "standard",
   "mcp": {
@@ -108,8 +108,8 @@
       "params": []
     },
     {
-      "name": "claude_sonnet-4-8",
-      "description": "When `stream: true` is set in the request, the API returns responses as server-sent events (SSE). Claude tool calling responses stream `tool_use` blocks and `input_json_delta` fragments.",
+      "name": "claude_messages",
+      "description": "Shared Kie endpoint. Select a documented model value: claude-fable-5, claude-haiku-4-5, claude-opus-4-5, claude-opus-4-6, claude-opus-4-7, claude-opus-4-8, claude-opus-5, claude-sonnet-4-5, claude-sonnet-4-6, claude-sonnet-5. Required: messages, model. Optional: max_tokens (default: 4096), output_config, stream (default: true) (plus 2 more). Returns array of ClaudeMessagesItem.",
       "method": "POST",
       "path": "/claude/v1/messages",
       "params": [
@@ -130,8 +130,22 @@
           "name": "model",
           "type": "string",
           "location": "body",
-          "description": "Model name. It must match the current document.",
+          "description": "Model identifier. Supported values: claude-fable-5, claude-haiku-4-5, claude-opus-4-5, claude-opus-4-6, claude-opus-4-7, claude-opus-4-8, claude-opus-5, claude-sonnet-4-5, claude-sonnet-4-6, claude-sonnet-5",
           "required": true
+        },
+        {
+          "name": "output-config-format-schema",
+          "wire_name": "output_config.format.schema",
+          "type": "object",
+          "location": "body",
+          "description": "JSON Schema for constrained output."
+        },
+        {
+          "name": "output-config-format-type",
+          "wire_name": "output_config.format.type",
+          "type": "string",
+          "location": "body",
+          "description": "Structured output type."
         },
         {
           "name": "stream",
@@ -154,8 +168,8 @@
       ]
     },
     {
-      "name": "codex_gpt-5-6-terra-completions",
-      "description": "GPT 5.6 Terra API is a multimodal chat-completions style endpoint that accepts structured input arrays, supports adjustable reasoning effort, and integrates web search or function calling tools. \u003cCardGroup cols={2}\u003e \u003cCard title='Multimodal Input' icon='🖼️'\u003e Supports mixed text, image, and file inputs in a single message. \u003c/Card\u003e \u003cCard title='Reasoning Control' icon='🧠'\u003e Adjustable reasoning effort from low to xhigh. \u003c/Card\u003e \u003cCard title='Tools \u0026 Web Search' icon='✨'\u003e Integrates web search or custom function calling tools. \u003c/Card\u003e \u003cCard title='Unified Endpoint' icon='💻'\u003e Uses the unified /api/v1/responses endpoint with model set to one of gpt-5-6-terra . \u003c/Card\u003e \u003c/CardGroup\u003e ## Tools \u0026 tool_choice The `tools` array enables **web search** or **function calling** capabilities. Web Search and Function Calling are **mutually exclusive**. In a single request you should choose only one: do not include both `{'type': 'web_search'}` and `{'type': 'function', ...}` in the same `tools` array. \u003cAccordionGroup\u003e \u003cAccordion title='Web Search'\u003e Use the built-in Web Search tool to retrieve up-to-date information: ```json { 'tools': [ { 'type': 'web_search' } ] } ``` \u003c/Accordion\u003e \u003cAccordion title='Function Calling'\u003e Define business functions that the model can call when needed: ```json { 'tools': [ { 'type': 'function', 'name': 'get_current_weather', 'description': 'Get the current weather in a given location', 'parameters': { 'type': 'object', 'properties': { 'location': { 'type': 'string', 'description': 'The city and state, e.g. San Francisco, CA' }, 'unit': { 'type': 'string', 'enum': ['celsius', 'fahrenheit'] } }, 'required': ['location', 'unit'] } } ], 'tool_choice': 'auto' } ``` When function tools are configured in `tools`, set `tool_choice` to `'auto'` so the model can decide when to call them. If you do not configure any function tools, omit the `tool_choice` field. \u003c/Accordion\u003e \u003c/AccordionGroup\u003e. Required: input, model (default: gpt-5-6-terra). Optional: reasoning, stream (default: false), tool_choice (plus 1 more).",
+      "name": "codex_openai-responses",
+      "description": "Shared Kie endpoint. Select a documented model value: gpt-5-4, gpt-5-5, gpt-5-6-luna, gpt-5-6-sol, gpt-5-6-terra. Required: input, model. Optional: reasoning, stream (default: false), tool_choice (plus 1 more).",
       "method": "POST",
       "path": "/codex/v1/responses",
       "params": [
@@ -170,7 +184,7 @@
           "name": "model",
           "type": "string",
           "location": "body",
-          "description": "Target model name. Allowed values: `gpt-5-6-terra`.",
+          "description": "Model identifier. Supported values: gpt-5-4, gpt-5-5, gpt-5-6-luna, gpt-5-6-sol, gpt-5-6-terra",
           "required": true
         },
         {
@@ -315,7 +329,7 @@
           "name": "aspectRatio",
           "type": "string",
           "location": "body",
-          "description": "Output image aspect ratio. You Applicable in both text-to-image generation and image editing modes. For **text-to-image generation** , the output image will follow the specified aspect ratio. For **image editing** , if aspectRatio is provided, the edited image will follow that ratio. If not provided, the image will retain its original aspect ratio. Supported Aspect Ratios: | Ratio | Format Type | Common Use Cases | |-------|-------------|-----------------| | 21:9 | Ultra-wide | Cinematic displays, panoramic views | | 16:9 | Widescreen | HD video, desktop wallpapers | | 4:3 | Standard | Traditional displays, presentations | | 1:1 | Square | Social media posts, profile pictures | | 3:4 | Portrait | Magazine layouts, portrait photos | | 9:16 | Mobile Portrait | Smartphone wallpapers, stories | \u003e Note: Default ratio is '16:9' if not specified."
+          "description": "Output image aspect ratio. You Applicable in both text-to-image generation and image editing modes. For **text-to-image generation** , the output image will follow the specified aspect ratio. For **image editing** , if aspectRatio is provided, the edited image will follow that ratio. If not provided, the image will retain its original aspect ratio. Supported Aspect Ratios: | Ratio | Format Type | Common Use Cases | |-------|-------------|-----------------| | 21:9 | Ultra-wide | Cinematic displays, panoramic views | | 16:9 | Widescreen | HD video, desktop wallpapers | | 4:3 | Standard | Traditional displays, presentations | | 1:1 | Square | Social media posts, profile pictures | | 3:4 | Portrait | Magazine layouts, portrait photos | | 9:16 | Mobile Portrait | Smartphone wallpapers, stories | Note: Default ratio is '16:9' if not specified."
         },
         {
           "name": "callBackUrl",
@@ -339,7 +353,7 @@
           "name": "model",
           "type": "string",
           "location": "body",
-          "description": "Model version to use for generation. Available Options: | Model | Description | |--------------|-------------| | flux-kontext-pro | Standard model with balanced performance | | flux-kontext-max | Enhanced model with advanced capabilities | \u003e Note: Choose flux-kontext-max for more demanding tasks that require higher quality and detail"
+          "description": "Model version to use for generation. Available Options: | Model | Description | |--------------|-------------| | flux-kontext-pro | Standard model with balanced performance | | flux-kontext-max | Enhanced model with advanced capabilities | Note: Choose flux-kontext-max for more demanding tasks that require higher quality and detail"
         },
         {
           "name": "outputFormat",
@@ -1352,24 +1366,10 @@
     },
     {
       "name": "generate_persona",
-      "description": "Create a personalized music Persona based on generated music, giving the music a unique identity and characteristics. ## Usage Guide Use this endpoint to create Personas (music characters) for generated music: * Requires the `taskId` from music generation related endpoints (generate, extend) and audio ID * Customize the Persona name and description to give music unique personality * Generated Personas can be used for subsequent music creation and style transfer ## Parameter Details * **`taskId`** (Required): Can be obtained from the following endpoints: * [Generate Music](/suno-api/generate-music) (`/api/v1/generate`) * [Extend Music](/suno-api/extend-music) (`/api/v1/generate/extend`) * **`audioId`** (Required): Specifies the audio ID to create Persona for * **`name`** (Required): Assigns an easily recognizable name to the Persona * **`description`** (Required): Describes the Persona's musical characteristics, style, and personality ## Developer Notes :::caution Important Requirements * **Ensure the music generation task is fully completed** before calling this endpoint. If the music is still generating, this endpoint will return a failure. * **Model Requirement**: Persona generation only supports `taskId` from music generated with models above v3.5 (v3.5 itself is **not** supported). * Each audio ID can only generate a Persona **once**. * It is recommended to provide detailed descriptions for Personas to better capture musical characteristics. * The returned `personaId` can be used in subsequent music generation requests to create music with similar style characteristics. * You can apply the `personaId` to the following endpoints: * [Generate Music](/suno-api/generate-music) * [Extend Music](/suno-api/extend-music) ## Parameter Example ```json { 'taskId': '5c79****be8e', 'audioId': 'e231****-****-****-****-****8cadc7dc', 'name': 'Electronic Pop Singer', 'description': 'A modern electronic music style pop singer, skilled in dynamic rhythms and synthesizer tones' } ``` Ensure that the music generation task corresponding to the `taskId` is complete and the `audioId` is within the valid range. Providing detailed and specific descriptions for Personas helps the system more accurately capture musical style characteristics. Required: audioId, description, name, taskId. Optional: vocalEnd (default: 30), vocalStart (default: 0), style. Returns the new GeneratePersonaResponse.",
+      "description": "Create a personalized music Persona based on generated music, giving the music a unique identity and characteristics. ## Usage Guide Use this endpoint to create Personas (music characters) for generated music: * Requires the `taskId` from music generation related endpoints (generate, extend) and audio ID * Customize the Persona name and description to give music unique personality * Generated Personas can be used for subsequent music creation and style transfer ## Parameter Details * **`taskId`** (Required): Can be obtained from the following endpoints: * [Generate Music](/suno-api/generate-music) (`/api/v1/generate`) * [Extend Music](/suno-api/extend-music) (`/api/v1/generate/extend`) * **`audioId`** (Required): Specifies the audio ID to create Persona for * **`name`** (Required): Assigns an easily recognizable name to the Persona * **`description`** (Required): Describes the Persona's musical characteristics, style, and personality ## Developer Notes :::caution Important Requirements * **Ensure the music generation task is fully completed** before calling this endpoint. If the music is still generating, this endpoint will return a failure. * **Model Requirement**: Persona generation only supports `taskId` from music generated with models above v3.5 (v3.5 itself is **not** supported). * Each audio ID can only generate a Persona **once**. * It is recommended to provide detailed descriptions for Personas to better capture musical characteristics. * The returned `personaId` can be used in subsequent music generation requests to create music with similar style characteristics. * You can apply the `personaId` to the following endpoints: * [Generate Music](/suno-api/generate-music) * [Extend Music](/suno-api/extend-music) ## Parameter Example ```json { 'taskId': '5c79****be8e', 'audioId': 'e231****-****-****-****-****8cadc7dc', 'name': 'Electronic Pop Singer', 'description': 'A modern electronic music style pop singer, skilled in dynamic rhythms and synthesizer tones' } ``` Ensure that the music generation task corresponding to the `taskId` is complete and the `audioId` is within the valid range. Providing detailed and specific descriptions for Personas helps the system more accurately capture musical style characteristics. Required: audioId, description, name, taskId. Optional: style, vocalEnd (default: 30), vocalStart (default: 0). Returns the new GeneratePersonaResponse.",
       "method": "POST",
       "path": "/api/v1/generate/generate-persona",
       "params": [
-        {
-          "name": "vocalEnd",
-          "wire_name": " vocalEnd",
-          "type": "float",
-          "location": "body",
-          "description": "End time (in seconds) for Persona analysis segment extraction. Together with vocalStart, used to specify the time range for analysis. vocalEnd - vocalStart must be between 10–30 seconds. Defaults to 30.0."
-        },
-        {
-          "name": "vocalStart",
-          "wire_name": " vocalStart",
-          "type": "float",
-          "location": "body",
-          "description": "Start time (in seconds) for Persona analysis segment extraction. Used to specify the time point in the audio from which to extract the segment for Persona analysis. Must be less than vocalEnd, and vocalEnd - vocalStart must be between 10–30 seconds. Defaults to 0.0."
-        },
         {
           "name": "audioId",
           "type": "string",
@@ -1403,6 +1403,18 @@
           "location": "body",
           "description": "Unique identifier of the original music generation task. This can be a taskId returned from any of the following endpoints: - Generate Music (/api/v1/generate) - Extend Music (/api/v1/generate/extend)",
           "required": true
+        },
+        {
+          "name": "vocalEnd",
+          "type": "float",
+          "location": "body",
+          "description": "End time (in seconds) for Persona analysis segment extraction. Together with vocalStart, used to specify the time range for analysis. vocalEnd - vocalStart must be between 10–30 seconds. Defaults to 30.0."
+        },
+        {
+          "name": "vocalStart",
+          "type": "float",
+          "location": "body",
+          "description": "Start time (in seconds) for Persona analysis segment extraction. Used to specify the time point in the audio from which to extract the segment for Persona analysis. Must be less than vocalEnd, and vocalEnd - vocalStart must be between 10–30 seconds. Defaults to 0.0."
         }
       ]
     },
@@ -1415,7 +1427,7 @@
     },
     {
       "name": "generate_sounds",
-      "description": "Used for creating a sound generation task (Sounds Task). It supports settings for looping, tempo (BPM), pitch (Key), as well as lyrics subtitle capture, etc. ## 🚀 User Guide - By using this interface, you can generate corresponding audio content based on the input `prompt`. - It supports setting up loop playback effect, which is suitable for background music, ambient sounds, and other scenarios. - It allows specifying BPM (beats per minute) and pitch (Key) to facilitate control over the style of the generated result. - Optional feature to enable lyric subtitle capture for easier display or processing of lyric content later. - Supports asynchronous reception of task completion notifications through callback address. ## 📌 Usage Scenarios - 🎧 Background music creation - 🎮 Game sound effects or looped ambient sounds generation - 🌐 Integration of audio content platforms and creative tools \u003cCard title='Poll Query Results' icon='lucide-radar' href='/suno-api/get-music-details' \u003e Use the get lyrics details endpoint to regularly query task status. We recommend querying every 30 seconds. \u003c/Card\u003e. Required: model, prompt. Optional: callBackUrl, grabLyrics (default: false), soundKey (default: Any) (plus 2 more). Returns the new ApiResponse.",
+      "description": "Used for creating a sound generation task (Sounds Task). It supports settings for looping, tempo (BPM), pitch (Key), as well as lyrics subtitle capture, etc. ## 🚀 User Guide - By using this interface, you can generate corresponding audio content based on the input `prompt`. - It supports setting up loop playback effect, which is suitable for background music, ambient sounds, and other scenarios. - It allows specifying BPM (beats per minute) and pitch (Key) to facilitate control over the style of the generated result. - Optional feature to enable lyric subtitle capture for easier display or processing of lyric content later. - Supports asynchronous reception of task completion notifications through callback address. ## 📌 Usage Scenarios - 🎧 Background music creation - 🎮 Game sound effects or looped ambient sounds generation - 🌐 Integration of audio content platforms and creative tools \u003cCard title='Poll Query Results' icon='lucide-radar' href='/suno-api/get-music-details' \u003e Use the get lyrics details endpoint to regularly query task status. We recommend querying every 30 seconds. \u003c/Card\u003e. Required: model, prompt. Optional: callBackUrl, grabLyrics (default: false), soundKey (default: Any) (plus 2 more). Returns the new ResponseNotWithRecordId.",
       "method": "POST",
       "path": "/api/v1/generate/sounds",
       "params": [
@@ -1789,7 +1801,7 @@
     },
     {
       "name": "grok_responses",
-      "description": "GPT Grok 4.5 API is a multimodal chat-completions style endpoint that accepts structured input arrays, supports adjustable reasoning effort, and integrates web search or function calling tools. \u003cCardGroup cols={3}\u003e \u003cCard title='Multimodal Input' icon='🖼️'\u003e Supports mixed text, image, and file inputs in a single message. \u003c/Card\u003e \u003cCard title='Reasoning Control' icon='🧠'\u003e Adjustable reasoning effort from low to xhigh. \u003c/Card\u003e \u003cCard title='Tools \u0026 Web Search' icon='✨'\u003e Integrates web search or custom function calling tools. \u003c/Card\u003e \u003c/CardGroup\u003e ## Tools \u0026 tool_choice The `tools` array enables **web search** or **function calling** capabilities. Web Search and Function Calling are **mutually exclusive**. In a single request you should choose only one: do not include both `{'type': 'web_search'}` and `{'type': 'function', ...}` in the same `tools` array. \u003cAccordionGroup\u003e \u003cAccordion title='Web Search'\u003e Use the built-in Web Search tool to retrieve up-to-date information: ```json { 'tools': [ { 'type': 'web_search' } ] } ``` \u003c/Accordion\u003e \u003cAccordion title='Function Calling'\u003e Define business functions that the model can call when needed: ```json { 'tools': [ { 'type': 'function', 'name': 'get_current_weather', 'description': 'Get the current weather in a given location', 'parameters': { 'type': 'object', 'properties': { 'location': { 'type': 'string', 'description': 'The city and state, e.g. San Francisco, CA' }, 'unit': { 'type': 'string', 'enum': ['celsius', 'fahrenheit'] } }, 'required': ['location', 'unit'] } } ], 'tool_choice': 'auto' } ``` When function tools are configured in `tools`, set `tool_choice` to `'auto'` so the model can decide when to call them. If you do not configure any function tools, omit the `tool_choice` field. \u003c/Accordion\u003e \u003c/AccordionGroup\u003e. Required: input, model, test. Optional: reasoning, stream (default: true), tools.",
+      "description": "Shared Kie endpoint. Select a documented model value: grok-4-3, grok-4-5. Required: input, model, test. Optional: reasoning, stream (default: true), tools.",
       "method": "POST",
       "path": "/grok/v1/responses",
       "params": [
@@ -1804,7 +1816,7 @@
           "name": "model",
           "type": "string",
           "location": "body",
-          "description": "Target model name. Allowed values：`grok-4-5`。",
+          "description": "Model identifier. Supported values: grok-4-3, grok-4-5",
           "required": true
         },
         {
@@ -1860,7 +1872,7 @@
     },
     {
       "name": "kie-ai-jobs_market-create-task",
-      "description": "Unified entry point for every model in the Kie.ai Market catalog (image, video, and audio generation). Pass the target model's identifier plus its model-specific input payload. See docs/MODELS.md in this repo, or https://docs.kie.ai/market/quickstart, for the full and growing catalog of supported `model` values and their `input` shapes. Required: model. Optional: callBackUrl, input. Returns the new KieAiJobsMarketCreateTaskResponse.",
+      "description": "Unified entry point for all 129 currently documented Kie.ai Market models. Pass a model identifier and its model-specific input payload. Inspect the exact schema with `kie-pp-cli models show \u003cmodel\u003e` and validate locally with `kie-pp-cli models validate \u003cmodel\u003e`. Required: input, model. Optional: callBackUrl. Returns the new KieAiJobsMarketCreateTaskResponse.",
       "method": "POST",
       "path": "/api/v1/jobs/createTask",
       "params": [
@@ -1868,19 +1880,20 @@
           "name": "callBackUrl",
           "type": "string",
           "location": "body",
-          "description": "The URL to receive generation task completion updates. Optional but recommended for production use. - System will POST task status and results to this URL when generation completes - Callback includes generated content URLs and task information - Your callback endpoint should accept POST requests with JSON payload containing results - Alternatively, use the Get Task Details endpoint to poll task status - To ensure callback security, see [Webhook Verification Guide](/common-api/webhook-verification) for signature verification implementation"
+          "description": "Optional URL that receives the generation task completion callback."
         },
         {
           "name": "input",
           "type": "object",
           "location": "body",
-          "description": "Model-specific input payload. Shape varies per model -- see docs/MODELS.md."
+          "description": "Model-specific input. The complete per-model JSON Schemas are embedded in the CLI model registry.",
+          "required": true
         },
         {
           "name": "model",
           "type": "string",
           "location": "body",
-          "description": "Market model identifier, e.g. 'google/nano-banana', 'kling/v2-1-pro', 'bytedance/v1-pro-text-to-video'. See docs/MODELS.md for the full catalog.",
+          "description": "Kie Market model identifier. Use `kie-pp-cli models list` for the current catalog.",
           "required": true
         }
       ]

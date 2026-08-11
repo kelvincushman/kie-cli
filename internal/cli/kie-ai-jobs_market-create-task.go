@@ -21,8 +21,8 @@ func newKieAiJobsMarketCreateTaskCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:         "market-create-task",
 		Aliases:     []string{"create"},
-		Short:       "Unified entry point for every model in the Kie.ai Market catalog (image, video, and audio generation).",
-		Example:     "  kie-pp-cli kie-ai-jobs market-create-task --model google/nano-banana",
+		Short:       "Unified entry point for all 129 currently documented Kie.ai Market models.",
+		Example:     "  kie-pp-cli kie-ai-jobs market-create-task --model bytedance/seedance-1.5-pro",
 		Annotations: map[string]string{"pp:endpoint": "kie-ai-jobs.market-create-task", "pp:method": "POST", "pp:path": "/api/v1/jobs/createTask"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// Bare invocation of a command with required input prints help
@@ -44,6 +44,9 @@ func newKieAiJobsMarketCreateTaskCmd(flags *rootFlags) *cobra.Command {
 				return cmd.Help()
 			}
 			if !stdinBody {
+				if !cmd.Flags().Changed("input") && !flags.dryRun {
+					return fmt.Errorf("required flag \"%s\" not set", "input")
+				}
 				if !cmd.Flags().Changed("model") && !flags.dryRun {
 					return fmt.Errorf("required flag \"%s\" not set", "model")
 				}
@@ -56,7 +59,7 @@ func newKieAiJobsMarketCreateTaskCmd(flags *rootFlags) *cobra.Command {
 			params := map[string]string{}
 			var body any
 			if stdinBody {
-				stdinData, err := io.ReadAll(os.Stdin)
+				stdinData, err := io.ReadAll(cmd.InOrStdin())
 				if err != nil {
 					return fmt.Errorf("reading stdin: %w", err)
 				}
@@ -237,9 +240,9 @@ func newKieAiJobsMarketCreateTaskCmd(flags *rootFlags) *cobra.Command {
 			return nil
 		},
 	}
-	cmd.Flags().StringVar(&bodyCallBackUrl, "call-back-url", "", "The URL to receive generation task completion updates. Optional but recommended for production use.")
-	cmd.Flags().StringVar(&bodyInput, "input", "", "Model-specific input payload. Shape varies per model -- see docs/MODELS.md.")
-	cmd.Flags().StringVar(&bodyModel, "model", "", "Market model identifier, e.g. 'google/nano-banana', 'kling/v2-1-pro', 'bytedance/v1-pro-text-to-video'. See docs/MODELS.")
+	cmd.Flags().StringVar(&bodyCallBackUrl, "call-back-url", "", "Optional URL that receives the generation task completion callback.")
+	cmd.Flags().StringVar(&bodyInput, "input", "", "Model-specific input. The complete per-model JSON Schemas are embedded in the CLI model registry.")
+	cmd.Flags().StringVar(&bodyModel, "model", "", "Kie Market model identifier. Use `kie-pp-cli models list` for the current catalog.")
 	cmd.Flags().BoolVar(&stdinBody, "stdin", false, "Read request body as JSON from stdin")
 
 	return cmd

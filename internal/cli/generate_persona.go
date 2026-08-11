@@ -13,13 +13,13 @@ import (
 )
 
 func newGeneratePersonaCmd(flags *rootFlags) *cobra.Command {
-	var bodyVocalEnd float64
-	var bodyVocalStart float64
 	var bodyAudioId string
 	var bodyDescription string
 	var bodyName string
 	var bodyStyle string
 	var bodyTaskId string
+	var bodyVocalEnd float64
+	var bodyVocalStart float64
 	var stdinBody bool
 
 	cmd := &cobra.Command{
@@ -80,12 +80,6 @@ func newGeneratePersonaCmd(flags *rootFlags) *cobra.Command {
 			} else {
 				bodyMap := map[string]any{}
 				body = bodyMap
-				if cmd.Flags().Changed("vocal-end") || bodyVocalEnd != 0.0 {
-					bodyMap[" vocalEnd"] = bodyVocalEnd
-				}
-				if cmd.Flags().Changed("vocal-start") || bodyVocalStart != 0.0 {
-					bodyMap[" vocalStart"] = bodyVocalStart
-				}
 				if cmd.Flags().Changed("audio-id") || bodyAudioId != "" {
 					bodyMap["audioId"] = bodyAudioId
 				}
@@ -100,6 +94,12 @@ func newGeneratePersonaCmd(flags *rootFlags) *cobra.Command {
 				}
 				if cmd.Flags().Changed("task-id") || bodyTaskId != "" {
 					bodyMap["taskId"] = bodyTaskId
+				}
+				if cmd.Flags().Changed("vocal-end") || bodyVocalEnd != 0.0 {
+					bodyMap["vocalEnd"] = bodyVocalEnd
+				}
+				if cmd.Flags().Changed("vocal-start") || bodyVocalStart != 0.0 {
+					bodyMap["vocalStart"] = bodyVocalStart
 				}
 			}
 			data, statusCode, err := c.PostWithParams(cmd.Context(), path, params, body)
@@ -253,13 +253,13 @@ func newGeneratePersonaCmd(flags *rootFlags) *cobra.Command {
 			return nil
 		},
 	}
-	cmd.Flags().Float64Var(&bodyVocalEnd, "vocal-end", 30.000000, "End time (in seconds) for Persona analysis segment extraction.")
-	cmd.Flags().Float64Var(&bodyVocalStart, "vocal-start", 0.000000, "Start time (in seconds) for Persona analysis segment extraction.")
 	cmd.Flags().StringVar(&bodyAudioId, "audio-id", "", "Unique identifier of the audio track to create Persona for.")
 	cmd.Flags().StringVar(&bodyDescription, "description", "", "Detailed description of the Persona's musical characteristics, style, and personality.")
 	cmd.Flags().StringVar(&bodyName, "name", "", "Name for the Persona. A descriptive name that captures the essence of the musical style or character.")
 	cmd.Flags().StringVar(&bodyStyle, "style", "", "Optional.")
 	cmd.Flags().StringVar(&bodyTaskId, "task-id", "", "Unique identifier of the original music generation task.")
+	cmd.Flags().Float64Var(&bodyVocalEnd, "vocal-end", 30.000000, "End time (in seconds) for Persona analysis segment extraction.")
+	cmd.Flags().Float64Var(&bodyVocalStart, "vocal-start", 0.000000, "Start time (in seconds) for Persona analysis segment extraction.")
 	cmd.Flags().BoolVar(&stdinBody, "stdin", false, "Read request body as JSON from stdin")
 
 	return cmd

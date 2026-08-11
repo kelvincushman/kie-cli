@@ -62,6 +62,21 @@ func TestHTTPNegotiatesLatestStatelessProtocolAndListsMediaTools(t *testing.T) {
 		t.Fatalf("workflow output = %#v", workflowOutput)
 	}
 
+	modelResult, err := session.CallTool(context.Background(), &mcp.CallToolParams{
+		Name: "media_model_get", Arguments: map[string]any{"model": "bytedance/seedance-2-5"},
+	})
+	if err != nil || modelResult.IsError {
+		t.Fatalf("media_model_get error=%v result=%#v", err, modelResult)
+	}
+	var modelView modelOutput
+	decodeStructured(t, modelResult.StructuredContent, &modelView)
+	if modelView.Model.ID != "bytedance/seedance-2-5" {
+		t.Fatalf("model output = %#v", modelView)
+	}
+	if _, ok := modelView.Model.InputSchema["properties"].(map[string]any)["reference_video_urls"]; !ok {
+		t.Fatalf("Seedance settings missing from MCP model output: %#v", modelView.Model.InputSchema)
+	}
+
 	result, err := session.CallTool(context.Background(), &mcp.CallToolParams{
 		Name: "media_brief_start",
 		Arguments: map[string]any{

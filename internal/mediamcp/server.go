@@ -17,6 +17,7 @@ import (
 	"kie-pp-cli/internal/cli"
 	"kie-pp-cli/internal/client"
 	"kie-pp-cli/internal/config"
+	"kie-pp-cli/internal/kiecatalog"
 	"kie-pp-cli/internal/media"
 )
 
@@ -28,6 +29,10 @@ var ToolNames = []string{
 	"media_brief_get",
 	"media_workflow_list",
 	"media_workflow_get",
+	"media_model_list",
+	"media_model_get",
+	"media_model_example",
+	"media_model_validate",
 	"media_reference_add",
 	"media_reference_list",
 	"media_identity_create",
@@ -109,6 +114,39 @@ type workflowGetOutput struct {
 	Workflow media.Workflow `json:"workflow"`
 }
 
+type modelListInput struct {
+	Search   string `json:"search,omitempty" jsonschema:"optional substring filter over model IDs, names, categories, and descriptions"`
+	Category string `json:"category,omitempty" jsonschema:"optional category substring filter"`
+}
+
+type modelGetInput struct {
+	Model string `json:"model" jsonschema:"exact Kie Market model ID returned by media_model_list"`
+}
+
+type modelListOutput struct {
+	Models []kiecatalog.Summary `json:"models"`
+}
+
+type modelOutput struct {
+	Model kiecatalog.Model `json:"model"`
+}
+
+type modelExampleOutput struct {
+	Model string         `json:"model"`
+	Input map[string]any `json:"input"`
+}
+
+type modelValidateInput struct {
+	Model string         `json:"model" jsonschema:"exact Kie Market model ID"`
+	Input map[string]any `json:"input" jsonschema:"model-specific generation input object"`
+}
+
+type modelValidationOutput struct {
+	Model  string                       `json:"model"`
+	Valid  bool                         `json:"valid"`
+	Issues []kiecatalog.ValidationIssue `json:"issues"`
+}
+
 type referenceListOutput struct {
 	References []media.PublicReference `json:"references"`
 }
@@ -183,7 +221,7 @@ func NewServer(version string, dependencies *Dependencies) *mcp.Server {
 	server := mcp.NewServer(
 		&mcp.Implementation{Name: "kie-media-mcp", Version: version},
 		&mcp.ServerOptions{
-			Instructions: "Qualify image and video requests one question at a time. For storyboard video, save and explicitly approve a local script and storyboard, then use each returned shot_brief_id. For every video shot, call media_preview_generate, poll with media_generation_status, display the returned preview image URL, and call media_preview_approve only after explicit approval. media_generate rejects video briefs without that approval and rejects storyboard master briefs. Preview and final generation are separate live actions that may consume Kie.ai credits.",
+			Instructions: "Qualify image and video requests one question at a time. Use media_model_list and media_model_get to select a model and inspect every documented input setting, then media_model_validate before a paid generation. For storyboard video, save and explicitly approve a local script and storyboard, then use each returned shot_brief_id. For every video shot, call media_preview_generate, poll with media_generation_status, display the returned preview image URL, and call media_preview_approve only after explicit approval. media_generate rejects video briefs without that approval and rejects storyboard master briefs. Preview and final generation are separate live actions that may consume Kie.ai credits.",
 			Capabilities: &mcp.ServerCapabilities{},
 		},
 	)
@@ -266,6 +304,46 @@ func registerTools(server *mcp.Server, deps Dependencies) {
 			return nil, workflowGetOutput{}, err
 		}
 		return nil, workflowGetOutput{Workflow: workflow}, nil
+	})
+
+	mcp.AddTool(server, &mcp.Tool{
+		Name: "media_model_list", Description: "List compact summaries for every embedded Kie Market model, including documented input field names. This is local, token-efficient, and spends no credits.", Annotations: readLocal,
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input modelListInput) (*mcp.CallToolResult, modelListOutput, error) {
+		models, err := kiecatalog.List(input.Search, input.Category)
+		if err != nil {
+			return nil, modelListOutput{}, err
+		}
+		return nil, modelListOutput{Models: models}, nil
+	})
+
+	mcp.AddTool(server, &mcp.Tool{
+		Name: "media_model_get", Description: "Get one model's complete official request schema, input settings, required fields, enums, defaults, limits, examples, and source page.", Annotations: readLocal,
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input modelGetInput) (*mcp.CallToolResult, modelOutput, error) {
+		model, err := kiecatalog.Get(input.Model)
+		if err != nil {
+			return nil, modelOutput{}, err
+		}
+		return nil, modelOutput{Model: *model}, nil
+	})
+
+	mcp.AddTool(server, &mcp.Tool{
+		Name: "media_model_example", Description: "Return a documented starter input object for one Kie Market model without making a network request.", Annotations: readLocal,
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input modelGetInput) (*mcp.CallToolResult, modelExampleOutput, error) {
+		example, err := kiecatalog.Example(input.Model)
+		if err != nil {
+			return nil, modelExampleOutput{}, err
+		}
+		return nil, modelExampleOutput{Model: input.Model, Input: example}, nil
+	})
+
+	mcp.AddTool(server, &mcp.Tool{
+		Name: "media_model_validate", Description: "Validate a proposed generation input locally against the selected model's documented required fields, types, enums, and ranges before spending credits.", Annotations: readLocal,
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input modelValidateInput) (*mcp.CallToolResult, modelValidationOutput, error) {
+		issues, err := kiecatalog.Validate(input.Model, input.Input)
+		if err != nil {
+			return nil, modelValidationOutput{}, err
+		}
+		return nil, modelValidationOutput{Model: input.Model, Valid: len(issues) == 0, Issues: issues}, nil
 	})
 
 	mcp.AddTool(server, &mcp.Tool{

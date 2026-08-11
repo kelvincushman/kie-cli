@@ -13,11 +13,11 @@
   "printer": "kelvincushman",
   "printer_name": "Kelvin Cushman",
   "spec_format": "openapi3",
-  "spec_checksum": "sha256:7ea2f9e12b88998cd088620d07b3beb76cc67bdf760e2c201f42217df31754b0",
+  "spec_checksum": "sha256:9de92ead36bee30cf342844f13958ba37a97e2a308b637dd6fd45bf18591be78",
   "run_id": "20260803T075619Z-899a6d3a",
   "catalog_entry": "kie",
   "category": "ai",
-  "description": "Unified CLI for Kie.ai's AI generation platform: 120+ Market models (image, video, audio) via one create/query task pair, plus dedicated Suno, Veo3.1, Runway, Flux Kontext, 4o Image, and per-model chat completion endpoints.",
+  "description": "Complete Kie.ai CLI: 70 current API operations and 129 Market models with embedded per-model input/settings schemas, plus a local agent media factory.",
   "mcp_binary": "kie-pp-mcp",
   "mcp_ready": "full",
   "api_version": "1.0",
@@ -30,8 +30,8 @@
     {
       "name": "Unified Market Catalog Access",
       "command": "kie-ai-jobs market-create-task",
-      "description": "Single create/query command pair that reaches all 120+ Kie.ai Market models via a --model identifier and JSON --input, instead of one generated command per model."
+      "description": "Single create/query command pair that reaches all 129 Kie.ai Market models, backed by local model discovery, examples, and formal input validation."
     }
   ],
-  "catalog_description": "Unified CLI for Kie.ai's AI generation platform: 120+ Market models (image, video, audio) via one create/query task pair, plus dedicated Suno, Veo3.1, Runway, Flux Kontext, 4o Image, and per-model chat completion endpoints."
+  "catalog_description": "Complete Kie.ai CLI: 70 current API operations and 129 Market models with embedded per-model input/settings schemas, plus a local agent media factory."
 }

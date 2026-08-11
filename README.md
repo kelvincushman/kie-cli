@@ -16,7 +16,7 @@ AGENT MEDIA FACTORY
 </p>
 
 <p align="center">
-  Seedance 2.5 · Local-first direction · CLI · Stateless MCP · 9 agent skills · 122 models · Human approval gates
+  Seedance 2.5 · Local-first direction · CLI · Stateless MCP · 9 agent skills · 129 typed models · Human approval gates
 </p>
 
 <p align="center">
@@ -54,9 +54,9 @@ Higgsfield clone and does not claim unsupported provider features.
 | Video safety gate | Preview still → display to user → explicit approval → final video |
 | Creative memory | Private image/video/audio reference vault and consented likeness bundles |
 | Agent access | Compact `--agent` JSON, durable handles, focused MCP, and reusable skills |
-| Focused MCP | 21 media tools over stdio or loopback stateless HTTP using MCP `2026-07-28` |
+| Focused MCP | 25 media tools over stdio or loopback stateless HTTP using MCP `2026-07-28` |
 | Skills | 1 core director skill plus 8 production skills for common media jobs |
-| Kie coverage | 70 dedicated API operations plus a unified catalog of 122 image/video/audio models |
+| Kie coverage | 70 current API operations plus 129 Market models with complete embedded input/settings schemas |
 | Local learning | SQLite-backed recall, teach, playbooks, and command discovery for repeat work |
 | Broad generated CLI | Image, video, music, speech, chat, upload, account, and task endpoints |
 
@@ -252,6 +252,15 @@ The media director is the preferred creative workflow, but every generated API
 command remains available for direct or advanced use.
 
 ```bash
+# Find the right model without loading the full catalog into an agent prompt
+kie-pp-cli models list --search video --agent
+
+# Inspect and validate exact settings before spending credits
+kie-pp-cli models show bytedance/seedance-2-5 --agent
+kie-pp-cli models example bytedance/seedance-2-5 --json
+kie-pp-cli models validate bytedance/seedance-2-5 \
+  --input '{"prompt":"product reveal","duration":5,"resolution":"720p"}' --agent
+
 # Check credits
 kie-pp-cli chat
 
@@ -304,7 +313,7 @@ turn. Use `--no-learn` when a deterministic run should not update local memory.
 
 Two MCP binaries serve different jobs:
 
-- `kie-media-mcp` is the recommended creative surface. It exposes 21 focused
+- `kie-media-mcp` is the recommended creative surface. It exposes 25 focused
   director tools, uses the official MCP Go SDK, supports stdio, and serves
   loopback-only stateless HTTP for MCP `2026-07-28`.
 - `kie-pp-mcp` exposes the broad generated Printing Press tool surface for
@@ -317,10 +326,15 @@ transport details, automation boundaries, and local state contract.
 
 ## Model catalog
 
-The current snapshot contains 122 Kie Market models. They share the same
+The current reproducible snapshot contains 129 Kie Market models. They share the same
 `market-create-task` and `market-query-task` commands rather than appearing as
-122 separate subcommands. See [docs/MODELS.md](docs/MODELS.md) for every known
-model identifier.
+129 separate subcommands. Every model's full request and `input` JSON Schema is
+embedded in the binary, including required fields, types, enums, defaults,
+limits, examples, and its official source page. Use `models list`, `models
+show`, `models example`, and `models validate` locally; agents can use the
+matching `media_model_*` MCP tools. See [docs/MODELS.md](docs/MODELS.md) for the
+compact catalog and [docs/MODEL_INPUTS.md](docs/MODEL_INPUTS.md) for all field
+tables.
 
 The director currently defaults to GPT Image 2 for stills and the configured
 `bytedance/seedance-2-5` route for video. Model availability and parameter
@@ -336,6 +350,8 @@ contracts can change upstream; inspect current Kie documentation and use
 | [Script and Storyboard](docs/SCRIPT_AND_STORYBOARD.md) | Multi-shot schemas, approvals, shot generation, and assembly boundary |
 | [Advanced Media Director](docs/ADVANCED_MEDIA_DIRECTOR.md) | Architecture, state, transports, automation, security, and troubleshooting |
 | [Model Catalog](docs/MODELS.md) | All currently indexed Kie Market model IDs |
+| [Model Inputs and Settings](docs/MODEL_INPUTS.md) | Every per-model field, type, requirement, default, enum, limit, example, and source |
+| [API Coverage Evidence](research/kie-api-coverage.json) | Indexed-page, operation, shared-variant, correction, and model counts |
 | [Root Agent Skill](SKILL.md) | Full generated endpoint command reference for agent hosts |
 
 ## Keeping the catalog current
@@ -343,18 +359,18 @@ contracts can change upstream; inspect current Kie documentation and use
 Kie.ai adds Market models frequently and occasionally adds dedicated API
 families.
 
-1. `scripts/weekly-refresh.sh` refreshes `docs/MODELS.md` and the research spec
-   from Kie documentation. It does not regenerate the Go command tree.
-2. For new dedicated endpoint families, add the documentation pages to
-   `DEDICATED_PAGES` in `research/build_spec.py`, rebuild the spec, regenerate
-   with CLI Printing Press, reapply `.printing-press-patches/`, and rerun the
-   verification suite.
+1. `research/build_spec.py` discovers every English Markdown page in Kie's
+   official `llms.txt`, parses every OpenAPI block, merges shared endpoints,
+   and writes the spec, model registry, field reference, and coverage report.
+2. `scripts/weekly-refresh.sh` runs that merger, safely regenerates the Go
+   CLI/MCP through a disposable mirror, preserves the live Git worktree and
+   recorded patches, then runs the complete Go verification suite.
+3. `.github/workflows/kie-api-refresh.yml` runs this every Monday and opens a
+   draft review PR only when Kie has changed.
 
 ```bash
-cd research
-python3 build_spec.py
-cli-printing-press generate --spec kie-final-openapi.yaml --name kie \
-  --spec-source docs --output .. --force
+python3 -m pip install -r research/requirements.txt
+scripts/weekly-refresh.sh
 ```
 
 ## Capability boundaries
@@ -369,7 +385,9 @@ cli-printing-press generate --spec kie-final-openapi.yaml --name kie \
 - The project does not claim Higgsfield's proprietary virality prediction,
   trained Soul models, 3D/mesh generation, marketplace compliance, or a hosted
   all-in-one editor.
-- Market inputs are passed through as JSON and are not validated per model.
+- Known Market inputs are validated locally against their captured formal JSON
+  Schema before submission. Cross-field rules expressed only as prose remain
+  visible in `models show` but cannot all be enforced mechanically.
 - Live Kie generation was not run during the current validation because the
   isolated test environment had no API key. Structural tests, dry runs, builds,
   and local workflow dogfood passed.

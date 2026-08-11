@@ -62,7 +62,7 @@ Use `--agent` on CLI calls so stdout is parseable JSON and the CLI uses non-inte
 
 ## Credential Rules
 
-Use the guided auth setup in an interactive terminal:
+Use the existing auth setup only:
 
 ```bash
 kie-pp-cli auth setup
@@ -198,7 +198,7 @@ Register the focused local MCP server with an agent host using stdio:
 claude mcp add kie-media -- kie-media-mcp
 ```
 
-`kie-media-mcp` exposes twenty-one focused workflow, brief, script, storyboard,
+`kie-media-mcp` exposes twenty-five focused workflow, model-contract, brief, script, storyboard,
 reference, identity, preview, generation, and status tools. Its optional HTTP
 mode is local-only, stateless, and negotiates MCP `2026-07-28`:
 

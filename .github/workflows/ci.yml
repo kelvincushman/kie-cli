@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: research/requirements.txt
+      - name: Install research dependencies
+        run: python -m pip install -r research/requirements.txt
+      - name: Test documentation merger
+        run: python -m unittest discover -s research -p 'test_*.py'
+      - name: Test Go packages
+        run: go test ./...
+      - name: Vet Go packages
+        run: go vet ./...
+      - name: Build every binary
+        run: make build-all
+      - name: Check formatting and generated JSON
+        run: |
+          test -z "$(gofmt -l internal cmd)"
+          python -m json.tool internal/kiecatalog/catalog.json >/dev/null
+          python -m json.tool research/kie-api-coverage.json >/dev/null
+          git diff --check
