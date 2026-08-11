@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kie Generate"
+  short_description: "Create media across Kie.ai models"
+  default_prompt: "Use $kie-generate to turn my media idea into an approved Kie.ai generation."

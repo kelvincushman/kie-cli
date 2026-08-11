@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kie YouTube Thumbnail"
+  short_description: "Design truthful high-impact thumbnails"
+  default_prompt: "Use $kie-youtube-thumbnail to create and validate YouTube thumbnail variants with Kie.ai."

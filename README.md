@@ -1,145 +1,389 @@
-# kie-cli
+# kie-cli — the open-source agent media factory for Kie.ai
 
-An unofficial command-line client for [Kie.ai](https://kie.ai), the AI generation
-aggregator API covering image, video, music, and chat models from Google, Runway,
-Veo, Suno, Flux, Kling, Grok, Claude, and 100+ other models under one unified
-task-based API.
+<pre align="center">
+ _  _____ _____
+| |/ /_ _| ____|
+| ' / | ||  _|
+| . \ | || |___
+|_|\_\___|_____|
 
-Generated with [CLI Printing Press](https://github.com/mvanhorn/cli-printing-press)
-from Kie.ai's published documentation at [docs.kie.ai](https://docs.kie.ai), then
-hand-patched and validated (`go build`, `go test ./...`, `cli-printing-press
-scorecard` — grade A / 88%).
+AGENT MEDIA FACTORY
+[ BRIEF ] -> [ PREVIEW ] -> [ APPROVE ] -> [ CREATE ]
+</pre>
 
-## What's covered
+<p align="center">
+  <strong>Turn Codex, Claude Code, Cursor, or any MCP-capable agent into a guided image and video production studio.</strong>
+</p>
 
-- **70 endpoints** across the dedicated product APIs: Common (credits, download
-  links), File Upload, 4o Image, Flux Kontext, Runway (+ Aleph), Veo3.1, Suno
-  (music/lyrics/vocals/MIDI/WAV/voice-cloning — its largest family), Gemini Omni,
-  and per-model chat completions (GPT, Claude, Gemini, Grok, Codex).
-- **The full Market catalog** (120+ image/video/audio models) via Kie.ai's own
-  unified `createTask` / `recordInfo` pattern — one pair of CLI commands
-  (`kie-ai-jobs market-create-task` / `market-query-task`) that takes any
-  model's identifier and JSON input. See [`docs/MODELS.md`](docs/MODELS.md) for
-  the full catalog with `--model` values.
+<p align="center">
+  Seedance 2.5 · Local-first direction · CLI · Stateless MCP · 9 agent skills · 122 models · Human approval gates
+</p>
 
-Every generation endpoint follows the same async shape: submit a task, get a
-`taskId` back, then either poll a `record-info`/`get-details` endpoint or supply
-a `--call-back-url` to receive a webhook when it's done.
+<p align="center">
+  <a href="docs/VIBE_CODER_QUICKSTART.md">Start with a coding assistant</a> ·
+  <a href="docs/MEDIA_DIRECTOR.md">CLI and MCP reference</a> ·
+  <a href="docs/SCRIPT_AND_STORYBOARD.md">Script and storyboard</a> ·
+  <a href="docs/ADVANCED_MEDIA_DIRECTOR.md">Advanced operation</a> ·
+  <a href="docs/MODELS.md">Model catalog</a>
+</p>
 
-## Install
+`kie-cli` combines Kie.ai's broad generation API with a local creative director
+that agents can operate through terminal commands or MCP. It qualifies the
+request one question at a time, keeps briefs and reusable references on the
+user's machine, plans the production, and asks before spending credits.
 
-Requires Go 1.26.5+.
+For video, the factory enforces a human-in-the-middle review: each shot gets a
+generated still, the user sees it, and the CLI requires explicit approval before
+submitting the final motion job. Longer productions add durable scripts,
+storyboards, one child brief per shot, and a transparent local assembly step.
+
+This is an open-source, bring-your-own-Kie-key alternative to closed agent media
+suites such as [Higgsfield's CLI and MCP workflow](https://higgsfield.ai/cli).
+It takes inspiration from that agent-first experience; it is not a drop-in
+Higgsfield clone and does not claim unsupported provider features.
+
+> The repository is named `kie-cli`; the generated command installed by this
+> project is `kie-pp-cli`.
+
+## What ships
+
+| Surface | Current capability |
+| --- | --- |
+| Local media director | Guided, resumable image and video briefs with one question per turn |
+| Production planning | Single-shot or multi-shot script/storyboard workflows with durable IDs |
+| Video safety gate | Preview still → display to user → explicit approval → final video |
+| Creative memory | Private image/video/audio reference vault and consented likeness bundles |
+| Agent access | Compact `--agent` JSON, durable handles, focused MCP, and reusable skills |
+| Focused MCP | 21 media tools over stdio or loopback stateless HTTP using MCP `2026-07-28` |
+| Skills | 1 core director skill plus 8 production skills for common media jobs |
+| Kie coverage | 70 dedicated API operations plus a unified catalog of 122 image/video/audio models |
+| Local learning | SQLite-backed recall, teach, playbooks, and command discovery for repeat work |
+| Broad generated CLI | Image, video, music, speech, chat, upload, account, and task endpoints |
+
+## How the factory works
+
+```mermaid
+flowchart LR
+    A["User or coding agent"] --> B["Local director<br/>CLI · MCP · skills"]
+    B --> C["Brief · references · identity"]
+    C --> D{"Single shot or storyboard?"}
+    D -->|Single shot| E["Preview still"]
+    D -->|Storyboard| F["Script approval<br/>Storyboard approval<br/>One child brief per shot"]
+    F --> E
+    E --> G{"User approves the image?"}
+    G -->|No| C
+    G -->|Yes| H["Kie.ai final generation"]
+    H --> I["Local assembly · delivery · reuse"]
+```
+
+The local state is durable but the protocol is stateless: agents pass opaque
+`brief_...`, `ref_...`, `identity_...`, `script_...`, `storyboard_...`, and
+`gen_...` handles between commands instead of repeatedly loading the full
+production context into their prompt.
+
+## Quick start
+
+Requires Go 1.26.5 or newer.
 
 ```bash
 git clone https://github.com/kelvincushman/kie-cli.git
 cd kie-cli
-go build -o kie ./cmd/kie-pp-cli
-sudo mv kie /usr/local/bin/   # or anywhere on your PATH
+make build-all
+export PATH="$PWD/bin:$PATH"
 ```
 
-## Auth
+`make build-all` creates:
 
-Get an API key at [kie.ai/api-key](https://kie.ai/api-key), then either:
+- `bin/kie-pp-cli`: the full CLI and local media director.
+- `bin/kie-media-mcp`: the focused agent media server.
+- `bin/kie-pp-mcp`: the broad generated Printing Press MCP server.
+
+Configure and verify authentication:
 
 ```bash
-kie auth set-token YOUR_API_KEY
+kie-pp-cli auth set-token YOUR_API_KEY
+kie-pp-cli doctor --json
+kie-pp-cli media setup --agent
 ```
 
-or
+Get a key from [kie.ai/api-key](https://kie.ai/api-key). You can use
+`KIE_BEARER_AUTH` instead of the local credential store. Never paste a key into
+a media brief, agent prompt, issue, log, or storyboard.
+
+Start creating:
 
 ```bash
-export KIE_BEARER_AUTH="YOUR_API_KEY"
+kie-pp-cli create "a cinematic website hero for my coffee brand"
 ```
 
-Verify everything's wired up:
+The command creates a local brief and asks the next useful question. Resume the
+same brief until it returns a ready plan, then explicitly submit it.
+
+## Give the factory to a coding agent
+
+Install the repository's Markdown skills:
 
 ```bash
-kie doctor
+npx skills add kelvincushman/kie-cli
 ```
 
-## Usage
+Register the focused MCP server with a local Claude Code installation:
 
 ```bash
-# Check remaining credits
-kie chat
+claude mcp add kie-media -- "$PWD/bin/kie-media-mcp"
+```
 
-# Generate an image with Google's Nano Banana via the unified Market endpoint
-kie kie-ai-jobs market-create-task \
+Other MCP hosts can launch `kie-media-mcp` over stdio. Loopback-only stateless
+HTTP is also available:
+
+```bash
+kie-media-mcp --transport http --addr 127.0.0.1:7780
+```
+
+For a complete copy-paste setup and first-job prompt, use the
+[Vibe Coder Quickstart](docs/VIBE_CODER_QUICKSTART.md). It tells the agent to
+verify the binaries, protect the API key, ask one question at a time, show plans
+before live calls, and enforce every preview gate.
+
+## Direct an image or single-shot video
+
+Agents should add `--agent` for compact, machine-readable, non-interactive
+output:
+
+```bash
+kie-pp-cli media workflow list --agent
+kie-pp-cli media workflow show product-photoshoot --agent
+kie-pp-cli create --workflow product-photoshoot \
+  "a vertical launch image for a premium coffee grinder" \
+  --type image --agent
+```
+
+Resume by durable brief ID and answer only the returned next question:
+
+```bash
+kie-pp-cli create --brief brief_ab12cd34 --answer "Instagram launch" --agent
+```
+
+For video, preview and final generation are deliberately separate live actions:
+
+```bash
+kie-pp-cli create "a vertical launch video" --type video --agent
+kie-pp-cli create --brief brief_ab12cd34 --preview --wait --agent
+# Display result_urls[0] to the user and wait for an explicit yes.
+kie-pp-cli create --brief brief_ab12cd34 --approve-preview --agent
+kie-pp-cli create --brief brief_ab12cd34 --submit --wait --agent
+```
+
+If the image is wrong, use `--reject-preview`, revise the brief, and generate a
+new still. Changing a creative field invalidates the prior approval.
+
+## Reuse references and likenesses
+
+References may be supported local image/video/audio paths, HTTP(S) URLs, or
+private `ref:<id>` handles. Dragging a file into a terminal normally inserts a
+path that can be passed directly to the command.
+
+```bash
+kie-pp-cli media reference add ./brand/logo.png --name brand-logo --agent
+kie-pp-cli create "a cinematic website hero" \
+  --reference ref:ref_ab12cd34 --agent
+```
+
+Consented likeness bundles keep a reusable set of reference photographs local
+until an approved live generation action:
+
+```bash
+kie-pp-cli media identity create "Creator" \
+  --reference ./front.jpg --reference ./profile.jpg --consent --agent
+kie-pp-cli create "Creator introducing the product" \
+  --type video --video-mode multimodal \
+  --identity identity_ab12cd34 --agent
+```
+
+Identity bundles are local reference packs, not trained biometric models or a
+portable equivalent of Higgsfield Soul.
+
+## Produce a multi-shot video
+
+Storyboard mode keeps the master production separate from the individual Kie
+jobs. The master brief cannot be submitted as a single prompt-only video.
+
+```bash
+kie-pp-cli create "a 30-second product story" \
+  --type video --duration 30 --production-mode storyboard --agent
+
+kie-pp-cli media script set <brief_id> --file script.md --agent
+kie-pp-cli media script show <brief_id> --agent
+kie-pp-cli media script approve <brief_id> --agent
+
+kie-pp-cli media storyboard set <brief_id> --file storyboard.json --agent
+kie-pp-cli media storyboard show <brief_id> --agent
+kie-pp-cli media storyboard approve <brief_id> --agent
+```
+
+The storyboard returns one ordinary `shot_brief_id` per shot. Run the preview,
+display, approval, and final-generation sequence separately for every shot,
+then assemble the approved clips locally with ffmpeg, Remotion, or an editor.
+See [Script and Storyboard Workflow](docs/SCRIPT_AND_STORYBOARD.md).
+
+## Nine production skills
+
+The `skills/` directory contains a core director and eight Kie-native production
+workflows. They keep domain guidance out of repeated agent prompts while handing
+compact workflow names and durable handles back to the CLI/MCP layer.
+
+| Skill | Production job |
+| --- | --- |
+| `kie-create` | Guided intake, references, scripts, storyboards, approvals, and polling |
+| `kie-generate` | General image/video routing plus audio and music handoff |
+| `kie-brandkit` | Approval-led brand concepts and reusable visual direction |
+| `kie-marketplace-cards` | Truthful marketplace assets with local exact-copy composition |
+| `kie-product-photoshoot` | Reference-led product campaign imagery |
+| `kie-identity` | Consented, reusable likeness-reference bundles |
+| `kie-video-explainer` | Scripted explainers, visual blocks, narration, and local assembly |
+| `kie-websites` | Website/app media assets and local build handoff |
+| `kie-youtube-thumbnail` | 16:9 thumbnail concepts with local exact-text composition |
+
+## Use the broad Kie CLI directly
+
+The media director is the preferred creative workflow, but every generated API
+command remains available for direct or advanced use.
+
+```bash
+# Check credits
+kie-pp-cli chat
+
+# Generate an image through the unified Market endpoint
+kie-pp-cli kie-ai-jobs market-create-task \
   --model google/nano-banana \
-  --input '{"prompt": "a corgi wearing a tiny wizard hat", "aspect_ratio": "1:1"}'
+  --input '{"prompt":"a corgi wearing a tiny wizard hat","aspect_ratio":"1:1"}'
 
-# Poll the resulting task
-kie kie-ai-jobs market-query-task --task-id task_google_xxxxx
+# Poll any Market task
+kie-pp-cli kie-ai-jobs market-query-task --task-id task_google_xxxxx
 
-# Generate a Veo 3.1 video (dedicated endpoint)
-kie veo generate-veo3-1-video --prompt "drone shot over a foggy mountain range"
+# Generate a Veo 3.1 video through its dedicated endpoint
+kie-pp-cli veo generate-veo3-1-video \
+  --prompt "drone shot over a foggy mountain range"
 
 # Generate music with Suno
-kie generate music --prompt "upbeat synthwave with female vocals" --model V5 --instrumental false --call-back-url https://example.com/callback
+kie-pp-cli generate music \
+  --prompt "upbeat synthwave with female vocals" \
+  --model V5 --instrumental false \
+  --call-back-url https://example.com/callback
 
 # Edit an image with Flux Kontext
-kie flux generate-or-edit-image --prompt "make the sky purple" --input-image https://example.com/photo.png
+kie-pp-cli flux generate-or-edit-image \
+  --prompt "make the sky purple" \
+  --input-image https://example.com/photo.png
 ```
 
-Every command supports `--help`, `--json`/`--agent` for machine-readable output,
-and `--dry-run` to preview a request without sending it. Run `kie --help` for
-the full command tree, or `kie api` to browse endpoints by name.
+Every command supports `--help`; generated API calls also support `--dry-run`.
+Use `--json` or `--agent` for machine-readable output, `kie-pp-cli api` to browse
+the endpoint tree, and `kie-pp-cli which "<capability>" --json` for command
+discovery.
 
-This CLI also ships an MCP server (`kie-pp-mcp`) and a local SQLite-backed
-teach/recall loop (`kie recall`, `kie teach`) for agent use — see `kie
-agent-context --pretty` for the machine-readable capability description.
+## Agent memory and token savings
 
-## The Market model catalog
+The CLI has a local SQLite-backed teach/recall loop for repeated command
+discovery. It never sends the learning database elsewhere.
 
-The 120+ marketplace models (Seedream, Ideogram, Kling, Wan, Hailuo, PixVerse,
-ElevenLabs, and more) all share the same two endpoints, so they aren't each a
-separate CLI command — instead, [`docs/MODELS.md`](docs/MODELS.md) lists every
-known `--model` value by category. That catalog is a point-in-time snapshot;
-see below for how it's kept current.
+```bash
+kie-pp-cli recall "how do I create a product image?" --agent
+kie-pp-cli agent-context --pretty
+kie-pp-cli learnings stats --agent
+```
 
-## Keeping this up to date
+`--agent` combines compact JSON, non-interactive behavior, no color, and safe
+confirmation defaults. Durable media IDs let agents pass small handles instead
+of restating scripts, storyboards, references, and generation records on every
+turn. Use `--no-learn` when a deterministic run should not update local memory.
 
-Kie.ai adds new models to the Market frequently and occasionally adds new
-dedicated endpoints. Two things keep this repo from going stale:
+## MCP surfaces
 
-1. **`scripts/weekly-refresh.sh`** re-fetches the Market catalog pages from
-   docs.kie.ai, regenerates `docs/MODELS.md`, and commits+pushes if anything
-   changed. It runs weekly via cron (Monday 03:07 local time — see `crontab -l`
-   on the maintainer's machine). It does **not** touch the OpenAPI spec or
-   regenerate CLI code — new dedicated endpoints (a new product family, not
-   just a new Market model) still need a human to fetch the new doc page(s)
-   and re-run the generation pipeline below.
-2. For a full spec/CLI regen when Kie.ai ships new dedicated endpoints, first
-   add the new page slug(s) to `DEDICATED_PAGES` in `research/build_spec.py`,
-   then:
-   ```bash
-   cd research/
-   python3 build_spec.py   # refetches everything, rewrites the spec + docs/MODELS.md
-   cli-printing-press generate --spec kie-final-openapi.yaml --name kie \
-     --spec-source docs --output .. --force
-   ```
-   then re-apply the patch in `.printing-press-patches/` if it still applies,
-   and re-run `go build ./... && go test ./...`.
+Two MCP binaries serve different jobs:
 
-## Known limitations
+- `kie-media-mcp` is the recommended creative surface. It exposes 21 focused
+  director tools, uses the official MCP Go SDK, supports stdio, and serves
+  loopback-only stateless HTTP for MCP `2026-07-28`.
+- `kie-pp-mcp` exposes the broad generated Printing Press tool surface for
+  direct API work and compatibility.
 
-- The Market catalog's per-model `input` shape isn't validated client-side —
-  it's passed through as JSON (`--input` / `--stdin`), matching how loosely
-  Kie.ai itself documents per-model parameters. Check `docs/MODELS.md` or the
-  model's docs.kie.ai page for its exact input fields.
-- Two Market pages (`wan/2-7-videoedit`, `z-image/z-image`) didn't serve a
-  markdown mirror at fetch time and are missing from the catalog.
-- Live API verification wasn't run (no API key was available during
-  generation) — endpoints are structurally correct against the documented
-  spec but haven't been smoke-tested against the real API. `path_validity`,
-  `auth_protocol`, and `live_api_verification` show as unscored in the
-  scorecard for this reason.
+The focused server is stateless at the protocol layer but stateful at the
+application layer: durable IDs carry the workflow between calls. See the
+[advanced guide](docs/ADVANCED_MEDIA_DIRECTOR.md) for the complete tool list,
+transport details, automation boundaries, and local state contract.
+
+## Model catalog
+
+The current snapshot contains 122 Kie Market models. They share the same
+`market-create-task` and `market-query-task` commands rather than appearing as
+122 separate subcommands. See [docs/MODELS.md](docs/MODELS.md) for every known
+model identifier.
+
+The director currently defaults to GPT Image 2 for stills and the configured
+`bytedance/seedance-2-5` route for video. Model availability and parameter
+contracts can change upstream; inspect current Kie documentation and use
+`--model` only when a specific route is required.
+
+## Documentation
+
+| Guide | Audience and purpose |
+| --- | --- |
+| [Vibe Coder Quickstart](docs/VIBE_CODER_QUICKSTART.md) | Copy-paste agent setup prompt and first safe generation |
+| [Media Director](docs/MEDIA_DIRECTOR.md) | Complete CLI/MCP workflow, qualification protocol, references, and tools |
+| [Script and Storyboard](docs/SCRIPT_AND_STORYBOARD.md) | Multi-shot schemas, approvals, shot generation, and assembly boundary |
+| [Advanced Media Director](docs/ADVANCED_MEDIA_DIRECTOR.md) | Architecture, state, transports, automation, security, and troubleshooting |
+| [Model Catalog](docs/MODELS.md) | All currently indexed Kie Market model IDs |
+| [Root Agent Skill](SKILL.md) | Full generated endpoint command reference for agent hosts |
+
+## Keeping the catalog current
+
+Kie.ai adds Market models frequently and occasionally adds dedicated API
+families.
+
+1. `scripts/weekly-refresh.sh` refreshes `docs/MODELS.md` and the research spec
+   from Kie documentation. It does not regenerate the Go command tree.
+2. For new dedicated endpoint families, add the documentation pages to
+   `DEDICATED_PAGES` in `research/build_spec.py`, rebuild the spec, regenerate
+   with CLI Printing Press, reapply `.printing-press-patches/`, and rerun the
+   verification suite.
+
+```bash
+cd research
+python3 build_spec.py
+cli-printing-press generate --spec kie-final-openapi.yaml --name kie \
+  --spec-source docs --output .. --force
+```
+
+## Capability boundaries
+
+- This is an unofficial community client, not affiliated with or endorsed by
+  Kie.ai, Higgsfield, Anthropic, or the model providers.
+- Kie generation requires the user's own API key and consumes Kie credits.
+- Identity bundles are consented local reference sets; there is no portable,
+  cross-model trained Soul/likeness endpoint in this project.
+- Final clip ordering, exact typography, captions, audio mix, and publishing
+  remain explicit local assembly or delivery steps.
+- The project does not claim Higgsfield's proprietary virality prediction,
+  trained Soul models, 3D/mesh generation, marketplace compliance, or a hosted
+  all-in-one editor.
+- Market inputs are passed through as JSON and are not validated per model.
+- Live Kie generation was not run during the current validation because the
+  isolated test environment had no API key. Structural tests, dry runs, builds,
+  and local workflow dogfood passed.
+
+The generated CLI currently scores grade A / 87% in CLI Printing Press. The
+unscored dimensions are `path_validity`, `auth_protocol`, and
+`live_api_verification`, which require credentialed live checks.
 
 ## Credits
 
-- API and docs: [Kie.ai](https://kie.ai) — this is an unofficial, community
-  client, not affiliated with or endorsed by Kie.ai.
-- Generated with [CLI Printing Press](https://github.com/mvanhorn/cli-printing-press)
+- API and documentation: [Kie.ai](https://kie.ai) and
+  [docs.kie.ai](https://docs.kie.ai).
+- Agent workflow inspiration: [Higgsfield CLI](https://higgsfield.ai/cli),
+  [Higgsfield skills](https://github.com/higgsfield-ai/skills), and Matt
+  Pocock's [Grill With Docs](https://www.aihero.dev/skills-grill-with-docs).
+- CLI generation: [CLI Printing Press](https://github.com/mvanhorn/cli-printing-press)
   by Matt Van Horn and Trevin Chow.
 
 ## License

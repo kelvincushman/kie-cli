@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kie Website Media"
+  short_description: "Build websites with Kie-generated media"
+  default_prompt: "Use $kie-websites to build a local website, app, or game with media generated through Kie.ai."

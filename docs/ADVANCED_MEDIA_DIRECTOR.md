@@ -1,0 +1,316 @@
+# Advanced Agent Media Factory
+
+This document is for local users who want to operate `kie-cli` as a
+terminal-first media factory, focused MCP server, skill runtime, or automation
+target. The repository is `kie-cli`; the installed command is `kie-pp-cli`.
+
+## Current Status
+
+Implemented and verified in the current local command surface:
+
+- `kie-pp-cli create` for guided image and video briefs.
+- `kie-pp-cli media` for setup, workflows, briefs, references, identities, and
+  generation status.
+- Video preview generation, preview approval, preview rejection, and final
+  submission blocking.
+- `kie-media-mcp` as a focused local MCP server.
+- Local reference vault and consented identity-reference bundles.
+- Eight routed production workflows delivered through nine Markdown skills.
+- Seventy generated dedicated API operations and a 122-model Market snapshot.
+- Local SQLite recall, teach, and playbook state for repeated agent work.
+
+Native storyboard command surface:
+
+- `kie-pp-cli create --production-mode storyboard`
+- `kie-pp-cli media script set/show/approve/reject`
+- `kie-pp-cli media storyboard set/show/approve/reject`
+- MCP tools `media_script_set`, `media_script_get`, `media_script_decide`,
+  `media_storyboard_set`, `media_storyboard_get`, and
+  `media_storyboard_decide`
+
+Each saved storyboard shot receives a normal `shot_brief_id` and therefore
+inherits the existing preview approval gate. The storyboard master cannot be
+submitted as one prompt-only video.
+
+## Operating Model
+
+The factory has four layers:
+
+1. **Direction:** a user or agent qualifies intent one question at a time.
+2. **Durable local production:** briefs, references, identity bundles, scripts,
+   storyboards, approvals, and generation records receive opaque handles.
+3. **Explicit live actions:** preview and final jobs are separate Kie.ai calls.
+4. **Local finishing:** clip order, exact text, captions, audio mix, publishing,
+   and deployment remain inspectable local steps.
+
+The focused MCP transport is stateless, but the application is not ephemeral.
+Every tool call carries a durable ID, so any compatible agent can resume a job
+without MCP session memory or a long prompt containing the entire production.
+
+This is an open-source, bring-your-own-Kie-key alternative to closed agent media
+suites. It does not provide trained cross-model Soul identities, proprietary
+virality scoring, 3D/mesh generation, marketplace compliance, or a hosted
+all-in-one editor. Identity records are consented local reference bundles, and
+unsupported gaps returned by `media workflow show` must remain visible to the
+agent.
+
+## Local State
+
+Discover the resolved data directory instead of hardcoding paths:
+
+```bash
+kie-pp-cli media setup --agent
+kie-pp-cli agent-context --pretty
+```
+
+The media director uses opaque local handles:
+
+- `brief_...` for durable media briefs.
+- `ref_...` for vaulted references.
+- `ref:<id>` when passing a vaulted reference back to `create`.
+- `identity_...` for consented local likeness-reference bundles.
+- `gen_...` for local generation records.
+- `script_...` for the current master script.
+- `storyboard_...` for the current ordered shot plan.
+- `shot_brief_id` values are ordinary `brief_...` handles linked back to the
+  storyboard master.
+
+Local state contains brief answers, selected model, provider input, reference
+handles, provider task IDs, generation status, result URLs, preview approval
+state, script/storyboard hashes, and shot lineage. It must not contain bearer
+tokens, cookies, auth headers, or credential file contents.
+
+Use `--home <directory>` to isolate projects or test runs. Do not point two
+untrusted users at the same home directory: the local store is application
+state, not a multi-tenant authorization boundary.
+
+## CLI Contract
+
+Use `--agent` for agent and automation calls. It enables JSON, compact output,
+no color, no input prompts, and yes-mode defaults.
+
+Core commands:
+
+```bash
+kie-pp-cli media setup --agent
+kie-pp-cli media workflow list --agent
+kie-pp-cli media workflow show <workflow> --agent
+kie-pp-cli create "<request>" --agent
+kie-pp-cli create --workflow <workflow> "<request>" --agent
+kie-pp-cli create --brief <brief_id> --answer "<answer>" --agent
+kie-pp-cli media brief show <brief_id> --agent
+kie-pp-cli media brief list --agent
+```
+
+Reference and identity commands:
+
+```bash
+kie-pp-cli media reference add <path-or-url> --name <name> --agent
+kie-pp-cli media reference list --agent
+kie-pp-cli media identity create <name> --reference <image> --consent --agent
+kie-pp-cli media identity show <identity_id> --agent
+kie-pp-cli media identity list --agent
+```
+
+Generation commands:
+
+```bash
+kie-pp-cli create --brief <brief_id> --preview --wait --agent
+kie-pp-cli create --brief <brief_id> --approve-preview --agent
+kie-pp-cli create --brief <brief_id> --reject-preview --agent
+kie-pp-cli create --brief <brief_id> --submit --wait --agent
+kie-pp-cli media generation status <generation_id> --wait --agent
+```
+
+## MCP Contract
+
+Build and register the focused MCP server:
+
+```bash
+make build-media-mcp
+claude mcp add kie-media -- ./bin/kie-media-mcp
+```
+
+Stdio is the recommended local host transport. The optional HTTP transport is
+for local-only stateless operation:
+
+```bash
+kie-media-mcp --transport http --addr 127.0.0.1:7780
+```
+
+Do not bind HTTP MCP to a wildcard or non-loopback address. The HTTP transport
+implements the finalized MCP `2026-07-28` stateless protocol. Stdio remains the
+recommended local child-process transport.
+
+The implemented focused server exposes twenty-one media tools:
+
+- `media_brief_start`
+- `media_brief_answer`
+- `media_brief_get`
+- `media_workflow_list`
+- `media_workflow_get`
+- `media_reference_add`
+- `media_reference_list`
+- `media_identity_create`
+- `media_identity_get`
+- `media_identity_list`
+- `media_preview_generate`
+- `media_preview_approve`
+- `media_preview_reject`
+- `media_script_set`
+- `media_script_get`
+- `media_script_decide`
+- `media_storyboard_set`
+- `media_storyboard_get`
+- `media_storyboard_decide`
+- `media_generate`
+- `media_generation_status`
+
+The MCP server is stateless at the protocol layer. Durable IDs carry workflow
+state between calls, so agents should store and pass `brief_id`, `generation_id`,
+and storyboard shot IDs explicitly. `kie-pp-mcp` is a different binary: it
+retains the broad generated API tool surface and is not the preferred creative
+director.
+
+## Video Approval Gate
+
+Preview generation and final video generation are separate live actions. Both
+may consume Kie.ai credits.
+
+Required sequence:
+
+```bash
+kie-pp-cli create --brief <brief_id> --preview --wait --agent
+# Show result_urls[0] to the user.
+kie-pp-cli create --brief <brief_id> --approve-preview --agent
+kie-pp-cli create --brief <brief_id> --submit --wait --agent
+```
+
+If the preview is wrong:
+
+```bash
+kie-pp-cli create --brief <brief_id> --reject-preview --agent
+kie-pp-cli create --brief <brief_id> --style "<revised direction>" --agent
+kie-pp-cli create --brief <brief_id> --preview --wait --agent
+```
+
+The approved still becomes the SeedDance first frame or multimodal visual
+anchor. Changing creative fields invalidates approval and requires a new
+preview.
+
+## Script And Storyboard Workflow
+
+Use storyboard mode for multi-shot work:
+
+```bash
+kie-pp-cli create --production-mode storyboard "<video request>" --agent
+kie-pp-cli media script set <brief_id> --file script.md --agent
+kie-pp-cli media script show <brief_id> --agent
+kie-pp-cli media script approve <brief_id> --agent
+kie-pp-cli media storyboard set <brief_id> --file storyboard.json --agent
+kie-pp-cli media storyboard show <brief_id> --agent
+kie-pp-cli media storyboard approve <brief_id> --agent
+```
+
+Each storyboard shot carries a `shot_brief_id`. Generate that shot through the
+same video gate:
+
+```bash
+kie-pp-cli create --brief <shot_brief_id> --preview --wait --agent
+kie-pp-cli create --brief <shot_brief_id> --approve-preview --agent
+kie-pp-cli create --brief <shot_brief_id> --submit --wait --agent
+```
+
+The CLI does not claim to assemble a final edited film by itself. Treat local
+assembly with `ffmpeg`, Remotion, or an editor as a separate local step. Record
+the command, source clips, approved preview URLs, and output file in a manifest.
+
+## Automation Boundaries
+
+Safe to automate:
+
+- setup checks
+- workflow discovery
+- brief inspection
+- reference listing
+- status polling
+- local script/storyboard file validation
+- local assembly after all inputs are approved
+- compact handle passing and local teach/recall
+
+Require explicit user approval:
+
+- storing or changing credentials
+- live preview generation
+- live final generation
+- approving a preview still
+- approving a script or storyboard
+- publishing or deploying generated media
+
+Do not chain preview generation directly into final video submission. The user
+must see the preview image first.
+
+## Security
+
+- Use `kie-pp-cli auth set-token <token>` or `KIE_BEARER_AUTH`.
+- Never store credentials in briefs, scripts, storyboards, manifests, issue
+  comments, or MCP messages.
+- Local reference files remain local until explicit live generation.
+- The reference vault rejects symbolic links and omits private filesystem paths
+  from public CLI/MCP responses.
+- Identity bundles are consented local reference packs, not trained biometric
+  models.
+- Keep MCP HTTP bound to `127.0.0.1`.
+- Preserve unsupported workflow gaps in agent output; do not silently imply
+  Higgsfield or provider feature parity.
+
+## Troubleshooting
+
+Auth missing:
+
+```bash
+kie-pp-cli auth status --agent
+kie-pp-cli auth set-token <token>
+kie-pp-cli doctor --json
+```
+
+Preview is not ready:
+
+```bash
+kie-pp-cli media generation status <generation_id> --wait --agent
+```
+
+Final video is blocked:
+
+- Confirm the preview generation has a result URL.
+- Show the image to the user.
+- Run `kie-pp-cli create --brief <brief_id> --approve-preview --agent`.
+- Re-run submit after approval.
+
+Preview approval is stale:
+
+- A creative field changed after approval.
+- Reject or regenerate the preview.
+- Approve the new preview before final generation.
+
+MCP host cannot see tools:
+
+- Rebuild `kie-media-mcp`.
+- Register with stdio first.
+- Restart the MCP host.
+- Use loopback HTTP only when the host supports stateless HTTP MCP.
+
+Storyboard commands missing after an upgrade or custom build:
+
+- Verify with `kie-pp-cli media script --help` and
+  `kie-pp-cli media storyboard --help`.
+- Rebuild both binaries from the same checkout. CLI, docs, and MCP binaries
+  must come from the same revision.
+
+Model behavior differs from the documented plan:
+
+- Run `kie-pp-cli media brief show <brief_id> --agent` and inspect `plan.model`
+  plus `plan.input`.
+- Check [MODELS.md](MODELS.md) and the current upstream Kie model page.
+- Use `--model` only when the requested model supports the required reference,
+  duration, audio, and output constraints.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kie Identity"
+  short_description: "Reuse consented likeness references locally"
+  default_prompt: "Use $kie-identity to prepare a consented local likeness bundle for Kie.ai media."

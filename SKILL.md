@@ -1,6 +1,6 @@
 ---
 name: pp-kie
-description: "Printing Press CLI for Kie. Unified API for Kie.ai's AI generation platform: image, video, music, and chat models, plus account and file utilities."
+description: "Operate the open-source Kie agent media factory and broad Printing Press CLI: guided image/video direction, script/storyboard production, human preview gates, local references, focused MCP, and Kie.ai image, video, music, speech, chat, account, file, and task APIs."
 author: "Kelvin Cushman"
 license: "Apache-2.0"
 argument-hint: "<command> [args] | install cli|mcp"
@@ -12,7 +12,7 @@ metadata:
         - kie-pp-cli
 ---
 
-# Kie — Printing Press CLI
+# Kie Agent Media Factory and Printing Press CLI
 
 ## Prerequisites: Install the CLI
 
@@ -29,7 +29,54 @@ If the `npx` install fails before this CLI has a public-library category, instal
 
 If `--version` reports "command not found" after install, the runtime cannot see the binary directory on `$PATH`. Do not proceed with skill commands until verification succeeds.
 
-Unified API for Kie.ai's AI generation platform: image, video, music, and chat models, plus account and file utilities. Async generation endpoints return a taskId; poll the matching record-info/get-details endpoint (or use a callBackUrl) to retrieve results.
+This skill covers both product layers: the local agent media factory and the
+broad generated Kie.ai CLI. Prefer the director for creative work; use raw
+commands for direct endpoint control. The current tree contains 70 dedicated
+operations, a 122-model Market snapshot, nine media skills, eight compact
+workflow routes, and a focused 21-tool MCP server. Async generation endpoints
+return a `taskId`; poll the matching record-info/get-details endpoint or use a
+callback URL.
+
+## Guided image and video creation
+
+For a media-creation request, prefer the local-first media director over calling
+raw model endpoints directly. Discover the compact Kie-native workflow catalog,
+then start or resume a durable brief. The CLI surface saves context compared
+with loading every specialized skill document:
+
+```bash
+kie-pp-cli media workflow list --agent
+kie-pp-cli media workflow show <workflow> --agent
+kie-pp-cli create --workflow <workflow> "<what the user wants>" --agent
+kie-pp-cli create "<what the user wants>" --agent
+kie-pp-cli create --brief <brief_id> --answer "<one answer>" --agent
+kie-pp-cli create --brief <brief_id> --preview --wait --agent
+kie-pp-cli create --brief <brief_id> --approve-preview --agent
+kie-pp-cli create --brief <brief_id> --submit --wait --agent
+# For multi-shot video:
+kie-pp-cli create --production-mode storyboard "<complete request>" --agent
+kie-pp-cli media script set <brief_id> --file <script.md|-> --agent
+kie-pp-cli media storyboard set <brief_id> --file <storyboard.json|-> --agent
+```
+
+Ask the returned `next_question` exactly once, preserve the returned `brief.id`,
+and call `--submit` only after the user approves the ready plan. For video,
+first generate the preview, display its returned image URL, and call
+`--approve-preview` only after an explicit user yes; final submission is blocked
+until then. Use `--reject-preview` and revise the brief when the still is wrong.
+For multi-shot video, explicitly approve the local script and storyboard, then
+run the same preview/show/approve/final sequence on every returned
+`shot_brief_id`; never submit the storyboard master as one prompt-only video.
+Local image, video, and audio files can be vaulted with `media reference add`; consented
+likeness sets use `media identity create` and reusable `identity:<id>` handles.
+For an MCP agent, register the focused MCP `2026-07-28` server with
+`claude mcp add kie-media -- kie-media-mcp`; it exposes the same workflows,
+briefs, references, identities, and generation status. Never include Kie
+credentials in a brief or response. See `skills/kie-create/SKILL.md` and the
+eight specialized `skills/kie-*` ports when full domain guidance is needed.
+The user-facing guides are `docs/VIBE_CODER_QUICKSTART.md`,
+`docs/MEDIA_DIRECTOR.md`, `docs/SCRIPT_AND_STORYBOARD.md`, and
+`docs/ADVANCED_MEDIA_DIRECTOR.md`.
 
 ## Command Reference
 
@@ -540,6 +587,10 @@ Parse `$ARGUMENTS`:
 Install the MCP binary from this CLI's published public-library entry or pre-built release, then register it:
 
 ```bash
+# Focused media director (official MCP SDK, stateless 2026-07-28)
+claude mcp add kie-media -- kie-media-mcp
+
+# Broad generated Printing Press tool surface
 claude mcp add kie-pp-mcp -- kie-pp-mcp
 ```
 

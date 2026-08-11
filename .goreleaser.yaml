@@ -31,6 +31,20 @@ builds:
       - linux_arm64
       - windows_amd64
       - windows_arm64
+  - id: kie-media-mcp
+    main: ./cmd/kie-media-mcp
+    binary: kie-media-mcp
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w -X main.version={{ .Version }}
+    targets:
+      - darwin_amd64
+      - darwin_arm64
+      - linux_amd64
+      - linux_arm64
+      - windows_amd64
+      - windows_arm64
 archives:
   - formats: [tar.gz]
     name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
@@ -49,3 +63,4 @@ brews:
     install: |
       bin.install "kie-pp-cli"
       bin.install "kie-pp-mcp"
+      bin.install "kie-media-mcp"
