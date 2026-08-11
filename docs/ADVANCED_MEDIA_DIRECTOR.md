@@ -18,6 +18,8 @@ Implemented and verified in the current local command surface:
 - Eight routed production workflows delivered through nine Markdown skills.
 - Seventy current API operations and a 129-model Market snapshot with complete
   embedded request/input schemas and local validation.
+- A compact `media models` catalog view and direct `media video` shortcut backed
+  by that same canonical registry.
 - Local SQLite recall, teach, and playbook state for repeated agent work.
 
 Native storyboard command surface:
@@ -122,6 +124,31 @@ kie-pp-cli create --brief <brief_id> --reject-preview --agent
 kie-pp-cli create --brief <brief_id> --submit --wait --agent
 kie-pp-cli media generation status <generation_id> --wait --agent
 ```
+
+The advanced direct path omits the director preview gate:
+
+```bash
+kie-pp-cli media video "<prompt>" --duration 5 --ratio 16:9 --wait --agent
+```
+
+Before constructing custom direct calls, use the local registry rather than
+putting whole schemas into an agent prompt:
+
+```bash
+kie-pp-cli media models --family video --agent
+kie-pp-cli models show wan/2-6-text-to-video --agent
+kie-pp-cli media video --model wan/2-6-text-to-video \
+  --input '{"prompt":"<prompt>","duration":"5"}' --agent
+```
+
+`media models` is a compact view of `internal/kiecatalog`, not an independently
+generated catalog. `media video` validates all custom input fields and settings
+against that registry before submission. Its Wan 2.7 flags cover prompt,
+negative prompt, audio URL, resolution, ratio, duration, prompt extension,
+watermark, seed, and NSFW checking. With `--wait`, it polls the shared Market
+task endpoint and returns discovered result URLs. Because this direct command
+does not create a brief or preview approval record, use it only when that
+explicitly advanced automation contract is appropriate.
 
 ## MCP Contract
 

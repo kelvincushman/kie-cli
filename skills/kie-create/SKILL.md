@@ -28,6 +28,7 @@ kie-pp-cli media reference --help
 kie-pp-cli media generation --help
 kie-pp-cli media script --help
 kie-pp-cli media storyboard --help
+kie-pp-cli media models --help
 ```
 
 Prefer product commands:
@@ -57,6 +58,12 @@ kie-pp-cli media storyboard approve <brief_id> --agent
 
 Raw generated endpoints such as `kie-pp-cli kie-ai-jobs market-create-task` are
 advanced/fallback surfaces. Do not use them as the normal media creation path.
+
+The advanced `kie-pp-cli media video` shortcut also bypasses the director's
+brief and still-preview approval gate. Use it only when the user explicitly
+wants direct automation. Inspect the exact captured settings with `models show`
+first; custom `--model/--input` calls are validated locally against the same
+complete registry before submission.
 
 Use `--agent` on CLI calls so stdout is parseable JSON and the CLI uses non-interactive agent defaults. Parse the returned `brief`, `next_question`, `ready`, `next_action`, `id`, `task_id`, `status`, and `result_urls` fields according to the command response.
 

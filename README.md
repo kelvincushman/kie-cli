@@ -272,6 +272,18 @@ kie-pp-cli kie-ai-jobs market-create-task \
 # Poll any Market task
 kie-pp-cli kie-ai-jobs market-query-task --task-id task_google_xxxxx
 
+# Browse the same complete registry through the compact media namespace
+kie-pp-cli media models --family video --agent
+
+# Direct, validated Wan 2.7 text-to-video shortcut (advanced; no preview gate)
+kie-pp-cli media video "A red kite crosses a dawn sky" \
+  --duration 5 --ratio 16:9 --wait --agent
+
+# Use any other captured video model with its exact documented input object
+kie-pp-cli media video --model wan/2-6-text-to-video \
+  --input '{"prompt":"A red kite crosses a dawn sky","duration":"5"}' \
+  --agent
+
 # Generate a Veo 3.1 video through its dedicated endpoint
 kie-pp-cli veo generate-veo3-1-video \
   --prompt "drone shot over a foggy mountain range"
@@ -291,7 +303,12 @@ kie-pp-cli flux generate-or-edit-image \
 Every command supports `--help`; generated API calls also support `--dry-run`.
 Use `--json` or `--agent` for machine-readable output, `kie-pp-cli api` to browse
 the endpoint tree, and `kie-pp-cli which "<capability>" --json` for command
-discovery.
+discovery. `media video` validates the selected model and every supplied setting
+against the embedded contract before submitting, then optionally polls the
+shared Market task endpoint and returns result URLs. It is an advanced direct
+route: it deliberately bypasses the director's still-preview confirmation gate.
+Use the guided `create` workflow whenever a human should inspect and approve the
+image that anchors a video.
 
 ## Agent memory and token savings
 
@@ -335,6 +352,11 @@ show`, `models example`, and `models validate` locally; agents can use the
 matching `media_model_*` MCP tools. See [docs/MODELS.md](docs/MODELS.md) for the
 compact catalog and [docs/MODEL_INPUTS.md](docs/MODEL_INPUTS.md) for all field
 tables.
+
+`media models [query] --family <term>` is a compact alias over that same
+canonical 129-model registry, not a second catalog. This keeps terminal and
+agent discovery token-efficient without allowing model counts, input fields, or
+settings to drift between command namespaces.
 
 The director currently defaults to GPT Image 2 for stills and the configured
 `bytedance/seedance-2-5` route for video. Model availability and parameter

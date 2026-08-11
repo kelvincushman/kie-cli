@@ -537,6 +537,8 @@ func newMediaCmd(flags *rootFlags) *cobra.Command {
 	cmd.AddCommand(newMediaScriptCmd(flags))
 	cmd.AddCommand(newMediaStoryboardCmd(flags))
 	cmd.AddCommand(newMediaGenerationCmd(flags))
+	cmd.AddCommand(newMediaModelsCmd(flags))
+	cmd.AddCommand(newMediaVideoCmd(flags))
 	return cmd
 }
 

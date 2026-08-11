@@ -17,6 +17,8 @@
     "docs/MODELS.md",
     "docs/MODEL_INPUTS.md",
     "docs/SCRIPT_AND_STORYBOARD.md",
+    "internal/cli/market_video.go",
+    "internal/cli/market_video_test.go",
     "internal/cli/model_catalog.go",
     "internal/cli/model_catalog_test.go",
     "internal/kiecatalog/catalog.go",
@@ -35,6 +37,6 @@
     "spec.yaml",
     "tools-manifest.json"
   ],
-  "validated_outcome": "The official Kie documentation index yielded 253 English pages, 219 OpenAPI pages/blocks, 219 documented operation variants, 70 unique API operations across 70 paths, and 129 unique Market model contracts. Every Market contract embeds its complete request and input schemas, examples, source pages, required fields, types, enums, defaults, and limits; three whitespace-corrupted upstream property names are normalized. CLI and focused MCP discovery, schema retrieval, examples, and validation are covered by unit and protocol tests, including Seedance 2.5's 14 documented input fields and validation for both flag and stdin task submissions. A disposable-mirror reprint with CLI Printing Press 4.30.1 completed repeatedly without modifying Git metadata, preserved guided authentication and local media extensions, regenerated pristine endpoint commands, reapplied recorded stream/status compatibility patches, and passed go test ./..., go vet ./..., make build-all, targeted race tests, 15 research unit tests, generated-artifact drift checking, nine skill validators, JSON parsing, Markdown link validation, gofmt, and git diff --check. No paid/live Kie generation was submitted because no API credential was used.",
+  "validated_outcome": "The official Kie documentation index yielded 253 English pages, 219 OpenAPI pages/blocks, 219 documented operation variants, 70 unique API operations across 70 paths, and 129 unique Market model contracts. Every Market contract embeds its complete request and input schemas, examples, source pages, required fields, types, enums, defaults, and limits; three whitespace-corrupted upstream property names are normalized. CLI and focused MCP discovery, schema retrieval, examples, validation, the compact media-model alias, and the direct video shortcut are covered by unit and protocol tests, including Seedance 2.5's 14 documented input fields, validation for both flag and stdin task submissions, and custom direct-model inputs. A disposable-mirror reprint with CLI Printing Press 4.30.1 completed repeatedly without modifying Git metadata, preserved guided authentication and local media extensions, regenerated pristine endpoint commands, reapplied recorded stream/status compatibility patches, and passed go test ./..., go vet ./..., make build-all, targeted race tests, 15 research unit tests, generated-artifact drift checking, nine skill validators, JSON parsing, Markdown link validation, gofmt, and git diff --check. No paid/live Kie generation was submitted because no API credential was used.",
   "upstream_issue": ""
 }

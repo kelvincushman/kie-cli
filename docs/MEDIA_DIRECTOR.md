@@ -44,6 +44,7 @@ kie-pp-cli media identity show <identity-id> --agent
 kie-pp-cli media identity list --agent
 kie-pp-cli media generation status <generation_id> --agent
 kie-pp-cli media generation status <generation_id> --wait --agent
+kie-pp-cli media models --family video --agent
 ```
 
 Agents must still inspect current runtime truth before relying on copied command details:
@@ -58,6 +59,14 @@ kie-pp-cli media --help
 Raw generated endpoints such as `kie-pp-cli kie-ai-jobs market-create-task` and
 `kie-pp-cli kie-ai-jobs market-query-task` are advanced/fallback surfaces. Do
 not prefer them for the media-director workflow.
+
+`kie-pp-cli media video` is a validated direct-generation shortcut for advanced
+automation. Its built-in flags cover `wan/2-7-text-to-video`; another captured
+model can be selected with `--model` and its exact input object supplied with
+`--input`. Both paths validate the complete embedded per-model contract before
+making a live call. This shortcut does not create a brief or enforce the still
+preview/show/approve gate, so agents must not substitute it for the normal
+director workflow when human confirmation is required.
 
 ## Design Goals
 
@@ -75,6 +84,9 @@ not prefer them for the media-director workflow.
 - Treat `create --brief <id> --submit --agent` as the explicit final-generation action. `--wait` only changes whether the command polls after submitting.
 - Apply the same separation to MCP: `media_preview_generate`, display/poll, `media_preview_approve`, then `media_generate`.
 - Return machine-readable brief, reference, generation, task state, and result URL data.
+- Keep `media models` backed by the canonical complete model registry; never
+  maintain a second summary catalog that can drift from captured inputs and
+  settings.
 - Keep provider gaps explicit. Do not describe local identity bundles as trained
   Soul models or qualitative review as proprietary virality prediction.
 
