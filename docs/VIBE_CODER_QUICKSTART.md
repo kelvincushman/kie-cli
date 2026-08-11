@@ -35,9 +35,9 @@ Setup:
    ./bin/kie-pp-cli media setup --agent
    ./bin/kie-pp-cli create --help
    ./bin/kie-pp-cli media --help
-3. If auth is missing, ask me to enter my Kie API key with:
-   ./bin/kie-pp-cli auth set-token <token>
-   Do not echo the token back.
+3. If auth is missing, ask me to run this in an interactive terminal:
+   ./bin/kie-pp-cli auth setup
+   The prompt hides the key; do not ask me to paste it into chat.
 4. If I use an MCP-capable local agent host, register the focused media server with stdio:
    claude mcp add kie-media -- ./bin/kie-media-mcp
 
@@ -111,11 +111,10 @@ the text prompt, metadata, silence, or the agent's private judgment.
 
 ## API Key Safety
 
-Use one of the supported auth paths:
+Use the guided setup in an interactive terminal. For CI or an agent host, set `KIE_BEARER_AUTH` through that environment's secret store:
 
 ```bash
-./bin/kie-pp-cli auth set-token <token>
-export KIE_BEARER_AUTH="<token>"
+./bin/kie-pp-cli auth setup
 ```
 
 Do not paste the token into prompts, issue bodies, logs, screenshots, docs, or

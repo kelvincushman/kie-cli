@@ -98,17 +98,19 @@ export PATH="$PWD/bin:$PATH"
 - `bin/kie-media-mcp`: the focused agent media server.
 - `bin/kie-pp-mcp`: the broad generated Printing Press MCP server.
 
-Configure and verify authentication:
+## First run
 
-```bash
-kie-pp-cli auth set-token YOUR_API_KEY
-kie-pp-cli doctor --json
-kie-pp-cli media setup --agent
-```
+Run `kie-pp-cli` with no arguments in an interactive terminal. If no credential
+is saved, it starts the setup wizard. The wizard shows the **Get API key** link,
+masks your entry, and saves it in the existing private credential store. You can
+also start it at any time with `kie-pp-cli auth setup`.
 
-Get a key from [kie.ai/api-key](https://kie.ai/api-key). You can use
-`KIE_BEARER_AUTH` instead of the local credential store. Never paste a key into
-a media brief, agent prompt, issue, log, or storyboard.
+![A genuine local terminal session runs the first-time Kie API key wizard. The key entry is hidden and a fake key was used for this capture.](docs/images/first-run-setup.png)
+
+For scripts, agents, and CI, set `KIE_BEARER_AUTH` through that environment's
+secret store. `--agent`, `--json`, `--no-input`, `--help`, and `--version` never
+start the wizard. Never paste a key into a media brief, agent prompt, issue,
+log, or storyboard.
 
 Start creating:
 

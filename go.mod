@@ -12,7 +12,10 @@ require modernc.org/sqlite v1.37.0
 
 require github.com/mark3labs/mcp-go v0.47.0
 
-require github.com/modelcontextprotocol/go-sdk v1.7.0
+require (
+	github.com/creack/pty v1.1.24
+	github.com/modelcontextprotocol/go-sdk v1.7.0
+)
 
 require (
 	github.com/dustin/go-humanize v1.0.1 // indirect

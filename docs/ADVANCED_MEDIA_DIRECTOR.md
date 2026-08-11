@@ -252,7 +252,7 @@ must see the preview image first.
 
 ## Security
 
-- Use `kie-pp-cli auth set-token <token>` or `KIE_BEARER_AUTH`.
+- Run `kie-pp-cli auth setup` in an interactive terminal, or set `KIE_BEARER_AUTH` through an environment secret store.
 - Never store credentials in briefs, scripts, storyboards, manifests, issue
   comments, or MCP messages.
 - Local reference files remain local until explicit live generation.
@@ -270,7 +270,7 @@ Auth missing:
 
 ```bash
 kie-pp-cli auth status --agent
-kie-pp-cli auth set-token <token>
+kie-pp-cli auth setup
 kie-pp-cli doctor --json
 ```
 

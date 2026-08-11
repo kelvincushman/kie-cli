@@ -265,13 +265,9 @@ kie-pp-cli which "<capability in your own words>"
 
 ## Auth Setup
 
-Run `kie-pp-cli auth setup` for the URL and steps to obtain a token (add `--launch` to open the URL). Then store it:
+Run `kie-pp-cli auth setup` in an interactive terminal. It shows the key URL, reads the token without echoing it, and saves it in the private credential store. Add `--launch` to open the URL.
 
-```bash
-kie-pp-cli auth set-token YOUR_TOKEN_HERE
-```
-
-Or set `KIE_BEARER_AUTH` as an environment variable.
+For scripts, CI, and agent hosts, set `KIE_BEARER_AUTH` through that environment's secret store.
 
 Run `kie-pp-cli doctor` to verify setup.
 

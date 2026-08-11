@@ -725,7 +725,7 @@ func newMediaSetupCmd(flags *rootFlags) *cobra.Command {
 				"next_step":       "Run kie-pp-cli create \"your media request\"",
 			}
 			if !configured {
-				result["next_step"] = "Run kie-pp-cli auth setup or kie-pp-cli auth set-token <token>"
+				result["next_step"] = "Run kie-pp-cli auth setup in an interactive terminal"
 			}
 			return printMediaValue(cmd, flags, result)
 		},

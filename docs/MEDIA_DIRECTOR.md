@@ -68,7 +68,7 @@ not prefer them for the media-director workflow.
 - Accept typed image, video, and audio paths, URLs, or `ref:<id>` handles from the local reference vault. Images support JPEG, PNG, GIF, WebP, BMP, and TIFF; video supports MP4, MOV, and MKV; audio supports MP3, WAV, AAC, M4A, and OGG. Local safety limits are 30 MiB for images, 200 MiB for video, and 15 MiB for audio.
 - Keep reusable likenesses as consented local identity-reference bundles; do not claim biometric training or a cross-model Soul equivalent.
 - Upload local reference files only during explicit live preview or final generation.
-- Use existing Kie.ai authentication only: `kie-pp-cli auth setup`, `kie-pp-cli auth set-token <token>`, or `KIE_BEARER_AUTH`.
+- Use existing Kie.ai authentication only: `kie-pp-cli auth setup` in an interactive terminal, or `KIE_BEARER_AUTH` through an environment secret store.
 - Never estimate cost by default.
 - Treat `create --brief <id> --preview --agent` as a separate live image-generation action that may consume credits.
 - For video, require `create --brief <id> --approve-preview --agent` after the preview has been shown. Silence or a ready brief is not approval.

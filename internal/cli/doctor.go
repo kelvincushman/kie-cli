@@ -207,8 +207,8 @@ func newDoctorCmd(flags *rootFlags) *cobra.Command {
 				configured, authSource := doctorAuthConfiguredState(cfg)
 				if !configured {
 					report["auth"] = "not configured"
-					report["auth_hint"] = "Set it with: kie-pp-cli auth set-token <token> or export KIE_BEARER_AUTH=\"your-token-here\""
-					report["auth_key_url"] = "https://kie.ai/api-key"
+					report["auth_hint"] = "Run kie-pp-cli auth setup in an interactive terminal, or set KIE_BEARER_AUTH through your environment's secret store"
+					report["auth_key_url"] = cliutil.KieAPIKeyURL
 				} else {
 					authConfigured = true
 					report["auth"] = "configured"
@@ -537,9 +537,9 @@ func collectCredentialsLocationReport(report map[string]any, cfg *config.Config)
 	}
 	if credsPresent && len(locations) > 1 {
 		if legacySecretsElsewhere != "" {
-			report["credentials_location_warning"] = "WARN credentials stored in more than one location; legacy secrets remain at " + legacySecretsElsewhere + "; run auth set-token or auth logout to consolidate and remove legacy secrets"
+			report["credentials_location_warning"] = "WARN credentials stored in more than one location; legacy secrets remain at " + legacySecretsElsewhere + "; run auth setup or auth logout to consolidate and remove legacy secrets"
 		} else {
-			report["credentials_location_warning"] = "WARN credentials stored in more than one location; current reads use credentials file; run auth set-token or auth logout to consolidate"
+			report["credentials_location_warning"] = "WARN credentials stored in more than one location; current reads use credentials file; run auth setup or auth logout to consolidate"
 		}
 	}
 }

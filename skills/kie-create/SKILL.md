@@ -62,13 +62,14 @@ Use `--agent` on CLI calls so stdout is parseable JSON and the CLI uses non-inte
 
 ## Credential Rules
 
-Use the existing auth setup only:
+Use the guided auth setup in an interactive terminal:
 
 ```bash
 kie-pp-cli auth setup
-kie-pp-cli auth set-token <token>
 kie-pp-cli auth status --agent
 ```
+
+For agent hosts, set `KIE_BEARER_AUTH` through the host's secret store.
 
 Never print, log, store, summarize, or expose credentials. Do not include bearer tokens, cookies, auth headers, or credential file contents in a brief, response, command transcript, or debugging note.
 

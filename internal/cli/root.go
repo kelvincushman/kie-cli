@@ -221,6 +221,16 @@ Add --agent to any command for JSON output + non-interactive mode.
 Run 'kie-pp-cli doctor' to verify auth and connectivity.`,
 		SilenceUsage: true,
 		Version:      version,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			cfg, err := config.Load(flags.configPath)
+			if err != nil {
+				return configErr(err)
+			}
+			if !cfg.CredentialConfigured() {
+				return runAuthSetup(cmd, flags, false, nil)
+			}
+			return cmd.Help()
+		},
 	}
 	rootCmd.SetVersionTemplate("kie-pp-cli {{ .Version }}\n")
 
