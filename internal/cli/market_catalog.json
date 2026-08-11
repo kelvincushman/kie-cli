@@ -1,0 +1,774 @@
+{
+  "source": "https://docs.kie.ai/llms.txt",
+  "scope": "Embedded snapshot of English Kie Market pages that document the standard createTask route; their tasks use the common recordInfo query. It excludes separate Market endpoint families; run scripts/weekly-refresh.sh and rebuild the CLI to refresh it.",
+  "models": [
+    {
+      "category": "Image Models > Flux-2",
+      "summary": "Flux-2 - Image to Image",
+      "model": "flux-2/flex-image-to-image",
+      "source": "https://docs.kie.ai/market/flux2/flex-image-to-image.md"
+    },
+    {
+      "category": "Image Models > Flux-2",
+      "summary": "Flux-2 - Text to Image",
+      "model": "flux-2/flex-text-to-image",
+      "source": "https://docs.kie.ai/market/flux2/flex-text-to-image.md"
+    },
+    {
+      "category": "Image Models > Flux-2",
+      "summary": "Flux-2 - Pro Image to Image",
+      "model": "flux-2/pro-image-to-image",
+      "source": "https://docs.kie.ai/market/flux2/pro-image-to-image.md"
+    },
+    {
+      "category": "Image Models > Flux-2",
+      "summary": "Flux-2 - Pro Text to Image",
+      "model": "flux-2/pro-text-to-image",
+      "source": "https://docs.kie.ai/market/flux2/pro-text-to-image.md"
+    },
+    {
+      "category": "Image Models > GPT Image",
+      "summary": "GPT Image 2 - Image To Image",
+      "model": "gpt-image-2-image-to-image",
+      "source": "https://docs.kie.ai/market/gpt/gpt-image-2-image-to-image.md"
+    },
+    {
+      "category": "Image Models > GPT Image",
+      "summary": "GPT Image-2 - Text to Image",
+      "model": "gpt-image-2-text-to-image",
+      "source": "https://docs.kie.ai/market/gpt/gpt-image-2-text-to-image.md"
+    },
+    {
+      "category": "Image Models > GPT Image",
+      "summary": "GPT Image-1.5 - Image to Image",
+      "model": "gpt-image/1.5-image-to-image",
+      "source": "https://docs.kie.ai/market/gpt-image/1-5-image-to-image.md"
+    },
+    {
+      "category": "Image Models > GPT Image",
+      "summary": "GPT Image-1.5 - Text to Image",
+      "model": "gpt-image/1.5-text-to-image",
+      "source": "https://docs.kie.ai/market/gpt-image/1-5-text-to-image.md"
+    },
+    {
+      "category": "Image Models > Google",
+      "summary": "Google - imagen4",
+      "model": "google/imagen4",
+      "source": "https://docs.kie.ai/market/google/imagen4.md"
+    },
+    {
+      "category": "Image Models > Google",
+      "summary": "Google - imagen4-fast",
+      "model": "google/imagen4-fast",
+      "source": "https://docs.kie.ai/market/google/imagen4-fast.md"
+    },
+    {
+      "category": "Image Models > Google",
+      "summary": "Google - imagen4-ultra",
+      "model": "google/imagen4-ultra",
+      "source": "https://docs.kie.ai/market/google/imagen4-ultra.md"
+    },
+    {
+      "category": "Image Models > Google",
+      "summary": "Google - Nano Banana",
+      "model": "google/nano-banana",
+      "source": "https://docs.kie.ai/market/google/nano-banana.md"
+    },
+    {
+      "category": "Image Models > Google",
+      "summary": "Google - Nano Banana Edit",
+      "model": "google/nano-banana-edit",
+      "source": "https://docs.kie.ai/market/google/nano-banana-edit.md"
+    },
+    {
+      "category": "Image Models > Google",
+      "summary": "Google - Nano Banana 2",
+      "model": "nano-banana-2",
+      "source": "https://docs.kie.ai/market/google/nanobanana2.md"
+    },
+    {
+      "category": "Image Models > Google",
+      "summary": "Google - Nano Banana 2 Lite",
+      "model": "nano-banana-2-lite",
+      "source": "https://docs.kie.ai/market/google/nano-banana-2-lite.md"
+    },
+    {
+      "category": "Image Models > Google",
+      "summary": "Google - Nano Banana Pro",
+      "model": "nano-banana-pro",
+      "source": "https://docs.kie.ai/market/google/pro-image-to-image.md"
+    },
+    {
+      "category": "Image Models > Grok Imagine",
+      "summary": "Grok Imagine - image to image",
+      "model": "grok-imagine/image-to-image",
+      "source": "https://docs.kie.ai/market/grok-imagine/image-to-image.md"
+    },
+    {
+      "category": "Image Models > Grok Imagine",
+      "summary": "Grok Imagine - Text to Image",
+      "model": "grok-imagine/text-to-image",
+      "source": "https://docs.kie.ai/market/grok-imagine/text-to-image.md"
+    },
+    {
+      "category": "Image Models > Ideogram",
+      "summary": "Ideogram - Character",
+      "model": "ideogram/character",
+      "source": "https://docs.kie.ai/market/ideogram/character.md"
+    },
+    {
+      "category": "Image Models > Ideogram",
+      "summary": "Ideogram - Character Edit",
+      "model": "ideogram/character-edit",
+      "source": "https://docs.kie.ai/market/ideogram/character-edit.md"
+    },
+    {
+      "category": "Image Models > Ideogram",
+      "summary": "Ideogram - Character Remix",
+      "model": "ideogram/character-remix",
+      "source": "https://docs.kie.ai/market/ideogram/character-remix.md"
+    },
+    {
+      "category": "Image Models > Ideogram",
+      "summary": "Ideogram V3 Edit",
+      "model": "ideogram/v3-edit",
+      "source": "https://docs.kie.ai/market/ideogram/v3-edit.md"
+    },
+    {
+      "category": "Image Models > Ideogram",
+      "summary": "Ideogram V3 Remix",
+      "model": "ideogram/v3-remix",
+      "source": "https://docs.kie.ai/market/ideogram/v3-remix.md"
+    },
+    {
+      "category": "Image Models > Ideogram",
+      "summary": "Ideogram V3 Text to Image",
+      "model": "ideogram/v3-text-to-image",
+      "source": "https://docs.kie.ai/market/ideogram/v3-text-to-image.md"
+    },
+    {
+      "category": "Image Models > Qwen",
+      "summary": "Qwen - Image Edit",
+      "model": "qwen/image-edit",
+      "source": "https://docs.kie.ai/market/qwen/image-edit.md"
+    },
+    {
+      "category": "Image Models > Qwen",
+      "summary": "Qwen - Image to Image",
+      "model": "qwen/image-to-image",
+      "source": "https://docs.kie.ai/market/qwen/image-to-image.md"
+    },
+    {
+      "category": "Image Models > Qwen",
+      "summary": "Qwen - Text to Image",
+      "model": "qwen/text-to-image",
+      "source": "https://docs.kie.ai/market/qwen/text-to-image.md"
+    },
+    {
+      "category": "Image Models > Qwen",
+      "summary": "Qwen2 - Image Edit",
+      "model": "qwen2/image-edit",
+      "source": "https://docs.kie.ai/market/qwen2/image-edit.md"
+    },
+    {
+      "category": "Image Models > Qwen",
+      "summary": "Qwen2 - Text To Image",
+      "model": "qwen2/text-to-image",
+      "source": "https://docs.kie.ai/market/qwen2/text-to-image.md"
+    },
+    {
+      "category": "Image Models > Qwen",
+      "summary": "Qwen3 Image to Image",
+      "model": "qwen3/image-to-image",
+      "source": "https://docs.kie.ai/market/qwen3/image-to-image.md"
+    },
+    {
+      "category": "Image Models > Qwen",
+      "summary": "Qwen3 Pro Image to Image",
+      "model": "qwen3/pro-image-to-image",
+      "source": "https://docs.kie.ai/market/qwen3-pro/image-to-image.md"
+    },
+    {
+      "category": "Image Models > Qwen",
+      "summary": "Qwen3 Pro Text to Image",
+      "model": "qwen3/pro-text-to-image",
+      "source": "https://docs.kie.ai/market/qwen3-pro/text-to-image.md"
+    },
+    {
+      "category": "Image Models > Qwen",
+      "summary": "Qwen3 Text to Image",
+      "model": "qwen3/text-to-image",
+      "source": "https://docs.kie.ai/market/qwen3/text-to-image.md"
+    },
+    {
+      "category": "Image Models > Recraft",
+      "summary": "Recraft - Crisp Upscale",
+      "model": "recraft/crisp-upscale",
+      "source": "https://docs.kie.ai/market/recraft/crisp-upscale.md"
+    },
+    {
+      "category": "Image Models > Recraft",
+      "summary": "Recraft - Remove Background",
+      "model": "recraft/remove-background",
+      "source": "https://docs.kie.ai/market/recraft/remove-background.md"
+    },
+    {
+      "category": "Image Models > Seedream",
+      "summary": "Seedream3.0 - Text to Image",
+      "model": "bytedance/seedream",
+      "source": "https://docs.kie.ai/market/seedream/seedream.md"
+    },
+    {
+      "category": "Image Models > Seedream",
+      "summary": "Seedream4.0 - Edit",
+      "model": "bytedance/seedream-v4-edit",
+      "source": "https://docs.kie.ai/market/seedream/seedream-v4-edit.md"
+    },
+    {
+      "category": "Image Models > Seedream",
+      "summary": "Seedream4.0 - Text to Image",
+      "model": "bytedance/seedream-v4-text-to-image",
+      "source": "https://docs.kie.ai/market/seedream/seedream-v4-text-to-image.md"
+    },
+    {
+      "category": "Image Models > Seedream",
+      "summary": "Seedream4.5 - Edit",
+      "model": "seedream/4.5-edit",
+      "source": "https://docs.kie.ai/market/seedream/4-5-edit.md"
+    },
+    {
+      "category": "Image Models > Seedream",
+      "summary": "Seedream4.5 - Text to Image",
+      "model": "seedream/4.5-text-to-image",
+      "source": "https://docs.kie.ai/market/seedream/4-5-text-to-image.md"
+    },
+    {
+      "category": "Image Models > Seedream",
+      "summary": "Seedream5.0 Lite - Image to Image",
+      "model": "seedream/5-lite-image-to-image",
+      "source": "https://docs.kie.ai/market/seedream-5-lite-image-to-image.md"
+    },
+    {
+      "category": "Image Models > Seedream",
+      "summary": "Seedream5.0 Lite - Text to Image",
+      "model": "seedream/5-lite-text-to-image",
+      "source": "https://docs.kie.ai/market/seedream/5-lite-text-to-image.md"
+    },
+    {
+      "category": "Image Models > Seedream",
+      "summary": "Seedream5.0 Pro - Image to Image",
+      "model": "seedream/5-pro-image-to-image",
+      "source": "https://docs.kie.ai/market/seedream/5-pro-image-to-image.md"
+    },
+    {
+      "category": "Image Models > Seedream",
+      "summary": "Seedream 5.0 Pro -  Layer Decomposition",
+      "model": "seedream/5-pro-layer-decomposition",
+      "source": "https://docs.kie.ai/market/seedream/5-pro-layer-decomposition.md"
+    },
+    {
+      "category": "Image Models > Seedream",
+      "summary": "Seedream5.0 Pro - Text to Image",
+      "model": "seedream/5-pro-text-to-image",
+      "source": "https://docs.kie.ai/market/seedream/5-pro-text-to-image.md"
+    },
+    {
+      "category": "Image Models > Topaz",
+      "summary": "Topaz - Image Upscale",
+      "model": "topaz/image-upscale",
+      "source": "https://docs.kie.ai/market/topaz/image-upscale.md"
+    },
+    {
+      "category": "Image Models > Wan",
+      "summary": "Wan 2.7 Image",
+      "model": "wan/2-7-image",
+      "source": "https://docs.kie.ai/market/wan/2-7-image.md"
+    },
+    {
+      "category": "Image Models > Wan",
+      "summary": "Wan 2.7 Image Pro",
+      "model": "wan/2-7-image-pro",
+      "source": "https://docs.kie.ai/market/wan/2-7-image-pro.md"
+    },
+    {
+      "category": "Image Models > Z-image",
+      "summary": "Z-Image",
+      "model": "z-image",
+      "source": "https://docs.kie.ai/market/z-image/z-image.md"
+    },
+    {
+      "category": "Music Models > ElevenLabs",
+      "summary": "elevenlabs/audio-isolation",
+      "model": "elevenlabs/audio-isolation",
+      "source": "https://docs.kie.ai/market/elevenlabs/audio-isolation.md"
+    },
+    {
+      "category": "Music Models > ElevenLabs",
+      "summary": "elevenlabs/text-to-dialogue-v3",
+      "model": "elevenlabs/text-to-dialogue-v3",
+      "source": "https://docs.kie.ai/market/elevenlabs/text-to-dialogue-v3.md"
+    },
+    {
+      "category": "Music Models > ElevenLabs",
+      "summary": "elevenlabs/text-to-speech-multilingual-v2",
+      "model": "elevenlabs/text-to-speech-multilingual-v2",
+      "source": "https://docs.kie.ai/market/elevenlabs/text-to-speech-multilingual-v2.md"
+    },
+    {
+      "category": "Music Models > ElevenLabs",
+      "summary": "elevenlabs/text-to-speech-turbo-2-5",
+      "model": "elevenlabs/text-to-speech-turbo-2-5",
+      "source": "https://docs.kie.ai/market/elevenlabs/text-to-speech-turbo-2-5.md"
+    },
+    {
+      "category": "Music Models > Gemini",
+      "summary": "Gemini 3.1 Flash Text to speech",
+      "model": "google/gemini-3-1-flash-tts",
+      "source": "https://docs.kie.ai/market/google/gemini-3-1-flash-tts.md"
+    },
+    {
+      "category": "Video Models > Bytedance",
+      "summary": "Bytedance Seedance 1.5 Pro",
+      "model": "bytedance/seedance-1.5-pro",
+      "source": "https://docs.kie.ai/market/bytedance/seedance-1-5-pro.md"
+    },
+    {
+      "category": "Video Models > Bytedance",
+      "summary": "bytedance-seedance-2",
+      "model": "bytedance/seedance-2",
+      "source": "https://docs.kie.ai/market/bytedance/seedance-2.md"
+    },
+    {
+      "category": "Video Models > Bytedance",
+      "summary": "Bytedance Seedance 2.5",
+      "model": "bytedance/seedance-2-5",
+      "source": "https://docs.kie.ai/market/bytedance/seedance-2-5.md"
+    },
+    {
+      "category": "Video Models > Bytedance",
+      "summary": "Bytedance Seedance 2.0 Fast",
+      "model": "bytedance/seedance-2-fast",
+      "source": "https://docs.kie.ai/market/bytedance/seedance-2-fast.md"
+    },
+    {
+      "category": "Video Models > Bytedance",
+      "summary": "Bytedance Seedance 2.0 Mini",
+      "model": "bytedance/seedance-2-mini",
+      "source": "https://docs.kie.ai/market/bytedance/seedance-2-mini.md"
+    },
+    {
+      "category": "Video Models > Bytedance",
+      "summary": "Bytedance - V1 Lite Image to Video",
+      "model": "bytedance/v1-lite-image-to-video",
+      "source": "https://docs.kie.ai/market/bytedance/v1-lite-image-to-video.md"
+    },
+    {
+      "category": "Video Models > Bytedance",
+      "summary": "Bytedance - V1 Lite Text to Video",
+      "model": "bytedance/v1-lite-text-to-video",
+      "source": "https://docs.kie.ai/market/bytedance/v1-lite-text-to-video.md"
+    },
+    {
+      "category": "Video Models > Bytedance",
+      "summary": "Bytedance V1 Pro Fast Image to Video",
+      "model": "bytedance/v1-pro-fast-image-to-video",
+      "source": "https://docs.kie.ai/market/bytedance/v1-pro-fast-image-to-video.md"
+    },
+    {
+      "category": "Video Models > Bytedance",
+      "summary": "Bytedance V1 Pro Image to Video",
+      "model": "bytedance/v1-pro-image-to-video",
+      "source": "https://docs.kie.ai/market/bytedance/v1-pro-image-to-video.md"
+    },
+    {
+      "category": "Video Models > Bytedance",
+      "summary": "Bytedance - V1 Pro Text to Video",
+      "model": "bytedance/v1-pro-text-to-video",
+      "source": "https://docs.kie.ai/market/bytedance/v1-pro-text-to-video.md"
+    },
+    {
+      "category": "Video Models > Gemini Omni",
+      "summary": "Gemini Omni Video",
+      "model": "gemini-omni-video",
+      "source": "https://docs.kie.ai/market/gemini-omni-video.md"
+    },
+    {
+      "category": "Video Models > Grok Imagine",
+      "summary": "Grok Imagine Video 1.5 Preview",
+      "model": "grok-imagine-video-1-5-preview",
+      "source": "https://docs.kie.ai/market/grok-imagine/1-5-preview.md"
+    },
+    {
+      "category": "Video Models > Grok Imagine",
+      "summary": "Grok Imagine - Video Extend",
+      "model": "grok-imagine/extend",
+      "source": "https://docs.kie.ai/market/grok-imagine/extend.md"
+    },
+    {
+      "category": "Video Models > Grok Imagine",
+      "summary": "Grok Imagine Image to Video",
+      "model": "grok-imagine/image-to-video",
+      "source": "https://docs.kie.ai/market/grok-imagine/image-to-video.md"
+    },
+    {
+      "category": "Video Models > Grok Imagine",
+      "summary": "Grok Imagine Text to Video",
+      "model": "grok-imagine/text-to-video",
+      "source": "https://docs.kie.ai/market/grok-imagine/text-to-video.md"
+    },
+    {
+      "category": "Video Models > Grok Imagine",
+      "summary": "Grok Imagine - Video Upscale",
+      "model": "grok-imagine/upscale",
+      "source": "https://docs.kie.ai/market/grok-imagine/upscale.md"
+    },
+    {
+      "category": "Video Models > Hailuo",
+      "summary": " Hailuo Pro Image to Video",
+      "model": "hailuo/02-image-to-video-pro",
+      "source": "https://docs.kie.ai/market/hailuo/02-image-to-video-pro.md"
+    },
+    {
+      "category": "Video Models > Hailuo",
+      "summary": "Hailuo Standard Image to Video",
+      "model": "hailuo/02-image-to-video-standard",
+      "source": "https://docs.kie.ai/market/hailuo/02-image-to-video-standard.md"
+    },
+    {
+      "category": "Video Models > Hailuo",
+      "summary": "Hailuo Pro Text to Video",
+      "model": "hailuo/02-text-to-video-pro",
+      "source": "https://docs.kie.ai/market/hailuo/02-text-to-video-pro.md"
+    },
+    {
+      "category": "Video Models > Hailuo",
+      "summary": "Hailuo Standard Text to Video",
+      "model": "hailuo/02-text-to-video-standard",
+      "source": "https://docs.kie.ai/market/hailuo/02-text-to-video-standard.md"
+    },
+    {
+      "category": "Video Models > Hailuo",
+      "summary": "Hailuo 2.3 Pro Image to Video",
+      "model": "hailuo/2-3-image-to-video-pro",
+      "source": "https://docs.kie.ai/market/hailuo/2-3-image-to-video-pro.md"
+    },
+    {
+      "category": "Video Models > Hailuo",
+      "summary": "Hailuo 2.3 Standard Image to Video",
+      "model": "hailuo/2-3-image-to-video-standard",
+      "source": "https://docs.kie.ai/market/hailuo/2-3-image-to-video-standard.md"
+    },
+    {
+      "category": "Video Models > HappyHorse",
+      "summary": "HappyHorse-1-1 image-to-video",
+      "model": "happyhorse-1-1/image-to-video",
+      "source": "https://docs.kie.ai/market/happyhorse-1-1/image-to-video.md"
+    },
+    {
+      "category": "Video Models > HappyHorse",
+      "summary": "HappyHorse-1-1 reference-to-video",
+      "model": "happyhorse-1-1/reference-to-video",
+      "source": "https://docs.kie.ai/market/happyhorse-1-1/reference-to-video.md"
+    },
+    {
+      "category": "Video Models > HappyHorse",
+      "summary": "HappyHorse-1-1 text-to-video",
+      "model": "happyhorse-1-1/text-to-video",
+      "source": "https://docs.kie.ai/market/happyhorse-1-1/text-to-video.md"
+    },
+    {
+      "category": "Video Models > HappyHorse",
+      "summary": "happyhorse-image-to-video",
+      "model": "happyhorse/image-to-video",
+      "source": "https://docs.kie.ai/market/happyhorse/image-to-video.md"
+    },
+    {
+      "category": "Video Models > HappyHorse",
+      "summary": "happyhorse/reference-to-video",
+      "model": "happyhorse/reference-to-video",
+      "source": "https://docs.kie.ai/market/happyhorse/reference-to-video.md"
+    },
+    {
+      "category": "Video Models > HappyHorse",
+      "summary": "happyhorse-text-to-video",
+      "model": "happyhorse/text-to-video",
+      "source": "https://docs.kie.ai/market/happyhorse/text-to-video.md"
+    },
+    {
+      "category": "Video Models > HappyHorse",
+      "summary": "happyhorse/video-edit",
+      "model": "happyhorse/video-edit",
+      "source": "https://docs.kie.ai/market/happyhorse/video-edit.md"
+    },
+    {
+      "category": "Video Models > Infinitalk",
+      "summary": "Infinitalk - From Audio",
+      "model": "infinitalk/from-audio",
+      "source": "https://docs.kie.ai/market/infinitalk/from-audio.md"
+    },
+    {
+      "category": "Video Models > Kling",
+      "summary": "Kling 2.6 Image to Video",
+      "model": "kling-2.6/image-to-video",
+      "source": "https://docs.kie.ai/market/kling/image-to-video.md"
+    },
+    {
+      "category": "Video Models > Kling",
+      "summary": "Kling 2.6 motion-control",
+      "model": "kling-2.6/motion-control",
+      "source": "https://docs.kie.ai/market/kling/motion-control.md"
+    },
+    {
+      "category": "Video Models > Kling",
+      "summary": "Kling 2.6 Text to Video",
+      "model": "kling-2.6/text-to-video",
+      "source": "https://docs.kie.ai/market/kling/text-to-video.md"
+    },
+    {
+      "category": "Video Models > Kling",
+      "summary": "Kling-3.0 motion-control",
+      "model": "kling-3.0/motion-control",
+      "source": "https://docs.kie.ai/market/kling/motion-control-v3.md"
+    },
+    {
+      "category": "Video Models > Kling",
+      "summary": "Kling 3.0",
+      "model": "kling-3.0/video",
+      "source": "https://docs.kie.ai/market/kling/kling-3-0.md"
+    },
+    {
+      "category": "Video Models > Kling",
+      "summary": "Kling AI Avatar Pro",
+      "model": "kling/ai-avatar-pro",
+      "source": "https://docs.kie.ai/market/kling/ai-avatar-pro.md"
+    },
+    {
+      "category": "Video Models > Kling",
+      "summary": "Kling AI Avatar Standard",
+      "model": "kling/ai-avatar-standard",
+      "source": "https://docs.kie.ai/market/kling/ai-avatar-standard.md"
+    },
+    {
+      "category": "Video Models > Kling",
+      "summary": "Kling V2.1 Master Image to Video",
+      "model": "kling/v2-1-master-image-to-video",
+      "source": "https://docs.kie.ai/market/kling/v2-1-master-image-to-video.md"
+    },
+    {
+      "category": "Video Models > Kling",
+      "summary": "Kling V2.1 Master Text to Video",
+      "model": "kling/v2-1-master-text-to-video",
+      "source": "https://docs.kie.ai/market/kling/v2-1-master-text-to-video.md"
+    },
+    {
+      "category": "Video Models > Kling",
+      "summary": "Kling V2.1 Pro",
+      "model": "kling/v2-1-pro",
+      "source": "https://docs.kie.ai/market/kling/v2-1-pro.md"
+    },
+    {
+      "category": "Video Models > Kling",
+      "summary": "Kling V2.1 Standard",
+      "model": "kling/v2-1-standard",
+      "source": "https://docs.kie.ai/market/kling/v2-1-standard.md"
+    },
+    {
+      "category": "Video Models > Kling",
+      "summary": "Kling - V2.5 Turbo Image to Video Pro",
+      "model": "kling/v2-5-turbo-image-to-video-pro",
+      "source": "https://docs.kie.ai/market/kling/v25-turbo-image-to-video-pro.md"
+    },
+    {
+      "category": "Video Models > Kling",
+      "summary": "Kling - V2.5 Turbo Text to Video Pro",
+      "model": "kling/v2-5-turbo-text-to-video-pro",
+      "source": "https://docs.kie.ai/market/kling/v25-turbo-text-to-video-pro.md"
+    },
+    {
+      "category": "Video Models > Kling",
+      "summary": "Kling - V3 Turbo Image to Video",
+      "model": "kling/v3-turbo-image-to-video",
+      "source": "https://docs.kie.ai/market/kling/v3-turbo-image-to-video.md"
+    },
+    {
+      "category": "Video Models > Kling",
+      "summary": "Kling - V3 Turbo Text to Video",
+      "model": "kling/v3-turbo-text-to-video",
+      "source": "https://docs.kie.ai/market/kling/v3-turbo-text-to-video.md"
+    },
+    {
+      "category": "Video Models > MiniMax H3",
+      "summary": "MiniMax H3 Image-to-Video",
+      "model": "minimax-h3/image-to-video",
+      "source": "https://docs.kie.ai/market/minimax-h3/image-to-video.md"
+    },
+    {
+      "category": "Video Models > MiniMax H3",
+      "summary": "MiniMax H3 Reference-to-Video",
+      "model": "minimax-h3/reference-to-video",
+      "source": "https://docs.kie.ai/market/minimax-h3/reference-to-video.md"
+    },
+    {
+      "category": "Video Models > MiniMax H3",
+      "summary": "MiniMax H3 Text-to-Video",
+      "model": "minimax-h3/text-to-video",
+      "source": "https://docs.kie.ai/market/minimax-h3/text-to-video.md"
+    },
+    {
+      "category": "Video Models > OmniHuman",
+      "summary": "Omnihuman 1.5",
+      "model": "omnihuman-1-5",
+      "source": "https://docs.kie.ai/market/omnihuman-1-5.md"
+    },
+    {
+      "category": "Video Models > OmniHuman",
+      "summary": "Omnihuman 1.5 Human Identification",
+      "model": "omnihuman-1-5/human-identification",
+      "source": "https://docs.kie.ai/market/omnihuman-1-5/human-identification.md"
+    },
+    {
+      "category": "Video Models > OmniHuman",
+      "summary": "OmniHuman 1.5 Subject Detection",
+      "model": "omnihuman-1-5/subject-detection",
+      "source": "https://docs.kie.ai/market/omnihuman-1-5/subject-detection.md"
+    },
+    {
+      "category": "Video Models > PixVerse",
+      "summary": "PixVerse V6 Video Extension",
+      "model": "pixverse-v6/extend",
+      "source": "https://docs.kie.ai/market/pixverse/extend.md"
+    },
+    {
+      "category": "Video Models > PixVerse",
+      "summary": "PixVerse V6 Image-to-Video",
+      "model": "pixverse-v6/image-to-video",
+      "source": "https://docs.kie.ai/market/pixverse/image-to-video.md"
+    },
+    {
+      "category": "Video Models > PixVerse",
+      "summary": "PixVerse V6 Fusion / Reference-to-Video",
+      "model": "pixverse-v6/reference-to-video",
+      "source": "https://docs.kie.ai/market/pixverse/reference-to-video.md"
+    },
+    {
+      "category": "Video Models > PixVerse",
+      "summary": "PixVerse V6 Text-to-Video",
+      "model": "pixverse-v6/text-to-video",
+      "source": "https://docs.kie.ai/market/pixverse/text-to-video.md"
+    },
+    {
+      "category": "Video Models > PixVerse",
+      "summary": "PixVerse V6 First & Last Frame Transition",
+      "model": "pixverse-v6/transition",
+      "source": "https://docs.kie.ai/market/pixverse/transition.md"
+    },
+    {
+      "category": "Video Models > Topaz",
+      "summary": "Topaz - Video Upscale",
+      "model": "topaz/video-upscale",
+      "source": "https://docs.kie.ai/market/topaz/video-upscale.md"
+    },
+    {
+      "category": "Video Models > Volcengine",
+      "summary": "Volcengine video to video lip sync",
+      "model": "volcengine/video-to-video-lip-sync",
+      "source": "https://docs.kie.ai/market/volcengine/video-to-video-lip-sync.md"
+    },
+    {
+      "category": "Video Models > Wan",
+      "summary": "Wan - Image to Video",
+      "model": "wan/2-2-a14b-image-to-video-turbo",
+      "source": "https://docs.kie.ai/market/wan/2-2-a14b-image-to-video-turbo.md"
+    },
+    {
+      "category": "Video Models > Wan",
+      "summary": "Wan - 2.2 A14B Speech to Video Turbo",
+      "model": "wan/2-2-a14b-speech-to-video-turbo",
+      "source": "https://docs.kie.ai/market/wan/2-2-a14b-speech-to-video-turbo.md"
+    },
+    {
+      "category": "Video Models > Wan",
+      "summary": "Wan - Text to Video",
+      "model": "wan/2-2-a14b-text-to-video-turbo",
+      "source": "https://docs.kie.ai/market/wan/2-2-a14b-text-to-video-turbo.md"
+    },
+    {
+      "category": "Video Models > Wan",
+      "summary": "Wan - Animate Move",
+      "model": "wan/2-2-animate-move",
+      "source": "https://docs.kie.ai/market/wan/2-2-animate-move.md"
+    },
+    {
+      "category": "Video Models > Wan",
+      "summary": "Wan - Animate Replace",
+      "model": "wan/2-2-animate-replace",
+      "source": "https://docs.kie.ai/market/wan/2-2-animate-replace.md"
+    },
+    {
+      "category": "Video Models > Wan",
+      "summary": "Wan 2.5 - Image to Video",
+      "model": "wan/2-5-image-to-video",
+      "source": "https://docs.kie.ai/market/wan/2-5-image-to-video.md"
+    },
+    {
+      "category": "Video Models > Wan",
+      "summary": "Wan 2.5 - Text to Video",
+      "model": "wan/2-5-text-to-video",
+      "source": "https://docs.kie.ai/market/wan/2-5-text-to-video.md"
+    },
+    {
+      "category": "Video Models > Wan",
+      "summary": "Wan - 2.6-flash-image-to-video",
+      "model": "wan/2-6-flash-image-to-video",
+      "source": "https://docs.kie.ai/market/wan/2-6-flash-image-to-video.md"
+    },
+    {
+      "category": "Video Models > Wan",
+      "summary": "Wan - 2-6-flash-video-to-video",
+      "model": "wan/2-6-flash-video-to-video",
+      "source": "https://docs.kie.ai/market/wan/2-6-flash-video-to-video.md"
+    },
+    {
+      "category": "Video Models > Wan",
+      "summary": "Wan 2.6 - Image to Video",
+      "model": "wan/2-6-image-to-video",
+      "source": "https://docs.kie.ai/market/wan/2-6-image-to-video.md"
+    },
+    {
+      "category": "Video Models > Wan",
+      "summary": "Wan 2.6 - Text to Video",
+      "model": "wan/2-6-text-to-video",
+      "source": "https://docs.kie.ai/market/wan/2-6-text-to-video.md"
+    },
+    {
+      "category": "Video Models > Wan",
+      "summary": "Wan 2.6 - Video to Video",
+      "model": "wan/2-6-video-to-video",
+      "source": "https://docs.kie.ai/market/wan/2-6-video-to-video.md"
+    },
+    {
+      "category": "Video Models > Wan",
+      "summary": "Wan 2.7 - Image to Video",
+      "model": "wan/2-7-image-to-video",
+      "source": "https://docs.kie.ai/market/wan/2-7-image-to-video.md"
+    },
+    {
+      "category": "Video Models > Wan",
+      "summary": "Wan 2.7 - Reference to Video",
+      "model": "wan/2-7-r2v",
+      "source": "https://docs.kie.ai/market/wan/2-7-r2v.md"
+    },
+    {
+      "category": "Video Models > Wan",
+      "summary": "Wan 2.7 - Text to Video",
+      "model": "wan/2-7-text-to-video",
+      "source": "https://docs.kie.ai/market/wan/2-7-text-to-video.md"
+    },
+    {
+      "category": "Video Models > Wan",
+      "summary": "Wan 2.7 - Video Edit",
+      "model": "wan/2-7-videoedit",
+      "source": "https://docs.kie.ai/market/wan/2-7-videoedit.md"
+    }
+  ]
+}

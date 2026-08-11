@@ -263,6 +263,23 @@ kie-pp-cli kie-ai-jobs market-create-task \
 # Poll any Market task
 kie-pp-cli kie-ai-jobs market-query-task --task-id task_google_xxxxx
 
+# Discover embedded standard Market task-model IDs, including video families
+kie-pp-cli media models --family video
+kie-pp-cli media models wan
+
+# Create a direct Wan 2.7 text-to-video task through the shared Market endpoint
+kie-pp-cli media video "a red kite crosses a dawn sky" --duration 5 --ratio 16:9
+
+# Select another documented Market video model by its ID and pass its exact input contract
+kie-pp-cli media video --model wan/2-6-text-to-video \
+  --input '{"prompt":"a red kite crosses a dawn sky","duration":"5"}'
+
+# Poll a direct Market task (or add --wait to `media video`)
+kie-pp-cli kie-ai-jobs market-query-task --task-id task_wan_xxxxx
+
+# Turn a returned result URL into a temporary direct download link
+kie-pp-cli common --url https://example.com/kie-result-url
+
 # Generate a Veo 3.1 video through its dedicated endpoint
 kie-pp-cli veo generate-veo3-1-video \
   --prompt "drone shot over a foggy mountain range"
@@ -317,10 +334,33 @@ transport details, automation boundaries, and local state contract.
 
 ## Model catalog
 
-The current snapshot contains 122 Kie Market models. They share the same
-`market-create-task` and `market-query-task` commands rather than appearing as
-122 separate subcommands. See [docs/MODELS.md](docs/MODELS.md) for every known
-model identifier.
+The current snapshot contains 128 standard Kie Market task-model contracts.
+It covers every English Market page in Kie's official
+[`llms.txt`](https://docs.kie.ai/llms.txt) index that documents the shared
+`/api/v1/jobs/createTask` route; those jobs use the documented shared
+`market-query-task` route. It intentionally excludes Market Chat and Omni
+pages with other paths. Run `kie-pp-cli media models [query]` to search this
+embedded snapshot; each result carries its official model-page URL. See
+[docs/MODELS.md](docs/MODELS.md) for the linked source list. The snapshot is
+embedded at build time, not a live registry.
+
+`kie-pp-cli media video` is a direct generic Market shortcut. It defaults to
+`wan/2-7-text-to-video` and validates its documented request: a 1–5,000
+character prompt; optional 500-character negative prompt and audio URI;
+resolution (`720p` or `1080p`, default `1080p`); ratio; duration (2–15); and
+the prompt-extension, watermark, seed, and NSFW flags. Use
+`--model <id> --input '<json>'` for another Kie video model; its input passes
+through unchanged, so obtain its exact contract from the selected model page.
+Wan 2.6 T2V is labelled an affordable alternative by Kie, not a guaranteed
+price tier; its `duration` is a string enum (`"5"`, `"10"`, or `"15"`). Do not
+use the nonexistent `wan/2-6-flash-text-to-video` ID.
+
+Market creation is asynchronous. Poll with `market-query-task`, use
+`media video --wait`, or provide `--call-back-url`. On success, `data.resultJson`
+is a JSON string: read `resultUrls` from its decoded value. Result shapes can
+also include frame URLs or `resultObject`. Convert any returned result URL with
+`kie-pp-cli common --url <url>`; Kie's direct download link lasts 20 minutes
+and generated result URLs commonly expire after 24 hours.
 
 The director currently defaults to GPT Image 2 for stills and the configured
 `bytedance/seedance-2-5` route for video. Model availability and parameter
@@ -335,20 +375,25 @@ contracts can change upstream; inspect current Kie documentation and use
 | [Media Director](docs/MEDIA_DIRECTOR.md) | Complete CLI/MCP workflow, qualification protocol, references, and tools |
 | [Script and Storyboard](docs/SCRIPT_AND_STORYBOARD.md) | Multi-shot schemas, approvals, shot generation, and assembly boundary |
 | [Advanced Media Director](docs/ADVANCED_MEDIA_DIRECTOR.md) | Architecture, state, transports, automation, security, and troubleshooting |
-| [Model Catalog](docs/MODELS.md) | All currently indexed Kie Market model IDs |
+| [Model Catalog](docs/MODELS.md) | Current standard Market task-model IDs and official source links |
 | [Root Agent Skill](SKILL.md) | Full generated endpoint command reference for agent hosts |
 
 ## Keeping the catalog current
 
-Kie.ai adds Market models frequently and occasionally adds dedicated API
-families.
+Kie.ai adds both standard Market task models and Market pages with distinct
+endpoint shapes.
 
-1. `scripts/weekly-refresh.sh` refreshes `docs/MODELS.md` and the research spec
-   from Kie documentation. It does not regenerate the Go command tree.
-2. For new dedicated endpoint families, add the documentation pages to
-   `DEDICATED_PAGES` in `research/build_spec.py`, rebuild the spec, regenerate
-   with CLI Printing Press, reapply `.printing-press-patches/`, and rerun the
-   verification suite.
+1. `scripts/weekly-refresh.sh` reads Kie's machine-readable
+   [`llms.txt`](https://docs.kie.ai/llms.txt) index and linked English Market
+   pages. It refreshes `docs/MODELS.md`, `internal/cli/market_catalog.json`,
+   and the research spec. The refresh rejects missing page contracts, duplicate
+   IDs, and title/contract conflicts; it reports a stale schema enum while
+   keeping the page's documented request-model ID. Rebuild the CLI after an
+   embedded catalog change.
+2. A new page that uses the existing `/api/v1/jobs/createTask` task contract
+   needs no command-tree change. A Chat, Omni, or other distinct endpoint shape
+   needs a spec update and CLI Printing Press regeneration before it can be
+   advertised as a route.
 
 ```bash
 cd research

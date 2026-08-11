@@ -11,10 +11,21 @@ import copy
 import json
 import re
 import sys
+from pathlib import Path
+import time
+import urllib.error
 import urllib.request
 import yaml
 
 BLOCK_RE = re.compile(r"## OpenAPI Specification\s*```yaml\s*\n(.*?)\n```", re.DOTALL)
+MARKET_PAGE_RE = re.compile(
+    r"^- (?P<category>.+?) \[(?P<title>[^]]+)]\((?P<url>https://docs\.kie\.ai/market/[a-zA-Z0-9/_-]*\.md)\):",
+    re.MULTILINE,
+)
+MARKET_URL_RE = re.compile(r"\(https://docs\.kie\.ai/market/[a-zA-Z0-9/_-]*\.md\)")
+DOCUMENTED_MODEL_RE = re.compile(
+    r'''(?:["']model["']\s*:\s*["']|^\s*model:\s*)([A-Za-z0-9._/-]+)''', re.MULTILINE
+)
 
 # Dedicated (non-Market) endpoint pages -- one distinct real path each.
 DEDICATED_PAGES = """
@@ -73,19 +84,133 @@ suno-api/suno-voice-check-voice
 
 DOCS_BASE = "https://docs.kie.ai"
 
+# llms.txt links this editorial page under /market; it describes the shared API,
+# not a model or endpoint contract.
+NON_CONTRACT_MARKET_PAGES = {f"{DOCS_BASE}/market/quickstart.md"}
+
+
+ROOT = Path(__file__).resolve().parents[1]
 
 def fetch(url):
     req = urllib.request.Request(url, headers={"User-Agent": "kie-cli-spec-builder/1.0"})
-    with urllib.request.urlopen(req, timeout=20) as resp:
-        return resp.read().decode("utf-8", errors="replace")
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                return resp.read().decode("utf-8", errors="replace")
+        except (OSError, TimeoutError, urllib.error.URLError):
+            if attempt == 2:
+                raise
+            time.sleep(2**attempt)
 
 
-def discover_market_urls():
+def discover_market_pages():
     llms = fetch(f"{DOCS_BASE}/llms.txt")
-    urls = re.findall(r"\(https://docs\.kie\.ai/market/[a-zA-Z0-9/_-]*\.md\)", llms)
-    urls = sorted(set(u[1:-1] for u in urls if "/cn/" not in u))
-    return urls
+    pages = {match.group("url"): match.groupdict() for match in MARKET_PAGE_RE.finditer(llms)}
+    for match in MARKET_URL_RE.finditer(llms):
+        url = match.group()[1:-1]
+        pages.setdefault(
+            url,
+            {"category": "Market", "title": url.removesuffix(".md").rsplit("/", 1)[-1], "url": url},
+        )
+    return sorted(pages.values(), key=lambda page: page["url"])
 
+def market_task_operations(doc):
+    paths = doc.get("paths", {})
+    create = (paths.get("/api/v1/jobs/createTask", {}) or {}).get("post")
+    query = (paths.get("/api/v1/jobs/recordInfo", {}) or {}).get("get")
+    return create, query
+
+
+def model_property(operation):
+    return (
+        operation.get("requestBody", {})
+        .get("content", {})
+        .get("application/json", {})
+        .get("schema", {})
+        .get("properties", {})
+        .get("model", {})
+    )
+
+
+def documented_model_ids(text):
+    ignored = {"array", "boolean", "integer", "model", "number", "object", "string", "type"}
+    return sorted(
+        {
+            value
+            for value in DOCUMENTED_MODEL_RE.findall(text)
+            if value.lower() not in ignored
+        }
+    )
+
+
+def title_tokens(title):
+    ignored = {"ai", "and", "for", "google", "of", "the", "to"}
+    tokens = set(re.findall(r"[a-z]+|\d+", title.lower()))
+    if "extension" in tokens:
+        tokens.add("extend")
+    if {"text", "speech"}.issubset(tokens):
+        tokens.add("tts")
+    return {token for token in tokens if token not in ignored and token != "0"}
+
+
+def model_tokens(model):
+    normalized = model.lower().replace("r2v", "reference-video").replace("videoedit", "video-edit")
+    tokens = set(re.findall(r"[a-z]+|\d+", normalized))
+    ignored = {"ai", "bytedance", "flex", "google", "to", "turbo", "v", "video"}
+    return {token for token in tokens if token not in ignored and not token.isdigit() and len(token) > 1}
+
+
+def version_tokens(value):
+    return {token for token in re.findall(r"\d+", value) if token != "0"}
+
+
+def title_matches_model(title, model):
+    title_words = title_tokens(title)
+    if not model_tokens(model).issubset(title_words):
+        return False
+    title_versions = version_tokens(title)
+    if title_versions and not version_tokens(model).issubset(title_versions):
+        return False
+    normalized_title = title.lower()
+    for modality in ("image", "video"):
+        if f"{modality}-to-{modality}" in model and normalized_title.count(modality) < 2:
+            return False
+    return True
+def catalog_model_for_page(page, text, create):
+    """Read the model ID from the page contract, not a stale OpenAPI enum."""
+    contract_ids = documented_model_ids(text)
+    if len(contract_ids) != 1:
+        raise ValueError(
+            f"{page['url']}: {page['title']!r} declares {len(contract_ids)} model IDs "
+            f"in its request contract: {', '.join(contract_ids) or 'none'}"
+        )
+    model = contract_ids[0]
+    if not title_matches_model(page["title"], model):
+        raise ValueError(
+            f"{page['url']}: page title {page['title']!r} conflicts with its documented "
+            f"model contract {model!r}"
+        )
+    props = model_property(create)
+    schema_ids = set(props.get("enum", []) or [])
+    if props.get("default"):
+        schema_ids.add(props["default"])
+    if schema_ids and model not in schema_ids:
+        print(
+            f"  WARN: {page['url']} OpenAPI model enum/default {sorted(schema_ids)!r} "
+            f"differs from documented contract {model!r}; using the contract",
+            file=sys.stderr,
+        )
+    return model
+
+
+def require_unique_model_ids(catalog):
+    model_sources = {}
+    for entry in catalog:
+        model_sources.setdefault(entry["model"], []).append(entry["source"])
+    duplicates = {model: urls for model, urls in model_sources.items() if len(urls) > 1}
+    if duplicates:
+        detail = "; ".join(f"{model}: {', '.join(urls)}" for model, urls in sorted(duplicates.items()))
+        raise ValueError(f"duplicate Market model IDs in llms.txt: {detail}")
 
 def load_block(text):
     m = BLOCK_RE.search(text)
@@ -189,45 +314,44 @@ def main():
         for name, schema in (doc.get("components", {}) or {}).get("schemas", {}).items():
             merged_schemas[name] = schema
 
-    print("Discovering Market model pages via llms.txt...", file=sys.stderr)
-    market_slugs = discover_market_urls()
-    print(f"  found {len(market_slugs)} market pages", file=sys.stderr)
+    print("Discovering Market pages via llms.txt...", file=sys.stderr)
+    market_pages = discover_market_pages()
+    print(f"  found {len(market_pages)} English Market pages", file=sys.stderr)
 
     catalog = []
     nano_doc = None
     common_detail_doc = None
-    for url in market_slugs:
+    for page in market_pages:
+        url = page["url"]
         text = fetch(url)
         doc = load_block(text)
         if not doc or "paths" not in doc:
-            continue
-        paths = doc["paths"]
+            if url in NON_CONTRACT_MARKET_PAGES:
+                continue
+            raise ValueError(f"{url}: linked from llms.txt but has no OpenAPI block")
+        create, query = market_task_operations(doc)
         if url.endswith("google/nano-banana.md"):
             nano_doc = doc
         if url.endswith("common/get-task-detail.md"):
             common_detail_doc = doc
-        if "/api/v1/jobs/createTask" in paths:
-            ct = paths["/api/v1/jobs/createTask"]["post"]
-            props = (
-                ct.get("requestBody", {})
-                .get("content", {})
-                .get("application/json", {})
-                .get("schema", {})
-                .get("properties", {})
+            continue
+        if create:
+            catalog.append(
+                {
+                    "model": catalog_model_for_page(page, text, create),
+                    "summary": page["title"],
+                    "category": page["category"],
+                    "source": url,
+                }
             )
-            model_enum = (props.get("model", {}) or {}).get("enum", [])
-            model_val = model_enum[0] if model_enum else (props.get("model", {}) or {}).get("default", "")
-            if model_val:
-                catalog.append(
-                    {"model": model_val, "summary": ct.get("summary", ""), "category": ct.get("tags", ["?"])[0]}
-                )
-            continue  # shared path, handled generically below
-        if "/api/v1/jobs/recordInfo" in paths:
-            continue  # handled generically below
-        for p, methods in paths.items():
+            continue
+        if query:
+            continue
+        for p, methods in doc["paths"].items():
             merged_paths.setdefault(p, {}).update(methods)
         for name, schema in (doc.get("components", {}) or {}).get("schemas", {}).items():
             merged_schemas[name] = schema
+    require_unique_model_ids(catalog)
 
     if nano_doc is None or common_detail_doc is None:
         print("ERROR: could not find nano-banana or common/get-task-detail page for the unified Market spec", file=sys.stderr)
@@ -305,7 +429,7 @@ def main():
     }
     clean_spec_tree(spec)
 
-    with open("kie-final-openapi.yaml", "w", encoding="utf-8") as f:
+    with open(ROOT / "research/kie-final-openapi.yaml", "w", encoding="utf-8") as f:
         yaml.dump(spec, f, sort_keys=False, allow_unicode=True, width=100)
     print(f"Wrote kie-final-openapi.yaml ({len(merged_paths)} paths)", file=sys.stderr)
 
@@ -317,31 +441,54 @@ def main():
         label = " > ".join(re.sub(r"\s+", " ", p).strip() for p in parts)
         cats.setdefault(label, []).append(m)
 
-    lines = ["# Kie.ai Market Model Catalog", ""]
-    lines.append(f"All {len(catalog)} models below share the same two endpoints:")
+    lines = ["# Kie.ai Standard Market Task-Model Catalog", ""]
+    lines.append(f"All {len(catalog)} English Market model contracts below use the shared task API:")
     lines.append("")
     lines.append("- Create a task: `kie-pp-cli kie-ai-jobs market-create-task --model <id> --input '{...}'`")
     lines.append("- Query a task: `kie-pp-cli kie-ai-jobs market-query-task --task-id <id>`")
+    lines.append("- Search the embedded CLI snapshot: `kie-pp-cli media models [query]`")
     lines.append("")
     lines.append(
-        f"This catalog is a point-in-time snapshot of {len(catalog)} models from docs.kie.ai, "
-        "regenerated by `research/build_spec.py`. Model availability and input contracts "
-        "can change upstream; use the current model page when preparing production input. "
-        "See README.md for the refresh mechanism."
+        f"This is a point-in-time snapshot of every English docs.kie.ai Market page that documents "
+        f"the standard createTask route ({len(catalog)} model IDs); Kie's common Market page documents "
+        "the shared recordInfo query. It intentionally excludes Market Chat and Omni pages with other paths; "
+        "use their generated commands. Each row links to its official source. `research/build_spec.py` rejects "
+        "a missing page contract, duplicate model ID, or title/contract mismatch during refresh. The CLI snapshot "
+        "is embedded at build time, not fetched live; run `scripts/weekly-refresh.sh` and rebuild to refresh it."
     )
     lines.append("")
     for label in sorted(cats):
         lines.append(f"## {label}")
         lines.append("")
-        lines.append("| Model | `--model` value |")
-        lines.append("|---|---|")
+        lines.append("| Model | `--model` value | Official source |")
+        lines.append("|---|---|---|")
         for m in sorted(cats[label], key=lambda x: x["model"]):
-            lines.append(f"| {m['summary']} | `{m['model']}` |")
+            lines.append(f"| {m['summary']} | `{m['model']}` | [Kie documentation]({m['source']}) |")
         lines.append("")
 
-    with open("../docs/MODELS.md", "w", encoding="utf-8") as f:
+    with open(ROOT / "docs/MODELS.md", "w", encoding="utf-8") as f:
         f.write("\n".join(lines))
     print(f"Wrote ../docs/MODELS.md ({len(catalog)} models)", file=sys.stderr)
+
+    catalog_records = []
+    for label in sorted(cats):
+        for m in sorted(cats[label], key=lambda x: x["model"]):
+            catalog_records.append(
+                {"category": label, "summary": m["summary"], "model": m["model"], "source": m["source"]}
+            )
+    catalog_payload = {
+        "source": f"{DOCS_BASE}/llms.txt",
+        "scope": (
+            "Embedded snapshot of English Kie Market pages that document the standard createTask route; "
+            "their tasks use the common recordInfo query. It excludes separate Market endpoint families; run "
+            "scripts/weekly-refresh.sh and rebuild the CLI to refresh it."
+        ),
+        "models": catalog_records,
+    }
+    with open(ROOT / "internal/cli/market_catalog.json", "w", encoding="utf-8") as f:
+        json.dump(catalog_payload, f, indent=2)
+        f.write("\n")
+    print(f"Wrote ../internal/cli/market_catalog.json ({len(catalog_records)} models)", file=sys.stderr)
 
 
 if __name__ == "__main__":

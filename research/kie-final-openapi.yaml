@@ -12813,6 +12813,10 @@ paths:
                       description: Error message when code != 200
                       examples:
                       - success
+                  x--orders:
+                  - code
+                  - msg
+                  x--ignore-properties: []
                 type: object
                 properties:
                   code:
@@ -12865,6 +12869,9 @@ paths:
                             description: Video URL
                             examples:
                             - ''
+                        x--orders:
+                        - videoUrl
+                        x--ignore-properties: []
                       successFlag:
                         type: string
                         description: PENDING-Waiting for execution SUCCESS-Success CREATE_TASK_FAILED-Failed
@@ -12896,6 +12903,23 @@ paths:
                         description: Error message
                         examples:
                         - ''
+                    x--orders:
+                    - taskId
+                    - musicId
+                    - callbackUrl
+                    - musicIndex
+                    - completeTime
+                    - response
+                    - successFlag
+                    - createTime
+                    - errorCode
+                    - errorMessage
+                    x--ignore-properties: []
+                x--orders:
+                - code
+                - msg
+                - data
+                x--ignore-properties: []
               example:
                 code: 200
                 msg: success
@@ -12953,10 +12977,17 @@ paths:
                   data:
                     type: object
                     properties: {}
+                    x--orders: []
+                    x--ignore-properties: []
                 required:
                 - code
                 - msg
                 - data
+                x--orders:
+                - code
+                - msg
+                - data
+                x--ignore-properties: []
               example:
                 code: 500
                 msg: Server Error - An unexpected error occurred while processing the request
@@ -13882,26 +13913,26 @@ paths:
         Reasoning Control\" icon=\"\U0001F9E0\">\n    Adjustable reasoning effort from low to xhigh.\n\
         \  </Card>\n\n  <Card title=\"Tools & Web Search\" icon=\"✨\">\n    Integrates web search or custom\
         \ function calling tools.\n  </Card>\n\n  <Card title=\"Unified Endpoint\" icon=\"\U0001F4BB\"\
-        >\n    Uses the unified <code>/api/v1/responses</code> endpoint with <code>model</code> set to\
-        \ one of <code>gpt-5-6-terra</code>.\n  </Card>\n</CardGroup>\n\n## Tools & tool\\_choice\n\n\
-        The `tools` array enables **web search** or **function calling** capabilities.\n\nWeb Search and\
-        \ Function Calling are **mutually exclusive**.  \nIn a single request you should choose only one:\
-        \ do not include both `{\"type\": \"web_search\"}` and `{\"type\": \"function\", ...}` in the\
-        \ same `tools` array.\n\n<AccordionGroup>\n  <Accordion title=\"Web Search\">\n    Use the built-in\
-        \ Web Search tool to retrieve up-to-date information:\n\n    ```json\n    {\n      \"tools\":\
-        \ [\n        {\n          \"type\": \"web_search\"\n        }\n      ]\n    }\n    ```\n  </Accordion>\n\
-        \n  <Accordion title=\"Function Calling\">\n    Define business functions that the model can call\
-        \ when needed:\n\n    ```json\n    {\n      \"tools\": [\n        {\n          \"type\": \"function\"\
-        ,\n          \"name\": \"get_current_weather\",\n          \"description\": \"Get the current\
-        \ weather in a given location\",\n          \"parameters\": {\n            \"type\": \"object\"\
-        ,\n            \"properties\": {\n              \"location\": {\n                \"type\": \"\
-        string\",\n                \"description\": \"The city and state, e.g. San Francisco, CA\"\n \
-        \             },\n              \"unit\": {\n                \"type\": \"string\",\n         \
-        \       \"enum\": [\"celsius\", \"fahrenheit\"]\n              }\n            },\n           \
-        \ \"required\": [\"location\", \"unit\"]\n          }\n        }\n      ],\n      \"tool_choice\"\
-        : \"auto\"\n    }\n    ```\n\n    When function tools are configured in `tools`, set `tool_choice`\
-        \ to `\"auto\"` so the model can decide when to call them.  \n    If you do not configure any\
-        \ function tools, omit the `tool_choice` field.\n  </Accordion>\n</AccordionGroup>"
+        >\n    Uses the unified <code>/codex/v1/responses</code> endpoint with <code>model</code> set\
+        \ to one of <code>gpt-5-6-terra</code>.\n  </Card>\n</CardGroup>\n\n## Tools & tool\\_choice\n\
+        \nThe `tools` array enables **web search** or **function calling** capabilities.\n\nWeb Search\
+        \ and Function Calling are **mutually exclusive**.  \nIn a single request you should choose only\
+        \ one: do not include both `{\"type\": \"web_search\"}` and `{\"type\": \"function\", ...}` in\
+        \ the same `tools` array.\n\n<AccordionGroup>\n  <Accordion title=\"Web Search\">\n    Use the\
+        \ built-in Web Search tool to retrieve up-to-date information:\n\n    ```json\n    {\n      \"\
+        tools\": [\n        {\n          \"type\": \"web_search\"\n        }\n      ]\n    }\n    ```\n\
+        \  </Accordion>\n\n  <Accordion title=\"Function Calling\">\n    Define business functions that\
+        \ the model can call when needed:\n\n    ```json\n    {\n      \"tools\": [\n        {\n     \
+        \     \"type\": \"function\",\n          \"name\": \"get_current_weather\",\n          \"description\"\
+        : \"Get the current weather in a given location\",\n          \"parameters\": {\n            \"\
+        type\": \"object\",\n            \"properties\": {\n              \"location\": {\n          \
+        \      \"type\": \"string\",\n                \"description\": \"The city and state, e.g. San\
+        \ Francisco, CA\"\n              },\n              \"unit\": {\n                \"type\": \"string\"\
+        ,\n                \"enum\": [\"celsius\", \"fahrenheit\"]\n              }\n            },\n\
+        \            \"required\": [\"location\", \"unit\"]\n          }\n        }\n      ],\n      \"\
+        tool_choice\": \"auto\"\n    }\n    ```\n\n    When function tools are configured in `tools`,\
+        \ set `tool_choice` to `\"auto\"` so the model can decide when to call them.  \n    If you do\
+        \ not configure any function tools, omit the `tool_choice` field.\n  </Accordion>\n</AccordionGroup>"
       operationId: gpt-5-6-terra-completions
       tags:
       - Chat
@@ -16268,6 +16299,7 @@ paths:
                     response:
                       type: string
             example:
+              model: gemini-3-5-flash-thinking
               messages:
               - role: user
                 content:
@@ -17028,13 +17060,6 @@ paths:
                   properties:
                     response:
                       type: string
-              x--orders:
-              - messages
-              - stream
-              - tools
-              - include_thoughts
-              - reasoning_effort
-              x--ignore-properties: []
             example:
               messages:
               - role: user
@@ -17104,10 +17129,6 @@ paths:
                           required:
                           - role
                           - content
-                          x--orders:
-                          - role
-                          - content
-                          x--ignore-properties: []
                         finish_reason:
                           type: string
                           description: Reason why the completion finished
@@ -17117,11 +17138,6 @@ paths:
                       - index
                       - message
                       - finish_reason
-                      x--orders:
-                      - index
-                      - message
-                      - finish_reason
-                      x--ignore-properties: []
                   usage:
                     type: object
                     properties:
@@ -17144,19 +17160,6 @@ paths:
                     - prompt_tokens
                     - completion_tokens
                     - total_tokens
-                    x--orders:
-                    - prompt_tokens
-                    - completion_tokens
-                    - total_tokens
-                    x--ignore-properties: []
-                x--orders:
-                - id
-                - object
-                - created
-                - model
-                - choices
-                - usage
-                x--ignore-properties: []
               example:
                 candidates:
                 - content:
@@ -17196,13 +17199,6 @@ paths:
                         type: string
                         examples:
                         - invalid_request_error
-                    x--orders:
-                    - message
-                    - type
-                    x--ignore-properties: []
-                x--orders:
-                - error
-                x--ignore-properties: []
           headers: {}
         '401':
           description: Unauthorized - Invalid or missing API key
@@ -17222,13 +17218,6 @@ paths:
                         type: string
                         examples:
                         - authentication_error
-                    x--orders:
-                    - message
-                    - type
-                    x--ignore-properties: []
-                x--orders:
-                - error
-                x--ignore-properties: []
           headers: {}
         '429':
           description: ''
@@ -17248,13 +17237,6 @@ paths:
                         type: string
                         examples:
                         - rate_limit_error
-                    x--orders:
-                    - message
-                    - type
-                    x--ignore-properties: []
-                x--orders:
-                - error
-                x--ignore-properties: []
           headers: {}
         '500':
           description: request failed
@@ -17297,17 +17279,10 @@ paths:
                   data:
                     type: object
                     properties: {}
-                    x--orders: []
-                    x--ignore-properties: []
                 required:
                 - code
                 - msg
                 - data
-                x--orders:
-                - code
-                - msg
-                - data
-                x--ignore-properties: []
               example:
                 code: 500
                 msg: Server Error - An unexpected error occurred while processing the request
@@ -19248,6 +19223,99 @@ paths:
                 msg: Server Error - An unexpected error occurred while processing the request
                 data: null
           headers: {}
+      callbacks:
+        onImageGenerated:
+          '{$request.body#/callBackUrl}':
+            post:
+              summary: Image Generation Callback
+              description: When the image generation task is completed, the system sends the result to
+                your callback URL via a POST request.
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      type: object
+                      properties:
+                        code:
+                          type: integer
+                          description: 'Status code
+
+
+                            - **200**: Success - Image generation task completed successfully
+
+                            - **400**: Invalid request parameters or content violates policy
+
+                            - **500**: Internal error. Please try again later.
+
+                            - **501**: Failed - Image generation task failed'
+                          enum:
+                          - 200
+                          - 400
+                          - 500
+                          - 501
+                        msg:
+                          type: string
+                          description: Status message
+                          example: Playground task completed successfully.
+                        data:
+                          type: object
+                          properties:
+                            completeTime:
+                              type: integer
+                              format: int64
+                              description: Task completion time, represented as a Unix timestamp in milliseconds
+                              example: 1786428635000
+                            costTime:
+                              type: integer
+                              description: Task duration in seconds
+                              example: 11
+                            createTime:
+                              type: integer
+                              format: int64
+                              description: Task creation time, represented as a Unix timestamp in milliseconds
+                              example: 1786428622000
+                            creditsConsumed:
+                              type: number
+                              format: double
+                              description: Number of credits consumed by the task
+                              example: 3
+                            model:
+                              type: string
+                              description: Image generation model used for the task
+                              example: google/nano-banana
+                            param:
+                              type: string
+                              description: Parameters submitted when creating the task, in JSON string
+                                format
+                              example: '{"input":"{\"output_format\":\"png\",\"image_size\":\"1:1\",\"prompt\":\"A
+                                surrealist-style artwork featuring a giant banana floating in outer space,
+                                with stars and galaxies in the background, vivid and saturated colors,
+                                and a digital art style.\"}","callBackUrl":"https://webhook.uutool.cn/5f723555-ec59-4b8f-8feb-bed810982785","model":"google/nano-banana"}'
+                            resultJson:
+                              type: string
+                              description: Image generation result in JSON string format. resultUrls contains
+                                the list of generated image URLs.
+                              example: '{"resultUrls":["https://tempfile.aiquickdraw.com/as/b31f0a77d507765367dc8f5868ba3ceb_1786428633913.png"]}'
+                            state:
+                              type: string
+                              description: Task status
+                              enum:
+                              - success
+                              - fail
+                              example: success
+                            taskId:
+                              type: string
+                              description: Task ID
+                              example: b31f0a77d507765367dc8f5868ba3ceb
+                            updateTime:
+                              type: integer
+                              format: int64
+                              description: Last task update time, represented as a Unix timestamp in milliseconds
+                              example: 1786428635000
+              responses:
+                '200':
+                  description: Callback received successfully
   /api/v1/jobs/recordInfo:
     get:
       summary: Get Task Details
