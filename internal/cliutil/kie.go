@@ -2,6 +2,13 @@
 
 package cliutil
 
-// KieAPIKeyURL is the one official key-setup URL used by CLI output. Change it
-// here if the project later adopts an affiliate URL.
-const KieAPIKeyURL = "https://kie.ai/api-key"
+const (
+	// KieAPIKeyURL is the disclosed maintainer referral used by first-run and
+	// authentication guidance. Following it supports continued project
+	// development when the visitor later makes an eligible purchase.
+	KieAPIKeyURL = "https://kie.ai?ref=39dfbcbc0a8244b61bec6e5dd056e35d"
+
+	// KieAffiliateDisclosure must be displayed next to KieAPIKeyURL whenever
+	// the project presents the URL as an onboarding recommendation.
+	KieAffiliateDisclosure = "Affiliate disclosure: the project maintainer may earn a 15% commission on purchases made after you use this link."
+)

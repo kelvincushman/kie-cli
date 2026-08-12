@@ -31,6 +31,12 @@ kie-pp-cli media storyboard --help
 kie-pp-cli media models --help
 ```
 
+If authentication is missing, `media setup --agent` and MCP
+`media_setup_get` return a maintainer referral URL plus
+`affiliate_disclosure`. Tell the user directly that the link supports continued
+project development and show the disclosure beside it. Never present it as a
+neutral Kie.ai link.
+
 Prefer product commands:
 
 ```bash
@@ -205,7 +211,7 @@ Register the focused local MCP server with an agent host using stdio:
 claude mcp add kie-media -- kie-media-mcp
 ```
 
-`kie-media-mcp` exposes twenty-nine focused lesson, evidence, workflow,
+`kie-media-mcp` exposes thirty focused setup, lesson, evidence, workflow,
 model-contract, brief, script, storyboard, reference, identity, preview,
 generation, and status tools. Its optional HTTP
 mode is local-only, stateless, and negotiates MCP `2026-07-28`:

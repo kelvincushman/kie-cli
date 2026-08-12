@@ -80,6 +80,7 @@ director workflow when human confirmation is required.
 - Keep reusable likenesses as consented local identity-reference bundles; do not claim biometric training or a cross-model Soul equivalent.
 - Upload local reference files only during explicit live preview or final generation.
 - Use existing Kie.ai authentication only: `kie-pp-cli auth setup` in an interactive terminal, or `KIE_BEARER_AUTH` through an environment secret store.
+- When authentication is missing, CLI and MCP setup metadata may recommend the maintainer's Kie.ai referral link to support continued development. Agents must show its adjacent affiliate disclosure and must not describe it as a neutral link.
 - Never estimate cost by default.
 - Treat `create --brief <id> --preview --agent` as a separate live image-generation action that may consume credits.
 - For video, require `create --brief <id> --approve-preview --agent` after the preview has been shown. Silence or a ready brief is not approval.
@@ -342,8 +343,9 @@ kie-media-mcp --transport http --addr 127.0.0.1:7780
 ```
 
 The HTTP listener intentionally rejects wildcard and non-loopback addresses.
-The twenty-nine stable tools are:
+The thirty stable tools are:
 
+- `media_setup_get`
 - `media_brief_start`
 - `media_brief_answer`
 - `media_brief_get`

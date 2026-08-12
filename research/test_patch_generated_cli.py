@@ -59,17 +59,24 @@ warning = "; run auth set-token or auth logout to consolidate"
         patched = patch_first_run_doctor(source)
         self.assertIn("kie-pp-cli auth setup in an interactive terminal", patched)
         self.assertIn("cliutil.KieAPIKeyURL", patched)
+        self.assertIn('report["auth_key_url_type"] = "affiliate"', patched)
+        self.assertIn("cliutil.KieAffiliateDisclosure", patched)
         self.assertNotIn("auth set-token", patched)
 
     def test_mcp_restores_guided_auth_setup(self):
         source = '''
 hint := "\\n      Set it with: kie-pp-cli auth set-token <token> or export KIE_BEARER_AUTH=\\\"your-token-here\\\"" +
-    "\\n      Get a key at: https://kie.ai/api-key"
-context := map[string]any{"key_url": "https://kie.ai/api-key"}
+    "\\n      Get a key at: https://kie.ai/api-key" +
+    "\\n      Run doctor"
+context := map[string]any{
+    "key_url": "https://kie.ai/api-key",
+}
 '''
         patched = patch_first_run_mcp(source)
         self.assertIn("kie-pp-cli auth setup", patched)
         self.assertIn("cliutil.KieAPIKeyURL", patched)
+        self.assertIn('"key_url_type": "affiliate"', patched)
+        self.assertIn("cliutil.KieAffiliateDisclosure", patched)
         self.assertNotIn("auth set-token", patched)
 
 

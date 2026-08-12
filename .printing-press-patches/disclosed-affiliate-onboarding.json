@@ -1,0 +1,30 @@
+{
+  "schema_version": 2,
+  "id": "disclosed-affiliate-onboarding",
+  "applied_at": "2026-08-12",
+  "base_run_id": "20260803T075619Z-899a6d3a",
+  "base_printing_press_version": "4.30.1",
+  "summary": "Recommend the maintainer's Kie.ai referral during CLI and MCP first-run setup, label it as an affiliate link, and keep the commission disclosure adjacent in human and machine-readable output.",
+  "reason": "The open-source CLI and MCP need a transparent way for users to fund continued development. A centralized referral constant, explicit link-type metadata, and a reusable disclosure keep terminal users and coding agents informed while making the support path visible across README, setup, doctor, and authentication failures.",
+  "files": [
+    "README.md",
+    "docs/ADVANCED_MEDIA_DIRECTOR.md",
+    "docs/MEDIA_DIRECTOR.md",
+    "docs/SCRIPT_AND_STORYBOARD.md",
+    "docs/VIBE_CODER_QUICKSTART.md",
+    "internal/cli/auth.go",
+    "internal/cli/auth_test.go",
+    "internal/cli/doctor.go",
+    "internal/cli/helpers.go",
+    "internal/cli/media_director.go",
+    "internal/cliutil/kie.go",
+    "internal/mcp/tools.go",
+    "internal/mediamcp/server.go",
+    "internal/mediamcp/server_test.go",
+    "research/patch_generated_cli.py",
+    "research/test_patch_generated_cli.py",
+    "skills/kie-create/SKILL.md"
+  ],
+  "validated_outcome": "go test ./..., go vet ./..., the generated-code patch helper's seven unit tests, make build-all, git diff --check, and isolated first-run/media-setup smoke commands pass. The smoke output includes the exact referral URL, affiliate link type, and 15% commission disclosure without exposing credential material.",
+  "upstream_issue": ""
+}

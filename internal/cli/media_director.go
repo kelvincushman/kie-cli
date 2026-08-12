@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	"kie-pp-cli/internal/cliutil"
 	"kie-pp-cli/internal/config"
 	"kie-pp-cli/internal/media"
 )
@@ -740,6 +741,9 @@ func newMediaSetupCmd(flags *rootFlags) *cobra.Command {
 			}
 			if !configured {
 				result["next_step"] = "Run kie-pp-cli auth setup in an interactive terminal"
+				result["get_api_key"] = cliutil.KieAPIKeyURL
+				result["get_api_key_link_type"] = "affiliate"
+				result["affiliate_disclosure"] = cliutil.KieAffiliateDisclosure
 			}
 			return printMediaValue(cmd, flags, result)
 		},

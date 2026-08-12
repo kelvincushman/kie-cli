@@ -89,9 +89,20 @@ def patch_first_run_doctor(text: str) -> str:
     }
     for old, new in replacements.items():
         text = text.replace(old, new)
+    if 'report["auth_affiliate_disclosure"]' not in text:
+        text, disclosure_replacements = re.subn(
+            r'(?m)^(?P<indent>\s*)report\["auth_key_url"\] = cliutil\.KieAPIKeyURL$',
+            r'\g<0>\n\g<indent>report["auth_key_url_type"] = "affiliate"'
+            r'\n\g<indent>report["auth_affiliate_disclosure"] = cliutil.KieAffiliateDisclosure',
+            text,
+            count=1,
+        )
+        if disclosure_replacements != 1:
+            raise PatchError("internal/cli/doctor.go: could not add affiliate disclosure metadata")
     required = (
         "Run kie-pp-cli auth setup in an interactive terminal",
         "cliutil.KieAPIKeyURL",
+        "cliutil.KieAffiliateDisclosure",
         "run auth setup or auth logout to consolidate",
     )
     missing = [marker for marker in required if marker not in text]
@@ -107,9 +118,26 @@ def patch_first_run_mcp(text: str) -> str:
     )
     text = text.replace('"\\n      Get a key at: https://kie.ai/api-key"', '"\\n      Get a key at: " + cliutil.KieAPIKeyURL')
     text = text.replace('"key_url": "https://kie.ai/api-key"', '"key_url": cliutil.KieAPIKeyURL')
+    if "cliutil.KieAffiliateDisclosure" not in text:
+        text, error_disclosures = re.subn(
+            r'(?m)^(?P<indent>\s*)"\\n      Get a key at: " \+ cliutil\.KieAPIKeyURL \+$',
+            r'\g<0>\n\g<indent>"\\n      " + cliutil.KieAffiliateDisclosure +',
+            text,
+        )
+        if error_disclosures == 0:
+            raise PatchError("internal/mcp/tools.go: could not disclose affiliate error links")
+        text, metadata_disclosures = re.subn(
+            r'(?m)^(?P<indent>\s*)"key_url": cliutil\.KieAPIKeyURL,$',
+            r'\g<0>\n\g<indent>"key_url_type": "affiliate",'
+            r'\n\g<indent>"affiliate_disclosure": cliutil.KieAffiliateDisclosure,',
+            text,
+            count=1,
+        )
+        if metadata_disclosures != 1:
+            raise PatchError("internal/mcp/tools.go: could not add affiliate auth metadata")
     if "auth set-token" in text:
         raise PatchError("internal/mcp/tools.go: stale direct-token guidance survived")
-    required = ("kie-pp-cli auth setup", "cliutil.KieAPIKeyURL")
+    required = ("kie-pp-cli auth setup", "cliutil.KieAPIKeyURL", "cliutil.KieAffiliateDisclosure")
     missing = [marker for marker in required if marker not in text]
     if missing:
         raise PatchError("internal/mcp/tools.go: first-run guidance patch no longer matches: " + ", ".join(missing))

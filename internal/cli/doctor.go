@@ -209,6 +209,8 @@ func newDoctorCmd(flags *rootFlags) *cobra.Command {
 					report["auth"] = "not configured"
 					report["auth_hint"] = "Run kie-pp-cli auth setup in an interactive terminal, or set KIE_BEARER_AUTH through your environment's secret store"
 					report["auth_key_url"] = cliutil.KieAPIKeyURL
+					report["auth_key_url_type"] = "affiliate"
+					report["auth_affiliate_disclosure"] = cliutil.KieAffiliateDisclosure
 				} else {
 					authConfigured = true
 					report["auth"] = "configured"

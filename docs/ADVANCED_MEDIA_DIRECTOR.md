@@ -191,8 +191,9 @@ Do not bind HTTP MCP to a wildcard or non-loopback address. The HTTP transport
 implements the finalized MCP `2026-07-28` stateless protocol. Stdio remains the
 recommended local child-process transport.
 
-The implemented focused server exposes twenty-nine media tools:
+The implemented focused server exposes thirty media tools:
 
+- `media_setup_get`
 - `media_brief_start`
 - `media_brief_answer`
 - `media_brief_get`

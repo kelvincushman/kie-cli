@@ -488,18 +488,21 @@ func makeAPIHandler(method, pathTemplate string, readOnly bool, binaryResponse b
 					"\nhint: the API rejected the request — this usually means auth is missing or invalid." +
 					"\n      Run 'kie-pp-cli auth setup' in an interactive terminal, or set KIE_BEARER_AUTH through your environment's secret store." +
 					"\n      Get a key at: " + cliutil.KieAPIKeyURL +
+					"\n      " + cliutil.KieAffiliateDisclosure +
 					"\n      Run 'kie-pp-cli doctor' to check auth status."), nil
 			case strings.Contains(msg, "HTTP 401"):
 				return mcpToolError("authentication failed: " + cliutil.SanitizeErrorBody(msg) +
 					"\nhint: check your token." +
 					"\n      Run 'kie-pp-cli auth setup' in an interactive terminal, or set KIE_BEARER_AUTH through your environment's secret store." +
 					"\n      Get a key at: " + cliutil.KieAPIKeyURL +
+					"\n      " + cliutil.KieAffiliateDisclosure +
 					"\n      Run 'kie-pp-cli doctor' to check auth status."), nil
 			case strings.Contains(msg, "HTTP 403"):
 				return mcpToolError("permission denied: " + cliutil.SanitizeErrorBody(msg) +
 					"\nhint: your credentials are valid but lack access to this resource. Check that they have the required permissions and match the API's expected auth scheme." +
 					"\n      Run 'kie-pp-cli auth setup' in an interactive terminal, or set KIE_BEARER_AUTH through your environment's secret store." +
 					"\n      Get a key at: " + cliutil.KieAPIKeyURL +
+					"\n      " + cliutil.KieAffiliateDisclosure +
 					"\n      Run 'kie-pp-cli doctor' to check auth status."), nil
 			case strings.Contains(msg, "HTTP 404"):
 				if method == "DELETE" {
@@ -998,7 +1001,9 @@ func handleContext(_ context.Context, _ mcplib.CallToolRequest) (*mcplib.CallToo
 					"description": "Set to your API credential.",
 				},
 			},
-			"key_url": cliutil.KieAPIKeyURL,
+			"key_url":              cliutil.KieAPIKeyURL,
+			"key_url_type":         "affiliate",
+			"affiliate_disclosure": cliutil.KieAffiliateDisclosure,
 		},
 		"resources": []map[string]any{
 			{

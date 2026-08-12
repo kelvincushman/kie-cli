@@ -17,6 +17,7 @@ import (
 	"kie-pp-cli/internal/academy"
 	"kie-pp-cli/internal/cli"
 	"kie-pp-cli/internal/client"
+	"kie-pp-cli/internal/cliutil"
 	"kie-pp-cli/internal/config"
 	"kie-pp-cli/internal/kiecatalog"
 	"kie-pp-cli/internal/leaderboard"
@@ -26,6 +27,7 @@ import (
 const defaultRateLimit = 2
 
 var ToolNames = []string{
+	"media_setup_get",
 	"media_brief_start",
 	"media_brief_answer",
 	"media_brief_get",
@@ -59,7 +61,16 @@ var ToolNames = []string{
 
 type Dependencies struct {
 	Store       func() (*media.Store, error)
+	LoadConfig  func() (*config.Config, error)
 	LiveService func(context.Context, *media.Store) (*media.Service, func(), error)
+}
+
+type setupOutput struct {
+	AuthConfigured      bool   `json:"auth_configured"`
+	NextStep            string `json:"next_step"`
+	GetAPIKey           string `json:"get_api_key,omitempty"`
+	GetAPIKeyLinkType   string `json:"get_api_key_link_type,omitempty"`
+	AffiliateDisclosure string `json:"affiliate_disclosure,omitempty"`
 }
 
 type briefStartInput struct {
@@ -257,7 +268,7 @@ func NewServer(version string, dependencies *Dependencies) *mcp.Server {
 	server := mcp.NewServer(
 		&mcp.Implementation{Name: "kie-media-mcp", Version: version},
 		&mcp.ServerOptions{
-			Instructions: "Qualify image and video requests one question at a time. When a production method would help, use media_lesson_recommend, explain the source-linked original Kie adaptation, and pass its key to media_brief_start with workflow academy. Use media_leaderboard_get as dated task evidence, then media_model_get and media_model_validate for the exact live input contract before a paid generation. For storyboard video, save and explicitly approve a local script and storyboard, then use each returned shot_brief_id. For every video shot, call media_preview_generate, poll with media_generation_status, display the returned preview image URL, and call media_preview_approve only after explicit approval. media_generate rejects video briefs without that approval and rejects storyboard master briefs. Preview and final generation are separate live actions that may consume Kie.ai credits.",
+			Instructions: "Qualify image and video requests one question at a time. If authentication is missing, call media_setup_get and show its get_api_key URL together with its affiliate_disclosure; never present the referral as a neutral link. When a production method would help, use media_lesson_recommend, explain the source-linked original Kie adaptation, and pass its key to media_brief_start with workflow academy. Use media_leaderboard_get as dated task evidence, then media_model_get and media_model_validate for the exact live input contract before a paid generation. For storyboard video, save and explicitly approve a local script and storyboard, then use each returned shot_brief_id. For every video shot, call media_preview_generate, poll with media_generation_status, display the returned preview image URL, and call media_preview_approve only after explicit approval. media_generate rejects video briefs without that approval and rejects storyboard master briefs. Preview and final generation are separate live actions that may consume Kie.ai credits.",
 			Capabilities: &mcp.ServerCapabilities{},
 		},
 	)
@@ -285,6 +296,9 @@ func dependenciesWithDefaults(input *Dependencies) Dependencies {
 	if deps.Store == nil {
 		deps.Store = media.DefaultStore
 	}
+	if deps.LoadConfig == nil {
+		deps.LoadConfig = func() (*config.Config, error) { return config.Load("") }
+	}
 	if deps.LiveService == nil {
 		deps.LiveService = newLiveService
 	}
@@ -296,6 +310,28 @@ func registerTools(server *mcp.Server, deps Dependencies) {
 	readLocal := &mcp.ToolAnnotations{ReadOnlyHint: true, IdempotentHint: true, DestructiveHint: boolPointer(false), OpenWorldHint: boolPointer(false)}
 	liveMutation := &mcp.ToolAnnotations{ReadOnlyHint: false, DestructiveHint: boolPointer(false), OpenWorldHint: boolPointer(true)}
 	readRemote := &mcp.ToolAnnotations{ReadOnlyHint: true, IdempotentHint: true, DestructiveHint: boolPointer(false), OpenWorldHint: boolPointer(true)}
+
+	mcp.AddTool(server, &mcp.Tool{
+		Name: "media_setup_get", Description: "Check local Kie authentication without exposing credentials. When setup is required, returns the maintainer referral URL and its required affiliate disclosure.", Annotations: readLocal,
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, _ emptyInput) (*mcp.CallToolResult, setupOutput, error) {
+		cfg, err := deps.LoadConfig()
+		if err != nil {
+			return nil, setupOutput{}, fmt.Errorf("loading Kie configuration: %w", err)
+		}
+		if cfg.CredentialConfigured() {
+			return nil, setupOutput{
+				AuthConfigured: true,
+				NextStep:       "Start or resume a media brief",
+			}, nil
+		}
+		return nil, setupOutput{
+			AuthConfigured:      false,
+			NextStep:            "Run kie-pp-cli auth setup in an interactive terminal",
+			GetAPIKey:           cliutil.KieAPIKeyURL,
+			GetAPIKeyLinkType:   "affiliate",
+			AffiliateDisclosure: cliutil.KieAffiliateDisclosure,
+		}, nil
+	})
 
 	mcp.AddTool(server, &mcp.Tool{
 		Name: "media_brief_start", Description: "Start a durable local image/video brief. Returns exactly one next question for the agent to ask the user.", Annotations: localMutation,

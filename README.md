@@ -28,6 +28,14 @@ AGENT MEDIA FACTORY
   <a href="docs/MODELS.md">Model catalog</a>
 </p>
 
+<p align="center">
+  <a href="https://kie.ai?ref=39dfbcbc0a8244b61bec6e5dd056e35d"><strong>Get Kie.ai API access and support continued kie-cli development</strong></a>
+</p>
+
+<p align="center">
+  <sub>Affiliate disclosure: the project maintainer may earn a 15% commission on purchases made after you use this link.</sub>
+</p>
+
 `kie-cli` combines Kie.ai's broad generation API with a local creative director
 that agents can operate through terminal commands or MCP. It qualifies the
 request one question at a time, keeps briefs and reusable references on the
@@ -56,7 +64,7 @@ Higgsfield clone and does not claim unsupported provider features.
 | Video safety gate | Preview still → display to user → explicit approval → final video |
 | Creative memory | Private image/video/audio reference vault and consented likeness bundles |
 | Agent access | Compact `--agent` JSON, durable handles, focused MCP, and reusable skills |
-| Focused MCP | 29 media tools over stdio or loopback stateless HTTP using MCP `2026-07-28` |
+| Focused MCP | 30 media tools over stdio or loopback stateless HTTP using MCP `2026-07-28` |
 | Skills | 1 core director skill plus 9 production skills for common media jobs |
 | Model evidence | Dated, task-specific rankings with live Kie route availability and explicit proxy warnings |
 | Kie coverage | 70 current API operations plus 129 Market models with complete embedded input/settings schemas |
@@ -104,11 +112,15 @@ export PATH="$PWD/bin:$PATH"
 ## First run
 
 Run `kie-pp-cli` with no arguments in an interactive terminal. If no credential
-is saved, it starts the setup wizard. The wizard shows the **Get API key** link,
-masks your entry, and saves it in the existing private credential store. You can
-also start it at any time with `kie-pp-cli auth setup`.
+is saved, it starts the setup wizard. The wizard offers the maintainer's
+**[support-development Kie.ai signup link](https://kie.ai?ref=39dfbcbc0a8244b61bec6e5dd056e35d)**,
+masks your key entry, and saves it in the existing private credential store. You
+can also start it at any time with `kie-pp-cli auth setup`.
 
-![A genuine local terminal session runs the first-time Kie API key wizard. The key entry is hidden and a fake key was used for this capture.](docs/images/first-run-setup.png)
+> **Affiliate disclosure:** the project maintainer may earn a 15% commission on
+> purchases made after you use that link. Using it is a direct way to fund
+> continued development of this open-source CLI and MCP server when you make an
+> eligible Kie.ai purchase.
 
 For scripts, agents, and CI, set `KIE_BEARER_AUTH` through that environment's
 secret store. `--agent`, `--json`, `--no-input`, `--help`, and `--version` never
@@ -387,7 +399,7 @@ turn. Use `--no-learn` when a deterministic run should not update local memory.
 
 Two MCP binaries serve different jobs:
 
-- `kie-media-mcp` is the recommended creative surface. It exposes 29 focused
+- `kie-media-mcp` is the recommended creative surface. It exposes 30 focused
   director tools, uses the official MCP Go SDK, supports stdio, and serves
   loopback-only stateless HTTP for MCP `2026-07-28`.
 - `kie-pp-mcp` exposes the broad generated Printing Press tool surface for
@@ -397,6 +409,9 @@ The focused server is stateless at the protocol layer but stateful at the
 application layer: durable IDs carry the workflow between calls. See the
 [advanced guide](docs/ADVANCED_MEDIA_DIRECTOR.md) for the complete tool list,
 transport details, automation boundaries, and local state contract.
+`media_setup_get` lets MCP agents check authentication without reading a secret;
+when setup is missing it returns the same referral URL and disclosure shown by
+the CLI.
 
 ## Model catalog
 

@@ -11,12 +11,17 @@ import (
 	"testing"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
+	"kie-pp-cli/internal/cliutil"
+	"kie-pp-cli/internal/config"
 	"kie-pp-cli/internal/media"
 )
 
 func TestHTTPNegotiatesLatestStatelessProtocolAndListsMediaTools(t *testing.T) {
 	store := media.NewStore(filepath.Join(t.TempDir(), "media"))
-	server := NewServer("test", &Dependencies{Store: func() (*media.Store, error) { return store, nil }})
+	server := NewServer("test", &Dependencies{
+		Store:      func() (*media.Store, error) { return store, nil },
+		LoadConfig: func() (*config.Config, error) { return &config.Config{}, nil },
+	})
 	httpServer := httptest.NewServer(NewHTTPHandler(server))
 	defer httpServer.Close()
 
@@ -48,6 +53,16 @@ func TestHTTPNegotiatesLatestStatelessProtocolAndListsMediaTools(t *testing.T) {
 	sort.Strings(wantNames)
 	if stringSliceJSON(gotNames) != stringSliceJSON(wantNames) {
 		t.Fatalf("tools = %v, want %v", gotNames, wantNames)
+	}
+
+	setupResult, err := session.CallTool(context.Background(), &mcp.CallToolParams{Name: "media_setup_get"})
+	if err != nil || setupResult.IsError {
+		t.Fatalf("media_setup_get error=%v result=%#v", err, setupResult)
+	}
+	var setup setupOutput
+	decodeStructured(t, setupResult.StructuredContent, &setup)
+	if setup.AuthConfigured || setup.GetAPIKey != cliutil.KieAPIKeyURL || setup.GetAPIKeyLinkType != "affiliate" || setup.AffiliateDisclosure != cliutil.KieAffiliateDisclosure {
+		t.Fatalf("media setup output = %#v", setup)
 	}
 
 	workflowResult, err := session.CallTool(context.Background(), &mcp.CallToolParams{
