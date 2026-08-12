@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kie Marketplace Cards"
+  short_description: "Create marketplace listing image sets"
+  default_prompt: "Use $kie-marketplace-cards to plan and generate a truthful marketplace image set with Kie.ai."

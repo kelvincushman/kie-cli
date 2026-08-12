@@ -1354,7 +1354,7 @@ func looksLikeCredentialPlaceholder(value string) bool {
 }
 
 func authPlaceholderCredentialError(cfg *config.Config) error {
-	return authPlaceholderCredentialErrorWithSetup(cfg, "export KIE_BEARER_AUTH=<your-token> or kie-pp-cli auth set-token <token>")
+	return authPlaceholderCredentialErrorWithSetup(cfg, "kie-pp-cli auth setup in an interactive terminal, or KIE_BEARER_AUTH through your environment's secret store")
 }
 
 func authPlaceholderCredentialErrorWithSetup(cfg *config.Config, setup string) error {

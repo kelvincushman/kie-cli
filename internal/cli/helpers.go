@@ -75,14 +75,8 @@ func colorEnabled() bool {
 }
 
 func isTerminal(w io.Writer) bool {
-	if f, ok := w.(*os.File); ok {
-		fi, err := f.Stat()
-		if err != nil {
-			return true
-		}
-		return (fi.Mode() & os.ModeCharDevice) != 0
-	}
-	return false
+	f, ok := w.(*os.File)
+	return ok && isTerminalFile(f)
 }
 
 func bold(s string) string {
@@ -627,20 +621,20 @@ func classifyAPIError(err error, flags *rootFlags) error {
 		return authErr(err)
 	case strings.Contains(msg, "HTTP 400") && cliutil.LooksLikeAuthError(msg):
 		return authErr(fmt.Errorf("%w\nhint: the API rejected the request — this usually means auth is missing or invalid."+
-			"\n      Set it with: kie-pp-cli auth set-token <token> or export KIE_BEARER_AUTH=\"your-token-here\""+
-			"\n      Get a key at: https://kie.ai/api-key"+
+			"\n      Run 'kie-pp-cli auth setup' in an interactive terminal, or set KIE_BEARER_AUTH through your environment's secret store."+
+			"\n      Get a key at: "+cliutil.KieAPIKeyURL+
 			"\n      Run 'kie-pp-cli doctor' to check auth status."+
 			"\n      Response: "+cliutil.SanitizeErrorBody(msg), err))
 	case strings.Contains(msg, "HTTP 401"):
 		return authErr(fmt.Errorf("%w\nhint: check your token."+
-			"\n      Set it with: kie-pp-cli auth set-token <token> or export KIE_BEARER_AUTH=\"your-token-here\""+
-			"\n      Get a key at: https://kie.ai/api-key"+
+			"\n      Run 'kie-pp-cli auth setup' in an interactive terminal, or set KIE_BEARER_AUTH through your environment's secret store."+
+			"\n      Get a key at: "+cliutil.KieAPIKeyURL+
 			"\n      Run 'kie-pp-cli doctor' to check auth status.", err))
 	case strings.Contains(msg, "HTTP 403"):
 		return authErr(fmt.Errorf("%w\nhint: permission denied. Your credentials are valid but lack access to this resource."+
 			"\n      Check that your credentials have the required permissions and match the API's expected auth scheme."+
-			"\n      Set it with: kie-pp-cli auth set-token <token> or export KIE_BEARER_AUTH=\"your-token-here\""+
-			"\n      Get a key at: https://kie.ai/api-key"+
+			"\n      Run 'kie-pp-cli auth setup' in an interactive terminal, or set KIE_BEARER_AUTH through your environment's secret store."+
+			"\n      Get a key at: "+cliutil.KieAPIKeyURL+
 			"\n      Run 'kie-pp-cli doctor' to check auth status.", err))
 	case strings.Contains(msg, "HTTP 404"):
 		return notFoundErr(fmt.Errorf("%w\nhint: resource not found. Run the 'list' command to see available items", err))
@@ -2764,7 +2758,7 @@ func printProvenance(cmd *cobra.Command, count int, prov DataProvenance) {
 func nonJSONPayloadError(data json.RawMessage) error {
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) > 0 && trimmed[0] == '<' {
-		return authErr(fmt.Errorf("not authenticated or session expired; API returned HTML instead of JSON. " + "Set it with: kie-pp-cli auth set-token <token> or export KIE_BEARER_AUTH=\"your-token-here\""))
+		return authErr(fmt.Errorf("not authenticated or session expired; API returned HTML instead of JSON. Run 'kie-pp-cli auth setup' in an interactive terminal, or set KIE_BEARER_AUTH through your environment's secret store."))
 	}
 	if len(trimmed) == 0 {
 		return apiErr(fmt.Errorf("API returned an empty response body; expected JSON"))

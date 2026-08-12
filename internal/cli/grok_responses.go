@@ -27,7 +27,7 @@ func newGrokResponsesCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "responses",
 		Aliases: []string{"create"},
-		Short:   "GPT Grok 4.",
+		Short:   "Shared Kie endpoint. Select a documented model value: grok-4-3, grok-4-5.",
 		// TODO: replace placeholder example values before relying on this for live dogfood.
 		Example:     "  kie-pp-cli grok responses --input example-value",
 		Annotations: map[string]string{"pp:endpoint": "grok.responses", "pp:method": "POST", "pp:path": "/grok/v1/responses"},
@@ -181,7 +181,7 @@ func newGrokResponsesCmd(flags *rootFlags) *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&bodyInput, "input", "", "Input")
-	cmd.Flags().StringVar(&bodyModel, "model", "", "Target model name. Allowed values：`grok-4-5`。")
+	cmd.Flags().StringVar(&bodyModel, "model", "", "Model identifier. Supported values: grok-4-3, grok-4-5")
 	cmd.Flags().StringVar(&bodyReasoningEffort, "reasoning-effort", "", "Reasoning effort level. Higher values provide more thorough reasoning but may increase latency. Defaults to 'low'.")
 	cmd.Flags().BoolVar(&bodyStream, "stream", true, "When true, responses stream in real time as server-sent events.")
 	cmd.Flags().StringVar(&bodyTestFormatName, "test-format-name", "", "Schema name, used to identify this schema")

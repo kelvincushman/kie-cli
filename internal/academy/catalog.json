@@ -1,0 +1,2276 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-12T06:03:06.196172+00:00",
+  "source": "https://higgsfield.ai/academy/courses",
+  "copyright_policy": "Public titles, positions, durations, and links only; Kie methods and prompt guidance are original adaptations. No Higgsfield lesson prose, scripts, prompts, media, or compiled page content is stored.",
+  "course_count": 16,
+  "lesson_count": 171,
+  "courses": [
+    {
+      "slug": "blockbuster-4k",
+      "title": "Blockbuster 4K: The AI Filmmaking Pipeline",
+      "source_url": "https://higgsfield.ai/academy/courses/blockbuster-4k",
+      "lesson_count": 10,
+      "duration_minutes": 40,
+      "difficulty": "Intermediate",
+      "lessons": [
+        {
+          "slug": "one-character-many-worlds-watch-the-film",
+          "title": "One Character, Many Worlds: Watch the Film",
+          "position": 1,
+          "source_url": "https://higgsfield.ai/academy/courses/blockbuster-4k/one-character-many-worlds-watch-the-film",
+          "key": "blockbuster-4k/one-character-many-worlds-watch-the-film",
+          "production_stage": "reference-review",
+          "kie_method": "Study the example for beats, recurring assets, transitions, and visible failure modes; record observations as constraints rather than imitating the source wording.",
+          "prompt_focus": "desired outcome, audience reaction, continuity risks, acceptance criteria",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "stage-1-writing-the-script-with-claude",
+          "title": "Stage 1: Writing the Script with Claude",
+          "position": 2,
+          "source_url": "https://higgsfield.ai/academy/courses/blockbuster-4k/stage-1-writing-the-script-with-claude",
+          "key": "blockbuster-4k/stage-1-writing-the-script-with-claude",
+          "production_stage": "script",
+          "kie_method": "Write short producible beats where each beat has one dramatic purpose, one visible action, and only the dialogue or narration that can fit its duration.",
+          "prompt_focus": "hook, beat objective, action, dialogue, payoff",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "stage-2-building-character-location-and-prop-assets",
+          "title": "Stage 2: Building Character, Location, and Prop Assets",
+          "position": 3,
+          "source_url": "https://higgsfield.ai/academy/courses/blockbuster-4k/stage-2-building-character-location-and-prop-assets",
+          "key": "blockbuster-4k/stage-2-building-character-location-and-prop-assets",
+          "production_stage": "asset-lock",
+          "kie_method": "Build reusable character, product, prop, wardrobe, and location references before scene work; define immutable identity traits separately from changeable styling.",
+          "prompt_focus": "identity traits, reference views, materials, palette, scale, exclusions",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        },
+        {
+          "slug": "stage-3-scene-generation-with-the-prompt-builder-skill",
+          "title": "Stage 3: Scene Generation with the Prompt-Builder Skill",
+          "position": 4,
+          "source_url": "https://higgsfield.ai/academy/courses/blockbuster-4k/stage-3-scene-generation-with-the-prompt-builder-skill",
+          "key": "blockbuster-4k/stage-3-scene-generation-with-the-prompt-builder-skill",
+          "production_stage": "prompt-design",
+          "kie_method": "Write one model-specific prompt per shot, separating locked references from the requested action, camera behavior, lighting, audio, and negative constraints.",
+          "prompt_focus": "locked assets, single action, camera, lighting, audio, negatives",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "scene-1-the-cabin-shot-and-the-talking-parrot",
+          "title": "Scene 1: The Cabin Shot and the Talking Parrot",
+          "position": 5,
+          "source_url": "https://higgsfield.ai/academy/courses/blockbuster-4k/scene-1-the-cabin-shot-and-the-talking-parrot",
+          "key": "blockbuster-4k/scene-1-the-cabin-shot-and-the-talking-parrot",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "scene-1-the-sea-battle-and-escape-overboard",
+          "title": "Scene 1: The Sea Battle and Escape Overboard",
+          "position": 6,
+          "source_url": "https://higgsfield.ai/academy/courses/blockbuster-4k/scene-1-the-sea-battle-and-escape-overboard",
+          "key": "blockbuster-4k/scene-1-the-sea-battle-and-escape-overboard",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "scene-2-the-desert-chase",
+          "title": "Scene 2: The Desert Chase",
+          "position": 7,
+          "source_url": "https://higgsfield.ai/academy/courses/blockbuster-4k/scene-2-the-desert-chase",
+          "key": "blockbuster-4k/scene-2-the-desert-chase",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "scene-3-the-jungle",
+          "title": "Scene 3: The Jungle",
+          "position": 8,
+          "source_url": "https://higgsfield.ai/academy/courses/blockbuster-4k/scene-3-the-jungle",
+          "key": "blockbuster-4k/scene-3-the-jungle",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "scene-4-the-twist-and-dialogue-scenes",
+          "title": "Scene 4: The Twist and Dialogue Scenes",
+          "position": 9,
+          "source_url": "https://higgsfield.ai/academy/courses/blockbuster-4k/scene-4-the-twist-and-dialogue-scenes",
+          "key": "blockbuster-4k/scene-4-the-twist-and-dialogue-scenes",
+          "production_stage": "script",
+          "kie_method": "Write short producible beats where each beat has one dramatic purpose, one visible action, and only the dialogue or narration that can fit its duration.",
+          "prompt_focus": "hook, beat objective, action, dialogue, payoff",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "full-film-and-workflow-recap",
+          "title": "Full Film and Workflow Recap",
+          "position": 10,
+          "source_url": "https://higgsfield.ai/academy/courses/blockbuster-4k/full-film-and-workflow-recap",
+          "key": "blockbuster-4k/full-film-and-workflow-recap",
+          "production_stage": "review",
+          "kie_method": "Compare the result with the brief and storyboard, reject visible defects instead of rationalizing them, and record reusable lessons for the next production.",
+          "prompt_focus": "brief match, continuity, defects, strongest take, next iteration",
+          "recommended_kie_models": []
+        }
+      ]
+    },
+    {
+      "slug": "santiago-cinematic",
+      "title": "Build an Ultra-Realistic Short Film in 4K",
+      "source_url": "https://higgsfield.ai/academy/courses/santiago-cinematic",
+      "lesson_count": 19,
+      "duration_minutes": 33,
+      "difficulty": "Intermediate",
+      "lessons": [
+        {
+          "slug": "emotional-short-film-showcase",
+          "title": "Thinking like a director",
+          "position": 1,
+          "source_url": "https://higgsfield.ai/academy/courses/santiago-cinematic/emotional-short-film-showcase",
+          "key": "santiago-cinematic/emotional-short-film-showcase",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "watch-the-santiago-short",
+          "title": "Watch the Santiago short film",
+          "position": 2,
+          "source_url": "https://higgsfield.ai/academy/courses/santiago-cinematic/watch-the-santiago-short",
+          "key": "santiago-cinematic/watch-the-santiago-short",
+          "production_stage": "reference-review",
+          "kie_method": "Study the example for beats, recurring assets, transitions, and visible failure modes; record observations as constraints rather than imitating the source wording.",
+          "prompt_focus": "desired outcome, audience reaction, continuity risks, acceptance criteria",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "write-the-script-with-claude",
+          "title": "Write the script with story structure",
+          "position": 3,
+          "source_url": "https://higgsfield.ai/academy/courses/santiago-cinematic/write-the-script-with-claude",
+          "key": "santiago-cinematic/write-the-script-with-claude",
+          "production_stage": "script",
+          "kie_method": "Write short producible beats where each beat has one dramatic purpose, one visible action, and only the dialogue or narration that can fit its duration.",
+          "prompt_focus": "hook, beat objective, action, dialogue, payoff",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "character-sheets-in-soul-cinema",
+          "title": "Character sheets in Soul Cinema",
+          "position": 4,
+          "source_url": "https://higgsfield.ai/academy/courses/santiago-cinematic/character-sheets-in-soul-cinema",
+          "key": "santiago-cinematic/character-sheets-in-soul-cinema",
+          "production_stage": "asset-lock",
+          "kie_method": "Build reusable character, product, prop, wardrobe, and location references before scene work; define immutable identity traits separately from changeable styling.",
+          "prompt_focus": "identity traits, reference views, materials, palette, scale, exclusions",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        },
+        {
+          "slug": "locations-with-the-3-4-angle",
+          "title": "Locations with the 3/4 angle",
+          "position": 5,
+          "source_url": "https://higgsfield.ai/academy/courses/santiago-cinematic/locations-with-the-3-4-angle",
+          "key": "santiago-cinematic/locations-with-the-3-4-angle",
+          "production_stage": "asset-lock",
+          "kie_method": "Build reusable character, product, prop, wardrobe, and location references before scene work; define immutable identity traits separately from changeable styling.",
+          "prompt_focus": "identity traits, reference views, materials, palette, scale, exclusions",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        },
+        {
+          "slug": "prompt-builder-skill-first-run",
+          "title": "The prompt-builder skill and first Seedance run",
+          "position": 6,
+          "source_url": "https://higgsfield.ai/academy/courses/santiago-cinematic/prompt-builder-skill-first-run",
+          "key": "santiago-cinematic/prompt-builder-skill-first-run",
+          "production_stage": "prompt-design",
+          "kie_method": "Write one model-specific prompt per shot, separating locked references from the requested action, camera behavior, lighting, audio, and negative constraints.",
+          "prompt_focus": "locked assets, single action, camera, lighting, audio, negatives",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "read-your-failed-takes",
+          "title": "Read your failed takes",
+          "position": 7,
+          "source_url": "https://higgsfield.ai/academy/courses/santiago-cinematic/read-your-failed-takes",
+          "key": "santiago-cinematic/read-your-failed-takes",
+          "production_stage": "review",
+          "kie_method": "Compare the result with the brief and storyboard, reject visible defects instead of rationalizing them, and record reusable lessons for the next production.",
+          "prompt_focus": "brief match, continuity, defects, strongest take, next iteration",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "dutch-angle-and-combining-takes",
+          "title": "The Dutch angle and combining takes",
+          "position": 8,
+          "source_url": "https://higgsfield.ai/academy/courses/santiago-cinematic/dutch-angle-and-combining-takes",
+          "key": "santiago-cinematic/dutch-angle-and-combining-takes",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "scene-2-assets-kit-keeper-stadium",
+          "title": "Scene 2 assets: kit, keeper, stadium",
+          "position": 9,
+          "source_url": "https://higgsfield.ai/academy/courses/santiago-cinematic/scene-2-assets-kit-keeper-stadium",
+          "key": "santiago-cinematic/scene-2-assets-kit-keeper-stadium",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "match-cut-flares-and-handheld",
+          "title": "The match cut, flares, fog and handheld",
+          "position": 10,
+          "source_url": "https://higgsfield.ai/academy/courses/santiago-cinematic/match-cut-flares-and-handheld",
+          "key": "santiago-cinematic/match-cut-flares-and-handheld",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "one-off-characters-the-grandfather",
+          "title": "One-off characters: the grandfather",
+          "position": 11,
+          "source_url": "https://higgsfield.ai/academy/courses/santiago-cinematic/one-off-characters-the-grandfather",
+          "key": "santiago-cinematic/one-off-characters-the-grandfather",
+          "production_stage": "asset-lock",
+          "kie_method": "Build reusable character, product, prop, wardrobe, and location references before scene work; define immutable identity traits separately from changeable styling.",
+          "prompt_focus": "identity traits, reference views, materials, palette, scale, exclusions",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        },
+        {
+          "slug": "establishing-shots-and-real-hands",
+          "title": "Establishing shots and realistic hands",
+          "position": 12,
+          "source_url": "https://higgsfield.ai/academy/courses/santiago-cinematic/establishing-shots-and-real-hands",
+          "key": "santiago-cinematic/establishing-shots-and-real-hands",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "speed-ramp-the-penalty",
+          "title": "The speed ramp: freezing the penalty",
+          "position": 13,
+          "source_url": "https://higgsfield.ai/academy/courses/santiago-cinematic/speed-ramp-the-penalty",
+          "key": "santiago-cinematic/speed-ramp-the-penalty",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "whip-pan-and-readable-text",
+          "title": "The whip pan and readable text",
+          "position": 14,
+          "source_url": "https://higgsfield.ai/academy/courses/santiago-cinematic/whip-pan-and-readable-text",
+          "key": "santiago-cinematic/whip-pan-and-readable-text",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "age-your-character-for-flashbacks",
+          "title": "Age your character for flashbacks",
+          "position": 15,
+          "source_url": "https://higgsfield.ai/academy/courses/santiago-cinematic/age-your-character-for-flashbacks",
+          "key": "santiago-cinematic/age-your-character-for-flashbacks",
+          "production_stage": "asset-lock",
+          "kie_method": "Build reusable character, product, prop, wardrobe, and location references before scene work; define immutable identity traits separately from changeable styling.",
+          "prompt_focus": "identity traits, reference views, materials, palette, scale, exclusions",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        },
+        {
+          "slug": "directing-the-voice-over",
+          "title": "Directing the voice-over",
+          "position": 16,
+          "source_url": "https://higgsfield.ai/academy/courses/santiago-cinematic/directing-the-voice-over",
+          "key": "santiago-cinematic/directing-the-voice-over",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "dialogue-pacing-after-a-flashback",
+          "title": "Dialogue pacing after a flashback",
+          "position": 17,
+          "source_url": "https://higgsfield.ai/academy/courses/santiago-cinematic/dialogue-pacing-after-a-flashback",
+          "key": "santiago-cinematic/dialogue-pacing-after-a-flashback",
+          "production_stage": "script",
+          "kie_method": "Write short producible beats where each beat has one dramatic purpose, one visible action, and only the dialogue or narration that can fit its duration.",
+          "prompt_focus": "hook, beat objective, action, dialogue, payoff",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "final-scene-in-three-shots",
+          "title": "The final scene in three shots",
+          "position": 18,
+          "source_url": "https://higgsfield.ai/academy/courses/santiago-cinematic/final-scene-in-three-shots",
+          "key": "santiago-cinematic/final-scene-in-three-shots",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "full-film-and-recap",
+          "title": "Full film and recap",
+          "position": 19,
+          "source_url": "https://higgsfield.ai/academy/courses/santiago-cinematic/full-film-and-recap",
+          "key": "santiago-cinematic/full-film-and-recap",
+          "production_stage": "review",
+          "kie_method": "Compare the result with the brief and storyboard, reject visible defects instead of rationalizing them, and record reusable lessons for the next production.",
+          "prompt_focus": "brief match, continuity, defects, strongest take, next iteration",
+          "recommended_kie_models": []
+        }
+      ]
+    },
+    {
+      "slug": "ai-vfx-real-footage",
+      "title": "Add AI VFX to Real Footage",
+      "source_url": "https://higgsfield.ai/academy/courses/ai-vfx-real-footage",
+      "lesson_count": 11,
+      "duration_minutes": 12,
+      "difficulty": "Advanced",
+      "lessons": [
+        {
+          "slug": "the-one-move-video-to-video",
+          "title": "The one move: video-to-video",
+          "position": 1,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-vfx-real-footage/the-one-move-video-to-video",
+          "key": "ai-vfx-real-footage/the-one-move-video-to-video",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "swap-the-world-the-walking-location-swap",
+          "title": "Swap the world: the walking location swap",
+          "position": 2,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-vfx-real-footage/swap-the-world-the-walking-location-swap",
+          "key": "ai-vfx-real-footage/swap-the-world-the-walking-location-swap",
+          "production_stage": "asset-lock",
+          "kie_method": "Build reusable character, product, prop, wardrobe, and location references before scene work; define immutable identity traits separately from changeable styling.",
+          "prompt_focus": "identity traits, reference views, materials, palette, scale, exclusions",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        },
+        {
+          "slug": "world-swap-on-a-moving-camera",
+          "title": "World swap while driving",
+          "position": 3,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-vfx-real-footage/world-swap-on-a-moving-camera",
+          "key": "ai-vfx-real-footage/world-swap-on-a-moving-camera",
+          "production_stage": "post-production",
+          "kie_method": "Assemble only approved takes, then check continuity at every cut before adding sound, captions, grade, reframing, upscale, or export as separate reversible passes.",
+          "prompt_focus": "selected take, edit point, transition, mix, captions, delivery format",
+          "recommended_kie_models": [],
+          "capability_boundary": "Final edit, compositing, captions, and assembly remain transparent local post-production steps."
+        },
+        {
+          "slug": "set-your-head-on-fire",
+          "title": "Set your head on fire",
+          "position": 4,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-vfx-real-footage/set-your-head-on-fire",
+          "key": "ai-vfx-real-footage/set-your-head-on-fire",
+          "production_stage": "post-production",
+          "kie_method": "Assemble only approved takes, then check continuity at every cut before adding sound, captions, grade, reframing, upscale, or export as separate reversible passes.",
+          "prompt_focus": "selected take, edit point, transition, mix, captions, delivery format",
+          "recommended_kie_models": [],
+          "capability_boundary": "Final edit, compositing, captions, and assembly remain transparent local post-production steps."
+        },
+        {
+          "slug": "hand-into-a-snake-change-one-thing",
+          "title": "Hand into a snake: change one thing",
+          "position": 5,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-vfx-real-footage/hand-into-a-snake-change-one-thing",
+          "key": "ai-vfx-real-footage/hand-into-a-snake-change-one-thing",
+          "production_stage": "post-production",
+          "kie_method": "Assemble only approved takes, then check continuity at every cut before adding sound, captions, grade, reframing, upscale, or export as separate reversible passes.",
+          "prompt_focus": "selected take, edit point, transition, mix, captions, delivery format",
+          "recommended_kie_models": [],
+          "capability_boundary": "Final edit, compositing, captions, and assembly remain transparent local post-production steps."
+        },
+        {
+          "slug": "add-a-creature-with-a-reference",
+          "title": "Add a creature with a reference image",
+          "position": 6,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-vfx-real-footage/add-a-creature-with-a-reference",
+          "key": "ai-vfx-real-footage/add-a-creature-with-a-reference",
+          "production_stage": "keyframe",
+          "kie_method": "Generate and inspect a still keyframe before motion. Use GPT Image 2 for first-pass quality and precise reference work, or Nano Banana for controlled image edits and continuity variants.",
+          "prompt_focus": "approved composition, exact identity, product fidelity, clean geometry, no motion blur",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        },
+        {
+          "slug": "the-handheld-showcase-wing-walker",
+          "title": "The handheld showcase: wing-walker",
+          "position": 7,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-vfx-real-footage/the-handheld-showcase-wing-walker",
+          "key": "ai-vfx-real-footage/the-handheld-showcase-wing-walker",
+          "production_stage": "post-production",
+          "kie_method": "Assemble only approved takes, then check continuity at every cut before adding sound, captions, grade, reframing, upscale, or export as separate reversible passes.",
+          "prompt_focus": "selected take, edit point, transition, mix, captions, delivery format",
+          "recommended_kie_models": [],
+          "capability_boundary": "Final edit, compositing, captions, and assembly remain transparent local post-production steps."
+        },
+        {
+          "slug": "collapsing-jungle-temple",
+          "title": "Collapsing jungle temple",
+          "position": 8,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-vfx-real-footage/collapsing-jungle-temple",
+          "key": "ai-vfx-real-footage/collapsing-jungle-temple",
+          "production_stage": "post-production",
+          "kie_method": "Assemble only approved takes, then check continuity at every cut before adding sound, captions, grade, reframing, upscale, or export as separate reversible passes.",
+          "prompt_focus": "selected take, edit point, transition, mix, captions, delivery format",
+          "recommended_kie_models": [],
+          "capability_boundary": "Final edit, compositing, captions, and assembly remain transparent local post-production steps."
+        },
+        {
+          "slug": "sauropods-in-the-rain",
+          "title": "Sauropods in the rain",
+          "position": 9,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-vfx-real-footage/sauropods-in-the-rain",
+          "key": "ai-vfx-real-footage/sauropods-in-the-rain",
+          "production_stage": "post-production",
+          "kie_method": "Assemble only approved takes, then check continuity at every cut before adding sound, captions, grade, reframing, upscale, or export as separate reversible passes.",
+          "prompt_focus": "selected take, edit point, transition, mix, captions, delivery format",
+          "recommended_kie_models": [],
+          "capability_boundary": "Final edit, compositing, captions, and assembly remain transparent local post-production steps."
+        },
+        {
+          "slug": "the-kraken-storm",
+          "title": "The kraken storm",
+          "position": 10,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-vfx-real-footage/the-kraken-storm",
+          "key": "ai-vfx-real-footage/the-kraken-storm",
+          "production_stage": "post-production",
+          "kie_method": "Assemble only approved takes, then check continuity at every cut before adding sound, captions, grade, reframing, upscale, or export as separate reversible passes.",
+          "prompt_focus": "selected take, edit point, transition, mix, captions, delivery format",
+          "recommended_kie_models": [],
+          "capability_boundary": "Final edit, compositing, captions, and assembly remain transparent local post-production steps."
+        },
+        {
+          "slug": "no-studio-required-the-recap",
+          "title": "No studio required: the recap",
+          "position": 11,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-vfx-real-footage/no-studio-required-the-recap",
+          "key": "ai-vfx-real-footage/no-studio-required-the-recap",
+          "production_stage": "review",
+          "kie_method": "Compare the result with the brief and storyboard, reject visible defects instead of rationalizing them, and record reusable lessons for the next production.",
+          "prompt_focus": "brief match, continuity, defects, strongest take, next iteration",
+          "recommended_kie_models": []
+        }
+      ]
+    },
+    {
+      "slug": "ai-animated-short",
+      "title": "Make an AI Animated Short",
+      "source_url": "https://higgsfield.ai/academy/courses/ai-animated-short",
+      "lesson_count": 11,
+      "duration_minutes": 17,
+      "difficulty": "Intermediate",
+      "lessons": [
+        {
+          "slug": "hook-and-launch",
+          "title": "Why now: Seedance 2.0 goes global",
+          "position": 1,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-animated-short/hook-and-launch",
+          "key": "ai-animated-short/hook-and-launch",
+          "production_stage": "reference-review",
+          "kie_method": "Study the example for beats, recurring assets, transitions, and visible failure modes; record observations as constraints rather than imitating the source wording.",
+          "prompt_focus": "desired outcome, audience reaction, continuity risks, acceptance criteria",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "the-concept",
+          "title": "The concept: one story, eight animation styles",
+          "position": 2,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-animated-short/the-concept",
+          "key": "ai-animated-short/the-concept",
+          "production_stage": "script",
+          "kie_method": "Write short producible beats where each beat has one dramatic purpose, one visible action, and only the dialogue or narration that can fit its duration.",
+          "prompt_focus": "hook, beat objective, action, dialogue, payoff",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "scene-1-the-bedroom",
+          "title": "Scene 1 — The Bedroom",
+          "position": 3,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-animated-short/scene-1-the-bedroom",
+          "key": "ai-animated-short/scene-1-the-bedroom",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "scene-2-the-cowboy-chase",
+          "title": "Scene 2 — The Cowboy Chase",
+          "position": 4,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-animated-short/scene-2-the-cowboy-chase",
+          "key": "ai-animated-short/scene-2-the-cowboy-chase",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "scene-3-the-low-poly-arena",
+          "title": "Scene 3 — The Low-Poly Arena",
+          "position": 5,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-animated-short/scene-3-the-low-poly-arena",
+          "key": "ai-animated-short/scene-3-the-low-poly-arena",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "scene-4-the-cyberpunk-rooftop",
+          "title": "Scene 4 — The Cyberpunk Rooftop",
+          "position": 6,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-animated-short/scene-4-the-cyberpunk-rooftop",
+          "key": "ai-animated-short/scene-4-the-cyberpunk-rooftop",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "scene-5-the-manga-world",
+          "title": "Scene 5 — The Manga World",
+          "position": 7,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-animated-short/scene-5-the-manga-world",
+          "key": "ai-animated-short/scene-5-the-manga-world",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "scene-6-clay-hell",
+          "title": "Scene 6 — Clay Hell",
+          "position": 8,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-animated-short/scene-6-clay-hell",
+          "key": "ai-animated-short/scene-6-clay-hell",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "scene-7-the-wedding-crash",
+          "title": "Scene 7 — The Wedding Crash",
+          "position": 9,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-animated-short/scene-7-the-wedding-crash",
+          "key": "ai-animated-short/scene-7-the-wedding-crash",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "scene-8-the-restaurant-ending",
+          "title": "Scene 8 — The Restaurant Ending",
+          "position": 10,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-animated-short/scene-8-the-restaurant-ending",
+          "key": "ai-animated-short/scene-8-the-restaurant-ending",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "full-film-replay",
+          "title": "The full film, and the workflow behind it",
+          "position": 11,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-animated-short/full-film-replay",
+          "key": "ai-animated-short/full-film-replay",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        }
+      ]
+    },
+    {
+      "slug": "seedance-25-ai-filmmaking",
+      "title": "How to evaluate AI filmmaking demos",
+      "source_url": "https://higgsfield.ai/academy/courses/seedance-25-ai-filmmaking",
+      "lesson_count": 11,
+      "duration_minutes": 20,
+      "difficulty": "Beginner",
+      "lessons": [
+        {
+          "slug": "set-the-test",
+          "title": "Set the test",
+          "position": 1,
+          "source_url": "https://higgsfield.ai/academy/courses/seedance-25-ai-filmmaking/set-the-test",
+          "key": "seedance-25-ai-filmmaking/set-the-test",
+          "production_stage": "review",
+          "kie_method": "Compare the result with the brief and storyboard, reject visible defects instead of rationalizing them, and record reusable lessons for the next production.",
+          "prompt_focus": "brief match, continuity, defects, strongest take, next iteration",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "read-camera-motion",
+          "title": "Read camera motion",
+          "position": 2,
+          "source_url": "https://higgsfield.ai/academy/courses/seedance-25-ai-filmmaking/read-camera-motion",
+          "key": "seedance-25-ai-filmmaking/read-camera-motion",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "test-the-music-video",
+          "title": "Test the music-video cut",
+          "position": 3,
+          "source_url": "https://higgsfield.ai/academy/courses/seedance-25-ai-filmmaking/test-the-music-video",
+          "key": "seedance-25-ai-filmmaking/test-the-music-video",
+          "production_stage": "post-production",
+          "kie_method": "Assemble only approved takes, then check continuity at every cut before adding sound, captions, grade, reframing, upscale, or export as separate reversible passes.",
+          "prompt_focus": "selected take, edit point, transition, mix, captions, delivery format",
+          "recommended_kie_models": [],
+          "capability_boundary": "Final edit, compositing, captions, and assembly remain transparent local post-production steps."
+        },
+        {
+          "slug": "watch-the-face-under-strain",
+          "title": "Watch the face under strain",
+          "position": 4,
+          "source_url": "https://higgsfield.ai/academy/courses/seedance-25-ai-filmmaking/watch-the-face-under-strain",
+          "key": "seedance-25-ai-filmmaking/watch-the-face-under-strain",
+          "production_stage": "reference-review",
+          "kie_method": "Study the example for beats, recurring assets, transitions, and visible failure modes; record observations as constraints rather than imitating the source wording.",
+          "prompt_focus": "desired outcome, audience reaction, continuity risks, acceptance criteria",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "check-the-choreography",
+          "title": "Check the choreography",
+          "position": 5,
+          "source_url": "https://higgsfield.ai/academy/courses/seedance-25-ai-filmmaking/check-the-choreography",
+          "key": "seedance-25-ai-filmmaking/check-the-choreography",
+          "production_stage": "review",
+          "kie_method": "Compare the result with the brief and storyboard, reject visible defects instead of rationalizing them, and record reusable lessons for the next production.",
+          "prompt_focus": "brief match, continuity, defects, strongest take, next iteration",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "follow-a-transformation",
+          "title": "Follow a transformation",
+          "position": 6,
+          "source_url": "https://higgsfield.ai/academy/courses/seedance-25-ai-filmmaking/follow-a-transformation",
+          "key": "seedance-25-ai-filmmaking/follow-a-transformation",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "audit-a-ugc-shot",
+          "title": "Audit a UGC shot",
+          "position": 7,
+          "source_url": "https://higgsfield.ai/academy/courses/seedance-25-ai-filmmaking/audit-a-ugc-shot",
+          "key": "seedance-25-ai-filmmaking/audit-a-ugc-shot",
+          "production_stage": "review",
+          "kie_method": "Compare the result with the brief and storyboard, reject visible defects instead of rationalizing them, and record reusable lessons for the next production.",
+          "prompt_focus": "brief match, continuity, defects, strongest take, next iteration",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "check-cinematic-geography",
+          "title": "Check cinematic geography",
+          "position": 8,
+          "source_url": "https://higgsfield.ai/academy/courses/seedance-25-ai-filmmaking/check-cinematic-geography",
+          "key": "seedance-25-ai-filmmaking/check-cinematic-geography",
+          "production_stage": "review",
+          "kie_method": "Compare the result with the brief and storyboard, reject visible defects instead of rationalizing them, and record reusable lessons for the next production.",
+          "prompt_focus": "brief match, continuity, defects, strongest take, next iteration",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "check-the-drama",
+          "title": "Check the drama",
+          "position": 9,
+          "source_url": "https://higgsfield.ai/academy/courses/seedance-25-ai-filmmaking/check-the-drama",
+          "key": "seedance-25-ai-filmmaking/check-the-drama",
+          "production_stage": "review",
+          "kie_method": "Compare the result with the brief and storyboard, reject visible defects instead of rationalizing them, and record reusable lessons for the next production.",
+          "prompt_focus": "brief match, continuity, defects, strongest take, next iteration",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "test-an-impossible-world",
+          "title": "Test an impossible world",
+          "position": 10,
+          "source_url": "https://higgsfield.ai/academy/courses/seedance-25-ai-filmmaking/test-an-impossible-world",
+          "key": "seedance-25-ai-filmmaking/test-an-impossible-world",
+          "production_stage": "review",
+          "kie_method": "Compare the result with the brief and storyboard, reject visible defects instead of rationalizing them, and record reusable lessons for the next production.",
+          "prompt_focus": "brief match, continuity, defects, strongest take, next iteration",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "name-the-trade-off",
+          "title": "Name the trade-off",
+          "position": 11,
+          "source_url": "https://higgsfield.ai/academy/courses/seedance-25-ai-filmmaking/name-the-trade-off",
+          "key": "seedance-25-ai-filmmaking/name-the-trade-off",
+          "production_stage": "review",
+          "kie_method": "Compare the result with the brief and storyboard, reject visible defects instead of rationalizing them, and record reusable lessons for the next production.",
+          "prompt_focus": "brief match, continuity, defects, strongest take, next iteration",
+          "recommended_kie_models": []
+        }
+      ]
+    },
+    {
+      "slug": "ai-ad-3-step",
+      "title": "The 3-Step Realistic AI Ad Workflow",
+      "source_url": "https://higgsfield.ai/academy/courses/ai-ad-3-step",
+      "lesson_count": 16,
+      "duration_minutes": 36,
+      "difficulty": "Intermediate",
+      "lessons": [
+        {
+          "slug": "the-finished-ad-and-the-3-step-system",
+          "title": "The finished ad, and the 3-step system",
+          "position": 1,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-ad-3-step/the-finished-ad-and-the-3-step-system",
+          "key": "ai-ad-3-step/the-finished-ad-and-the-3-step-system",
+          "production_stage": "reference-review",
+          "kie_method": "Study the example for beats, recurring assets, transitions, and visible failure modes; record observations as constraints rather than imitating the source wording.",
+          "prompt_focus": "desired outcome, audience reaction, continuity risks, acceptance criteria",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "the-product-sheet",
+          "title": "The product sheet (GPT Image 2.0)",
+          "position": 2,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-ad-3-step/the-product-sheet",
+          "key": "ai-ad-3-step/the-product-sheet",
+          "production_stage": "keyframe",
+          "kie_method": "Generate and inspect a still keyframe before motion. Use GPT Image 2 for first-pass quality and precise reference work, or Nano Banana for controlled image edits and continuity variants.",
+          "prompt_focus": "approved composition, exact identity, product fidelity, clean geometry, no motion blur",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        },
+        {
+          "slug": "the-hero-character",
+          "title": "The hero character (Soul Cinema)",
+          "position": 3,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-ad-3-step/the-hero-character",
+          "key": "ai-ad-3-step/the-hero-character",
+          "production_stage": "asset-lock",
+          "kie_method": "Build reusable character, product, prop, wardrobe, and location references before scene work; define immutable identity traits separately from changeable styling.",
+          "prompt_focus": "identity traits, reference views, materials, palette, scale, exclusions",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        },
+        {
+          "slug": "the-boss-and-side-characters",
+          "title": "The boss & side characters (AICast)",
+          "position": 4,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-ad-3-step/the-boss-and-side-characters",
+          "key": "ai-ad-3-step/the-boss-and-side-characters",
+          "production_stage": "asset-lock",
+          "kie_method": "Build reusable character, product, prop, wardrobe, and location references before scene work; define immutable identity traits separately from changeable styling.",
+          "prompt_focus": "identity traits, reference views, materials, palette, scale, exclusions",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        },
+        {
+          "slug": "locking-the-kitchen",
+          "title": "Locking the first location: the kitchen",
+          "position": 5,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-ad-3-step/locking-the-kitchen",
+          "key": "ai-ad-3-step/locking-the-kitchen",
+          "production_stage": "asset-lock",
+          "kie_method": "Build reusable character, product, prop, wardrobe, and location references before scene work; define immutable identity traits separately from changeable styling.",
+          "prompt_focus": "identity traits, reference views, materials, palette, scale, exclusions",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        },
+        {
+          "slug": "one-face-per-character-sheet",
+          "title": "One face per character sheet",
+          "position": 6,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-ad-3-step/one-face-per-character-sheet",
+          "key": "ai-ad-3-step/one-face-per-character-sheet",
+          "production_stage": "asset-lock",
+          "kie_method": "Build reusable character, product, prop, wardrobe, and location references before scene work; define immutable identity traits separately from changeable styling.",
+          "prompt_focus": "identity traits, reference views, materials, palette, scale, exclusions",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        },
+        {
+          "slug": "locking-the-rest-of-the-locations",
+          "title": "Locking the stadium, street & office",
+          "position": 7,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-ad-3-step/locking-the-rest-of-the-locations",
+          "key": "ai-ad-3-step/locking-the-rest-of-the-locations",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "the-outfit-edit",
+          "title": "The outfit edit, kept photoreal",
+          "position": 8,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-ad-3-step/the-outfit-edit",
+          "key": "ai-ad-3-step/the-outfit-edit",
+          "production_stage": "post-production",
+          "kie_method": "Assemble only approved takes, then check continuity at every cut before adding sound, captions, grade, reframing, upscale, or export as separate reversible passes.",
+          "prompt_focus": "selected take, edit point, transition, mix, captions, delivery format",
+          "recommended_kie_models": [],
+          "capability_boundary": "Final edit, compositing, captions, and assembly remain transparent local post-production steps."
+        },
+        {
+          "slug": "the-props",
+          "title": "The props: sky dancer, sneakers, backpack",
+          "position": 9,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-ad-3-step/the-props",
+          "key": "ai-ad-3-step/the-props",
+          "production_stage": "asset-lock",
+          "kie_method": "Build reusable character, product, prop, wardrobe, and location references before scene work; define immutable identity traits separately from changeable styling.",
+          "prompt_focus": "identity traits, reference views, materials, palette, scale, exclusions",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        },
+        {
+          "slug": "the-shot-list-and-the-skill",
+          "title": "The shot list, and the Claude skill behind it",
+          "position": 10,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-ad-3-step/the-shot-list-and-the-skill",
+          "key": "ai-ad-3-step/the-shot-list-and-the-skill",
+          "production_stage": "storyboard",
+          "kie_method": "Convert the approved script into ordered shots with duration, composition, action, camera, audio, continuity inputs, and a specific approval criterion for each frame.",
+          "prompt_focus": "shot size, camera, blocking, timing, continuity in/out, transition",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "scene-1-the-kitchen",
+          "title": "Scene 1 — the kitchen",
+          "position": 11,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-ad-3-step/scene-1-the-kitchen",
+          "key": "ai-ad-3-step/scene-1-the-kitchen",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "scene-2-the-stadium",
+          "title": "Scene 2 — the stadium",
+          "position": 12,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-ad-3-step/scene-2-the-stadium",
+          "key": "ai-ad-3-step/scene-2-the-stadium",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "scene-3-the-street-and-the-map-trick",
+          "title": "Scene 3 — the street, and the layout map trick",
+          "position": 13,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-ad-3-step/scene-3-the-street-and-the-map-trick",
+          "key": "ai-ad-3-step/scene-3-the-street-and-the-map-trick",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "scene-4-the-office",
+          "title": "Scene 4 — the office",
+          "position": 14,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-ad-3-step/scene-4-the-office",
+          "key": "ai-ad-3-step/scene-4-the-office",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "scene-5-the-boss-dance",
+          "title": "Scene 5 — the boss's payoff",
+          "position": 15,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-ad-3-step/scene-5-the-boss-dance",
+          "key": "ai-ad-3-step/scene-5-the-boss-dance",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "the-full-commercial-and-recap",
+          "title": "The full commercial, and the recap",
+          "position": 16,
+          "source_url": "https://higgsfield.ai/academy/courses/ai-ad-3-step/the-full-commercial-and-recap",
+          "key": "ai-ad-3-step/the-full-commercial-and-recap",
+          "production_stage": "review",
+          "kie_method": "Compare the result with the brief and storyboard, reject visible defects instead of rationalizing them, and record reusable lessons for the next production.",
+          "prompt_focus": "brief match, continuity, defects, strongest take, next iteration",
+          "recommended_kie_models": []
+        }
+      ]
+    },
+    {
+      "slug": "claude-higgsfield-ai-ad-agency",
+      "title": "Build an AI Ad Agency with Claude + Higgsfield",
+      "source_url": "https://higgsfield.ai/academy/courses/claude-higgsfield-ai-ad-agency",
+      "lesson_count": 12,
+      "duration_minutes": 22,
+      "difficulty": "Beginner",
+      "lessons": [
+        {
+          "slug": "find-an-underserved-niche",
+          "title": "Find an underserved niche",
+          "position": 1,
+          "source_url": "https://higgsfield.ai/academy/courses/claude-higgsfield-ai-ad-agency/find-an-underserved-niche",
+          "key": "claude-higgsfield-ai-ad-agency/find-an-underserved-niche",
+          "production_stage": "research",
+          "kie_method": "Collect a small evidence set, label what is factual versus inspirational, and translate it into an original visual direction without copying another creator's execution.",
+          "prompt_focus": "source evidence, audience language, differentiators, prohibited imitation",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "shape-the-offer",
+          "title": "Shape the offer",
+          "position": 2,
+          "source_url": "https://higgsfield.ai/academy/courses/claude-higgsfield-ai-ad-agency/shape-the-offer",
+          "key": "claude-higgsfield-ai-ad-agency/shape-the-offer",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "connect-claude-and-higgsfield",
+          "title": "Connect Claude and Higgsfield",
+          "position": 3,
+          "source_url": "https://higgsfield.ai/academy/courses/claude-higgsfield-ai-ad-agency/connect-claude-and-higgsfield",
+          "key": "claude-higgsfield-ai-ad-agency/connect-claude-and-higgsfield",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "generate-a-varied-portfolio",
+          "title": "Generate a varied portfolio",
+          "position": 4,
+          "source_url": "https://higgsfield.ai/academy/courses/claude-higgsfield-ai-ad-agency/generate-a-varied-portfolio",
+          "key": "claude-higgsfield-ai-ad-agency/generate-a-varied-portfolio",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "design-the-client-intake",
+          "title": "Design the client intake",
+          "position": 5,
+          "source_url": "https://higgsfield.ai/academy/courses/claude-higgsfield-ai-ad-agency/design-the-client-intake",
+          "key": "claude-higgsfield-ai-ad-agency/design-the-client-intake",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "rewrite-cold-outreach",
+          "title": "Rewrite cold outreach",
+          "position": 6,
+          "source_url": "https://higgsfield.ai/academy/courses/claude-higgsfield-ai-ad-agency/rewrite-cold-outreach",
+          "key": "claude-higgsfield-ai-ad-agency/rewrite-cold-outreach",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "build-the-back-office",
+          "title": "Build the back office",
+          "position": 7,
+          "source_url": "https://higgsfield.ai/academy/courses/claude-higgsfield-ai-ad-agency/build-the-back-office",
+          "key": "claude-higgsfield-ai-ad-agency/build-the-back-office",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "turn-delivery-into-a-subscription",
+          "title": "Turn delivery into a subscription",
+          "position": 8,
+          "source_url": "https://higgsfield.ai/academy/courses/claude-higgsfield-ai-ad-agency/turn-delivery-into-a-subscription",
+          "key": "claude-higgsfield-ai-ad-agency/turn-delivery-into-a-subscription",
+          "production_stage": "script",
+          "kie_method": "Write short producible beats where each beat has one dramatic purpose, one visible action, and only the dialogue or narration that can fit its duration.",
+          "prompt_focus": "hook, beat objective, action, dialogue, payoff",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "add-a-quality-control-gate",
+          "title": "Add a quality-control gate",
+          "position": 9,
+          "source_url": "https://higgsfield.ai/academy/courses/claude-higgsfield-ai-ad-agency/add-a-quality-control-gate",
+          "key": "claude-higgsfield-ai-ad-agency/add-a-quality-control-gate",
+          "production_stage": "review",
+          "kie_method": "Compare the result with the brief and storyboard, reject visible defects instead of rationalizing them, and record reusable lessons for the next production.",
+          "prompt_focus": "brief match, continuity, defects, strongest take, next iteration",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "build-the-sales-website",
+          "title": "Build the sales website",
+          "position": 10,
+          "source_url": "https://higgsfield.ai/academy/courses/claude-higgsfield-ai-ad-agency/build-the-sales-website",
+          "key": "claude-higgsfield-ai-ad-agency/build-the-sales-website",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "launch-to-a-qualified-list",
+          "title": "Launch to a qualified list",
+          "position": 11,
+          "source_url": "https://higgsfield.ai/academy/courses/claude-higgsfield-ai-ad-agency/launch-to-a-qualified-list",
+          "key": "claude-higgsfield-ai-ad-agency/launch-to-a-qualified-list",
+          "production_stage": "delivery",
+          "kie_method": "Package the finished media for its destination, verify claims and formatting, publish only with authorization, and feed observed performance back into the next brief.",
+          "prompt_focus": "platform requirements, title/thumbnail, claims, export, measurement plan",
+          "recommended_kie_models": [],
+          "capability_boundary": "Publishing, analytics, and platform compliance remain outside Kie and require explicit local or platform-specific actions."
+        },
+        {
+          "slug": "pressure-test-the-economics",
+          "title": "Pressure-test the economics",
+          "position": 12,
+          "source_url": "https://higgsfield.ai/academy/courses/claude-higgsfield-ai-ad-agency/pressure-test-the-economics",
+          "key": "claude-higgsfield-ai-ad-agency/pressure-test-the-economics",
+          "production_stage": "review",
+          "kie_method": "Compare the result with the brief and storyboard, reject visible defects instead of rationalizing them, and record reusable lessons for the next production.",
+          "prompt_focus": "brief match, continuity, defects, strongest take, next iteration",
+          "recommended_kie_models": []
+        }
+      ]
+    },
+    {
+      "slug": "cinematic-realism-4k",
+      "title": "Seedance 4K: Cinematic Realism",
+      "source_url": "https://higgsfield.ai/academy/courses/cinematic-realism-4k",
+      "lesson_count": 8,
+      "duration_minutes": 14,
+      "difficulty": "Intermediate",
+      "lessons": [
+        {
+          "slug": "cinematic-realism-and-hyper-detail",
+          "title": "Cinematic Realism & Hyper-Detail",
+          "position": 1,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-realism-4k/cinematic-realism-and-hyper-detail",
+          "key": "cinematic-realism-4k/cinematic-realism-and-hyper-detail",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "the-impossible-shot",
+          "title": "The Impossible Shot: 21:9 Crowds",
+          "position": 2,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-realism-4k/the-impossible-shot",
+          "key": "cinematic-realism-4k/the-impossible-shot",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "vfx-on-real-footage",
+          "title": "Mixing 4K With Real Footage (VFX)",
+          "position": 3,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-realism-4k/vfx-on-real-footage",
+          "key": "cinematic-realism-4k/vfx-on-real-footage",
+          "production_stage": "post-production",
+          "kie_method": "Assemble only approved takes, then check continuity at every cut before adding sound, captions, grade, reframing, upscale, or export as separate reversible passes.",
+          "prompt_focus": "selected take, edit point, transition, mix, captions, delivery format",
+          "recommended_kie_models": [],
+          "capability_boundary": "Final edit, compositing, captions, and assembly remain transparent local post-production steps."
+        },
+        {
+          "slug": "cartoon-and-2d-animation",
+          "title": "Cartoon & 2D Animation",
+          "position": 4,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-realism-4k/cartoon-and-2d-animation",
+          "key": "cinematic-realism-4k/cartoon-and-2d-animation",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "3d-cartoons-and-cgi",
+          "title": "3D Cartoons & CGI",
+          "position": 5,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-realism-4k/3d-cartoons-and-cgi",
+          "key": "cinematic-realism-4k/3d-cartoons-and-cgi",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "ads-brands-and-sharp-text",
+          "title": "Ads, Brands & Sharp Text",
+          "position": 6,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-realism-4k/ads-brands-and-sharp-text",
+          "key": "cinematic-realism-4k/ads-brands-and-sharp-text",
+          "production_stage": "asset-lock",
+          "kie_method": "Build reusable character, product, prop, wardrobe, and location references before scene work; define immutable identity traits separately from changeable styling.",
+          "prompt_focus": "identity traits, reference views, materials, palette, scale, exclusions",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        },
+        {
+          "slug": "next-gen-game-trailers",
+          "title": "Gaming: Next-Gen Trailers",
+          "position": 7,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-realism-4k/next-gen-game-trailers",
+          "key": "cinematic-realism-4k/next-gen-game-trailers",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "high-speed-combat-and-final-verdict",
+          "title": "High-Speed Combat & Final Verdict",
+          "position": 8,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-realism-4k/high-speed-combat-and-final-verdict",
+          "key": "cinematic-realism-4k/high-speed-combat-and-final-verdict",
+          "production_stage": "review",
+          "kie_method": "Compare the result with the brief and storyboard, reject visible defects instead of rationalizing them, and record reusable lessons for the next production.",
+          "prompt_focus": "brief match, continuity, defects, strongest take, next iteration",
+          "recommended_kie_models": []
+        }
+      ]
+    },
+    {
+      "slug": "brand-visuals-ai",
+      "title": "Build a Brand's Visuals with AI",
+      "source_url": "https://higgsfield.ai/academy/courses/brand-visuals-ai",
+      "lesson_count": 9,
+      "duration_minutes": 26,
+      "difficulty": "Intermediate",
+      "lessons": [
+        {
+          "slug": "the-ai-marketing-workflow",
+          "title": "The AI Marketing Workflow",
+          "position": 1,
+          "source_url": "https://higgsfield.ai/academy/courses/brand-visuals-ai/the-ai-marketing-workflow",
+          "key": "brand-visuals-ai/the-ai-marketing-workflow",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "inventing-the-brand",
+          "title": "Inventing the Brand",
+          "position": 2,
+          "source_url": "https://higgsfield.ai/academy/courses/brand-visuals-ai/inventing-the-brand",
+          "key": "brand-visuals-ai/inventing-the-brand",
+          "production_stage": "asset-lock",
+          "kie_method": "Build reusable character, product, prop, wardrobe, and location references before scene work; define immutable identity traits separately from changeable styling.",
+          "prompt_focus": "identity traits, reference views, materials, palette, scale, exclusions",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        },
+        {
+          "slug": "creating-the-products",
+          "title": "Creating the Products",
+          "position": 3,
+          "source_url": "https://higgsfield.ai/academy/courses/brand-visuals-ai/creating-the-products",
+          "key": "brand-visuals-ai/creating-the-products",
+          "production_stage": "asset-lock",
+          "kie_method": "Build reusable character, product, prop, wardrobe, and location references before scene work; define immutable identity traits separately from changeable styling.",
+          "prompt_focus": "identity traits, reference views, materials, palette, scale, exclusions",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        },
+        {
+          "slug": "marketing-studio-try-ons",
+          "title": "Marketing Studio Try-Ons",
+          "position": 4,
+          "source_url": "https://higgsfield.ai/academy/courses/brand-visuals-ai/marketing-studio-try-ons",
+          "key": "brand-visuals-ai/marketing-studio-try-ons",
+          "production_stage": "asset-lock",
+          "kie_method": "Build reusable character, product, prop, wardrobe, and location references before scene work; define immutable identity traits separately from changeable styling.",
+          "prompt_focus": "identity traits, reference views, materials, palette, scale, exclusions",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        },
+        {
+          "slug": "hyper-motion-ads",
+          "title": "Hyper Motion Ads",
+          "position": 5,
+          "source_url": "https://higgsfield.ai/academy/courses/brand-visuals-ai/hyper-motion-ads",
+          "key": "brand-visuals-ai/hyper-motion-ads",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "social-video-content",
+          "title": "Social Video Content",
+          "position": 6,
+          "source_url": "https://higgsfield.ai/academy/courses/brand-visuals-ai/social-video-content",
+          "key": "brand-visuals-ai/social-video-content",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "the-professional-tv-spot",
+          "title": "The Professional TV Spot",
+          "position": 7,
+          "source_url": "https://higgsfield.ai/academy/courses/brand-visuals-ai/the-professional-tv-spot",
+          "key": "brand-visuals-ai/the-professional-tv-spot",
+          "production_stage": "asset-lock",
+          "kie_method": "Build reusable character, product, prop, wardrobe, and location references before scene work; define immutable identity traits separately from changeable styling.",
+          "prompt_focus": "identity traits, reference views, materials, palette, scale, exclusions",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        },
+        {
+          "slug": "social-and-website-images",
+          "title": "Social & Website Images",
+          "position": 8,
+          "source_url": "https://higgsfield.ai/academy/courses/brand-visuals-ai/social-and-website-images",
+          "key": "brand-visuals-ai/social-and-website-images",
+          "production_stage": "keyframe",
+          "kie_method": "Generate and inspect a still keyframe before motion. Use GPT Image 2 for first-pass quality and precise reference work, or Nano Banana for controlled image edits and continuity variants.",
+          "prompt_focus": "approved composition, exact identity, product fidelity, clean geometry, no motion blur",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        },
+        {
+          "slug": "packaging-and-unboxing",
+          "title": "Packaging & Unboxing",
+          "position": 9,
+          "source_url": "https://higgsfield.ai/academy/courses/brand-visuals-ai/packaging-and-unboxing",
+          "key": "brand-visuals-ai/packaging-and-unboxing",
+          "production_stage": "asset-lock",
+          "kie_method": "Build reusable character, product, prop, wardrobe, and location references before scene work; define immutable identity traits separately from changeable styling.",
+          "prompt_focus": "identity traits, reference views, materials, palette, scale, exclusions",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "cinematic-ad-e2e",
+      "title": "Make a Cinematic Ad End-to-End",
+      "source_url": "https://higgsfield.ai/academy/courses/cinematic-ad-e2e",
+      "lesson_count": 10,
+      "duration_minutes": 46,
+      "difficulty": "Intermediate",
+      "lessons": [
+        {
+          "slug": "intro",
+          "title": "Intro: One Website, One Cinematic Ad",
+          "position": 1,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-ad-e2e/intro",
+          "key": "cinematic-ad-e2e/intro",
+          "production_stage": "reference-review",
+          "kie_method": "Study the example for beats, recurring assets, transitions, and visible failure modes; record observations as constraints rather than imitating the source wording.",
+          "prompt_focus": "desired outcome, audience reaction, continuity risks, acceptance criteria",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "stage-1-building-the-assets",
+          "title": "Stage 1: Building the Assets",
+          "position": 2,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-ad-e2e/stage-1-building-the-assets",
+          "key": "cinematic-ad-e2e/stage-1-building-the-assets",
+          "production_stage": "asset-lock",
+          "kie_method": "Build reusable character, product, prop, wardrobe, and location references before scene work; define immutable identity traits separately from changeable styling.",
+          "prompt_focus": "identity traits, reference views, materials, palette, scale, exclusions",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        },
+        {
+          "slug": "stage-2-the-prompting-framework",
+          "title": "Stage 2: The Prompting Framework",
+          "position": 3,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-ad-e2e/stage-2-the-prompting-framework",
+          "key": "cinematic-ad-e2e/stage-2-the-prompting-framework",
+          "production_stage": "prompt-design",
+          "kie_method": "Write one model-specific prompt per shot, separating locked references from the requested action, camera behavior, lighting, audio, and negative constraints.",
+          "prompt_focus": "locked assets, single action, camera, lighting, audio, negatives",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "scenes-1-2-opening-and-transformation",
+          "title": "Scenes 1-2: The Opening & Transformation",
+          "position": 4,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-ad-e2e/scenes-1-2-opening-and-transformation",
+          "key": "cinematic-ad-e2e/scenes-1-2-opening-and-transformation",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "scenes-3-4-first-meeting-and-the-goal",
+          "title": "Scenes 3-4: First Meeting & The Goal",
+          "position": 5,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-ad-e2e/scenes-3-4-first-meeting-and-the-goal",
+          "key": "cinematic-ad-e2e/scenes-3-4-first-meeting-and-the-goal",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "scenes-5-6-the-duel-and-round-one-loss",
+          "title": "Scenes 5-6: The Duel & Round One Loss",
+          "position": 6,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-ad-e2e/scenes-5-6-the-duel-and-round-one-loss",
+          "key": "cinematic-ad-e2e/scenes-5-6-the-duel-and-round-one-loss",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "scenes-7-8-the-fall-and-the-comeback",
+          "title": "Scenes 7-8: The Fall & The Comeback",
+          "position": 7,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-ad-e2e/scenes-7-8-the-fall-and-the-comeback",
+          "key": "cinematic-ad-e2e/scenes-7-8-the-fall-and-the-comeback",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "scenes-9-10-round-two-and-the-winning-goal",
+          "title": "Scenes 9-10: Round Two & The Winning Goal",
+          "position": 8,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-ad-e2e/scenes-9-10-round-two-and-the-winning-goal",
+          "key": "cinematic-ad-e2e/scenes-9-10-round-two-and-the-winning-goal",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "scenes-11-12-victory-gag-and-pack-shot",
+          "title": "Scenes 11-12: Victory Gag & Pack Shot",
+          "position": 9,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-ad-e2e/scenes-11-12-victory-gag-and-pack-shot",
+          "key": "cinematic-ad-e2e/scenes-11-12-victory-gag-and-pack-shot",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "recap",
+          "title": "Recap: Iteration Is the Skill",
+          "position": 10,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-ad-e2e/recap",
+          "key": "cinematic-ad-e2e/recap",
+          "production_stage": "review",
+          "kie_method": "Compare the result with the brief and storyboard, reject visible defects instead of rationalizing them, and record reusable lessons for the next production.",
+          "prompt_focus": "brief match, continuity, defects, strongest take, next iteration",
+          "recommended_kie_models": []
+        }
+      ]
+    },
+    {
+      "slug": "automate-faceless-niche",
+      "title": "Automate a Faceless Niche Channel",
+      "source_url": "https://higgsfield.ai/academy/courses/automate-faceless-niche",
+      "lesson_count": 11,
+      "duration_minutes": 10,
+      "difficulty": "Intermediate",
+      "lessons": [
+        {
+          "slug": "intro",
+          "title": "Intro: The Faceless Explainer System",
+          "position": 1,
+          "source_url": "https://higgsfield.ai/academy/courses/automate-faceless-niche/intro",
+          "key": "automate-faceless-niche/intro",
+          "production_stage": "reference-review",
+          "kie_method": "Study the example for beats, recurring assets, transitions, and visible failure modes; record observations as constraints rather than imitating the source wording.",
+          "prompt_focus": "desired outcome, audience reaction, continuity risks, acceptance criteria",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "setup-mcp-and-the-skill",
+          "title": "Setup: Connect the MCP and Install the Skill",
+          "position": 2,
+          "source_url": "https://higgsfield.ai/academy/courses/automate-faceless-niche/setup-mcp-and-the-skill",
+          "key": "automate-faceless-niche/setup-mcp-and-the-skill",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "picking-a-topic-with-live-research",
+          "title": "Picking a Topic with Live Research",
+          "position": 3,
+          "source_url": "https://higgsfield.ai/academy/courses/automate-faceless-niche/picking-a-topic-with-live-research",
+          "key": "automate-faceless-niche/picking-a-topic-with-live-research",
+          "production_stage": "research",
+          "kie_method": "Collect a small evidence set, label what is factual versus inspirational, and translate it into an original visual direction without copying another creator's execution.",
+          "prompt_focus": "source evidence, audience language, differentiators, prohibited imitation",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "writing-the-monetizable-script",
+          "title": "Writing a Script That Stays Monetized",
+          "position": 4,
+          "source_url": "https://higgsfield.ai/academy/courses/automate-faceless-niche/writing-the-monetizable-script",
+          "key": "automate-faceless-niche/writing-the-monetizable-script",
+          "production_stage": "delivery",
+          "kie_method": "Package the finished media for its destination, verify claims and formatting, publish only with authorization, and feed observed performance back into the next brief.",
+          "prompt_focus": "platform requirements, title/thumbnail, claims, export, measurement plan",
+          "recommended_kie_models": [],
+          "capability_boundary": "Publishing, analytics, and platform compliance remain outside Kie and require explicit local or platform-specific actions."
+        },
+        {
+          "slug": "generating-the-full-video",
+          "title": "Generating the Full 10-Minute Video",
+          "position": 5,
+          "source_url": "https://higgsfield.ai/academy/courses/automate-faceless-niche/generating-the-full-video",
+          "key": "automate-faceless-niche/generating-the-full-video",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "translating-into-a-second-language",
+          "title": "Translating into a Second Language",
+          "position": 6,
+          "source_url": "https://higgsfield.ai/academy/courses/automate-faceless-niche/translating-into-a-second-language",
+          "key": "automate-faceless-niche/translating-into-a-second-language",
+          "production_stage": "research",
+          "kie_method": "Collect a small evidence set, label what is factual versus inspirational, and translate it into an original visual direction without copying another creator's execution.",
+          "prompt_focus": "source evidence, audience language, differentiators, prohibited imitation",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "cloning-your-own-voice",
+          "title": "Cloning Your Own Voice",
+          "position": 7,
+          "source_url": "https://higgsfield.ai/academy/courses/automate-faceless-niche/cloning-your-own-voice",
+          "key": "automate-faceless-niche/cloning-your-own-voice",
+          "production_stage": "research",
+          "kie_method": "Collect a small evidence set, label what is factual versus inspirational, and translate it into an original visual direction without copying another creator's execution.",
+          "prompt_focus": "source evidence, audience language, differentiators, prohibited imitation",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "titles-and-thumbnails",
+          "title": "Titles & Thumbnails in the Same Chat",
+          "position": 8,
+          "source_url": "https://higgsfield.ai/academy/courses/automate-faceless-niche/titles-and-thumbnails",
+          "key": "automate-faceless-niche/titles-and-thumbnails",
+          "production_stage": "delivery",
+          "kie_method": "Package the finished media for its destination, verify claims and formatting, publish only with authorization, and feed observed performance back into the next brief.",
+          "prompt_focus": "platform requirements, title/thumbnail, claims, export, measurement plan",
+          "recommended_kie_models": [],
+          "capability_boundary": "Publishing, analytics, and platform compliance remain outside Kie and require explicit local or platform-specific actions."
+        },
+        {
+          "slug": "twenty-shorts-in-one-click",
+          "title": "20 Shorts in One Click",
+          "position": 9,
+          "source_url": "https://higgsfield.ai/academy/courses/automate-faceless-niche/twenty-shorts-in-one-click",
+          "key": "automate-faceless-niche/twenty-shorts-in-one-click",
+          "production_stage": "research",
+          "kie_method": "Collect a small evidence set, label what is factual versus inspirational, and translate it into an original visual direction without copying another creator's execution.",
+          "prompt_focus": "source evidence, audience language, differentiators, prohibited imitation",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "the-30-day-content-plan",
+          "title": "The 30-Day Content Plan",
+          "position": 10,
+          "source_url": "https://higgsfield.ai/academy/courses/automate-faceless-niche/the-30-day-content-plan",
+          "key": "automate-faceless-niche/the-30-day-content-plan",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "outro",
+          "title": "Outro: Your Move",
+          "position": 11,
+          "source_url": "https://higgsfield.ai/academy/courses/automate-faceless-niche/outro",
+          "key": "automate-faceless-niche/outro",
+          "production_stage": "research",
+          "kie_method": "Collect a small evidence set, label what is factual versus inspirational, and translate it into an original visual direction without copying another creator's execution.",
+          "prompt_focus": "source evidence, audience language, differentiators, prohibited imitation",
+          "recommended_kie_models": []
+        }
+      ]
+    },
+    {
+      "slug": "faceless-channel",
+      "title": "Build a Faceless Channel",
+      "source_url": "https://higgsfield.ai/academy/courses/faceless-channel",
+      "lesson_count": 7,
+      "duration_minutes": 14,
+      "difficulty": "Beginner",
+      "lessons": [
+        {
+          "slug": "why-ai-channels-get-monetized",
+          "title": "Why AI Channels Actually Get Monetized",
+          "position": 1,
+          "source_url": "https://higgsfield.ai/academy/courses/faceless-channel/why-ai-channels-get-monetized",
+          "key": "faceless-channel/why-ai-channels-get-monetized",
+          "production_stage": "delivery",
+          "kie_method": "Package the finished media for its destination, verify claims and formatting, publish only with authorization, and feed observed performance back into the next brief.",
+          "prompt_focus": "platform requirements, title/thumbnail, claims, export, measurement plan",
+          "recommended_kie_models": [],
+          "capability_boundary": "Publishing, analytics, and platform compliance remain outside Kie and require explicit local or platform-specific actions."
+        },
+        {
+          "slug": "connecting-claude-and-higgsfield-mcp",
+          "title": "Connecting Claude Fable 5 and Higgsfield MCP",
+          "position": 2,
+          "source_url": "https://higgsfield.ai/academy/courses/faceless-channel/connecting-claude-and-higgsfield-mcp",
+          "key": "faceless-channel/connecting-claude-and-higgsfield-mcp",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "writing-the-script-with-one-prompt",
+          "title": "Writing the Script With One Prompt",
+          "position": 3,
+          "source_url": "https://higgsfield.ai/academy/courses/faceless-channel/writing-the-script-with-one-prompt",
+          "key": "faceless-channel/writing-the-script-with-one-prompt",
+          "production_stage": "prompt-design",
+          "kie_method": "Write one model-specific prompt per shot, separating locked references from the requested action, camera behavior, lighting, audio, and negative constraints.",
+          "prompt_focus": "locked assets, single action, camera, lighting, audio, negatives",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "generating-the-full-video",
+          "title": "Generating the Full Video",
+          "position": 4,
+          "source_url": "https://higgsfield.ai/academy/courses/faceless-channel/generating-the-full-video",
+          "key": "faceless-channel/generating-the-full-video",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "packaging-it-for-youtube",
+          "title": "Packaging It for YouTube",
+          "position": 5,
+          "source_url": "https://higgsfield.ai/academy/courses/faceless-channel/packaging-it-for-youtube",
+          "key": "faceless-channel/packaging-it-for-youtube",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "getting-monetized-without-demonetization",
+          "title": "Getting Monetized Without Demonetization",
+          "position": 6,
+          "source_url": "https://higgsfield.ai/academy/courses/faceless-channel/getting-monetized-without-demonetization",
+          "key": "faceless-channel/getting-monetized-without-demonetization",
+          "production_stage": "delivery",
+          "kie_method": "Package the finished media for its destination, verify claims and formatting, publish only with authorization, and feed observed performance back into the next brief.",
+          "prompt_focus": "platform requirements, title/thumbnail, claims, export, measurement plan",
+          "recommended_kie_models": [],
+          "capability_boundary": "Publishing, analytics, and platform compliance remain outside Kie and require explicit local or platform-specific actions."
+        },
+        {
+          "slug": "three-days-later-the-results",
+          "title": "Three Days Later: The Real Results",
+          "position": 7,
+          "source_url": "https://higgsfield.ai/academy/courses/faceless-channel/three-days-later-the-results",
+          "key": "faceless-channel/three-days-later-the-results",
+          "production_stage": "delivery",
+          "kie_method": "Package the finished media for its destination, verify claims and formatting, publish only with authorization, and feed observed performance back into the next brief.",
+          "prompt_focus": "platform requirements, title/thumbnail, claims, export, measurement plan",
+          "recommended_kie_models": [],
+          "capability_boundary": "Publishing, analytics, and platform compliance remain outside Kie and require explicit local or platform-specific actions."
+        }
+      ]
+    },
+    {
+      "slug": "mix-ai-real-footage",
+      "title": "Mix AI with Real Footage",
+      "source_url": "https://higgsfield.ai/academy/courses/mix-ai-real-footage",
+      "lesson_count": 10,
+      "duration_minutes": 5,
+      "difficulty": "Intermediate",
+      "lessons": [
+        {
+          "slug": "the-real-or-ai-challenge",
+          "title": "The Real-or-AI Challenge",
+          "position": 1,
+          "source_url": "https://higgsfield.ai/academy/courses/mix-ai-real-footage/the-real-or-ai-challenge",
+          "key": "mix-ai-real-footage/the-real-or-ai-challenge",
+          "production_stage": "reference-review",
+          "kie_method": "Study the example for beats, recurring assets, transitions, and visible failure modes; record observations as constraints rather than imitating the source wording.",
+          "prompt_focus": "desired outcome, audience reaction, continuity risks, acceptance criteria",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "setting-up-the-quixel-plugin",
+          "title": "Setting Up the Quixel Plugin",
+          "position": 2,
+          "source_url": "https://higgsfield.ai/academy/courses/mix-ai-real-footage/setting-up-the-quixel-plugin",
+          "key": "mix-ai-real-footage/setting-up-the-quixel-plugin",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "removing-an-object",
+          "title": "Removing an Object",
+          "position": 3,
+          "source_url": "https://higgsfield.ai/academy/courses/mix-ai-real-footage/removing-an-object",
+          "key": "mix-ai-real-footage/removing-an-object",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "adding-a-new-element",
+          "title": "Adding a New Element",
+          "position": 4,
+          "source_url": "https://higgsfield.ai/academy/courses/mix-ai-real-footage/adding-a-new-element",
+          "key": "mix-ai-real-footage/adding-a-new-element",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "changing-clothing",
+          "title": "Changing Clothing",
+          "position": 5,
+          "source_url": "https://higgsfield.ai/academy/courses/mix-ai-real-footage/changing-clothing",
+          "key": "mix-ai-real-footage/changing-clothing",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "swapping-the-background",
+          "title": "Swapping the Background",
+          "position": 6,
+          "source_url": "https://higgsfield.ai/academy/courses/mix-ai-real-footage/swapping-the-background",
+          "key": "mix-ai-real-footage/swapping-the-background",
+          "production_stage": "keyframe",
+          "kie_method": "Generate and inspect a still keyframe before motion. Use GPT Image 2 for first-pass quality and precise reference work, or Nano Banana for controlled image edits and continuity variants.",
+          "prompt_focus": "approved composition, exact identity, product fidelity, clean geometry, no motion blur",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        },
+        {
+          "slug": "building-a-transition",
+          "title": "Building a Transition",
+          "position": 7,
+          "source_url": "https://higgsfield.ai/academy/courses/mix-ai-real-footage/building-a-transition",
+          "key": "mix-ai-real-footage/building-a-transition",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "creating-multiple-angles",
+          "title": "Creating Multiple Angles",
+          "position": 8,
+          "source_url": "https://higgsfield.ai/academy/courses/mix-ai-real-footage/creating-multiple-angles",
+          "key": "mix-ai-real-footage/creating-multiple-angles",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "reframing-for-social",
+          "title": "Reframing for Social",
+          "position": 9,
+          "source_url": "https://higgsfield.ai/academy/courses/mix-ai-real-footage/reframing-for-social",
+          "key": "mix-ai-real-footage/reframing-for-social",
+          "production_stage": "post-production",
+          "kie_method": "Assemble only approved takes, then check continuity at every cut before adding sound, captions, grade, reframing, upscale, or export as separate reversible passes.",
+          "prompt_focus": "selected take, edit point, transition, mix, captions, delivery format",
+          "recommended_kie_models": [],
+          "capability_boundary": "Final edit, compositing, captions, and assembly remain transparent local post-production steps."
+        },
+        {
+          "slug": "upscaling-old-footage",
+          "title": "Upscaling Old Footage",
+          "position": 10,
+          "source_url": "https://higgsfield.ai/academy/courses/mix-ai-real-footage/upscaling-old-footage",
+          "key": "mix-ai-real-footage/upscaling-old-footage",
+          "production_stage": "post-production",
+          "kie_method": "Assemble only approved takes, then check continuity at every cut before adding sound, captions, grade, reframing, upscale, or export as separate reversible passes.",
+          "prompt_focus": "selected take, edit point, transition, mix, captions, delivery format",
+          "recommended_kie_models": [],
+          "capability_boundary": "Final edit, compositing, captions, and assembly remain transparent local post-production steps."
+        }
+      ]
+    },
+    {
+      "slug": "build-3d-games-mcp",
+      "title": "Build 3D Games with MCP",
+      "source_url": "https://higgsfield.ai/academy/courses/build-3d-games-mcp",
+      "lesson_count": 10,
+      "duration_minutes": 12,
+      "difficulty": "Beginner",
+      "lessons": [
+        {
+          "slug": "intro-three-games-no-code",
+          "title": "Intro: Three Real Games, Zero Code",
+          "position": 1,
+          "source_url": "https://higgsfield.ai/academy/courses/build-3d-games-mcp/intro-three-games-no-code",
+          "key": "build-3d-games-mcp/intro-three-games-no-code",
+          "production_stage": "reference-review",
+          "kie_method": "Study the example for beats, recurring assets, transitions, and visible failure modes; record observations as constraints rather than imitating the source wording.",
+          "prompt_focus": "desired outcome, audience reaction, continuity risks, acceptance criteria",
+          "recommended_kie_models": [],
+          "capability_boundary": "Apply the agent-planning and asset-production method only; Kie does not provide a true 3D mesh/game build-and-publish endpoint."
+        },
+        {
+          "slug": "setup-mcp-and-skill",
+          "title": "Setup: MCP Connector and Skill",
+          "position": 2,
+          "source_url": "https://higgsfield.ai/academy/courses/build-3d-games-mcp/setup-mcp-and-skill",
+          "key": "build-3d-games-mcp/setup-mcp-and-skill",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": [],
+          "capability_boundary": "Apply the agent-planning and asset-production method only; Kie does not provide a true 3D mesh/game build-and-publish endpoint."
+        },
+        {
+          "slug": "scene-1-the-pirate-game",
+          "title": "Scene 1: The Pirate Game",
+          "position": 3,
+          "source_url": "https://higgsfield.ai/academy/courses/build-3d-games-mcp/scene-1-the-pirate-game",
+          "key": "build-3d-games-mcp/scene-1-the-pirate-game",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ],
+          "capability_boundary": "Apply the agent-planning and asset-production method only; Kie does not provide a true 3D mesh/game build-and-publish endpoint."
+        },
+        {
+          "slug": "mcp-vs-claude-alone",
+          "title": "With MCP vs. Claude Alone",
+          "position": 4,
+          "source_url": "https://higgsfield.ai/academy/courses/build-3d-games-mcp/mcp-vs-claude-alone",
+          "key": "build-3d-games-mcp/mcp-vs-claude-alone",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": [],
+          "capability_boundary": "Apply the agent-planning and asset-production method only; Kie does not provide a true 3D mesh/game build-and-publish endpoint."
+        },
+        {
+          "slug": "scene-2-blockfield-shooter",
+          "title": "Scene 2: Blockfield Shooter",
+          "position": 5,
+          "source_url": "https://higgsfield.ai/academy/courses/build-3d-games-mcp/scene-2-blockfield-shooter",
+          "key": "build-3d-games-mcp/scene-2-blockfield-shooter",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ],
+          "capability_boundary": "Apply the agent-planning and asset-production method only; Kie does not provide a true 3D mesh/game build-and-publish endpoint."
+        },
+        {
+          "slug": "scene-3-neonslice-fruit-slicer",
+          "title": "Scene 3: NeonSlice Fruit Slicer",
+          "position": 6,
+          "source_url": "https://higgsfield.ai/academy/courses/build-3d-games-mcp/scene-3-neonslice-fruit-slicer",
+          "key": "build-3d-games-mcp/scene-3-neonslice-fruit-slicer",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ],
+          "capability_boundary": "Apply the agent-planning and asset-production method only; Kie does not provide a true 3D mesh/game build-and-publish endpoint."
+        },
+        {
+          "slug": "publishing-to-the-marketplace",
+          "title": "Publishing to the Marketplace",
+          "position": 7,
+          "source_url": "https://higgsfield.ai/academy/courses/build-3d-games-mcp/publishing-to-the-marketplace",
+          "key": "build-3d-games-mcp/publishing-to-the-marketplace",
+          "production_stage": "delivery",
+          "kie_method": "Package the finished media for its destination, verify claims and formatting, publish only with authorization, and feed observed performance back into the next brief.",
+          "prompt_focus": "platform requirements, title/thumbnail, claims, export, measurement plan",
+          "recommended_kie_models": [],
+          "capability_boundary": "Apply the agent-planning and asset-production method only; Kie does not provide a true 3D mesh/game build-and-publish endpoint."
+        },
+        {
+          "slug": "the-results-i-woke-up-to",
+          "title": "The Results I Woke Up To",
+          "position": 8,
+          "source_url": "https://higgsfield.ai/academy/courses/build-3d-games-mcp/the-results-i-woke-up-to",
+          "key": "build-3d-games-mcp/the-results-i-woke-up-to",
+          "production_stage": "delivery",
+          "kie_method": "Package the finished media for its destination, verify claims and formatting, publish only with authorization, and feed observed performance back into the next brief.",
+          "prompt_focus": "platform requirements, title/thumbnail, claims, export, measurement plan",
+          "recommended_kie_models": [],
+          "capability_boundary": "Apply the agent-planning and asset-production method only; Kie does not provide a true 3D mesh/game build-and-publish endpoint."
+        },
+        {
+          "slug": "what-three-games-cost",
+          "title": "What Three Games Actually Cost",
+          "position": 9,
+          "source_url": "https://higgsfield.ai/academy/courses/build-3d-games-mcp/what-three-games-cost",
+          "key": "build-3d-games-mcp/what-three-games-cost",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": [],
+          "capability_boundary": "Apply the agent-planning and asset-production method only; Kie does not provide a true 3D mesh/game build-and-publish endpoint."
+        },
+        {
+          "slug": "studio-reaction-and-wrap-up",
+          "title": "Studio Reaction and Wrap-Up",
+          "position": 10,
+          "source_url": "https://higgsfield.ai/academy/courses/build-3d-games-mcp/studio-reaction-and-wrap-up",
+          "key": "build-3d-games-mcp/studio-reaction-and-wrap-up",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ],
+          "capability_boundary": "Apply the agent-planning and asset-production method only; Kie does not provide a true 3D mesh/game build-and-publish endpoint."
+        }
+      ]
+    },
+    {
+      "slug": "cinematic-car-commercial",
+      "title": "Direct a cinematic AI car commercial",
+      "source_url": "https://higgsfield.ai/academy/courses/cinematic-car-commercial",
+      "lesson_count": 11,
+      "duration_minutes": 35,
+      "difficulty": "Intermediate",
+      "lessons": [
+        {
+          "slug": "plan-around-reusable-assets",
+          "title": "Plan around reusable assets",
+          "position": 1,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-car-commercial/plan-around-reusable-assets",
+          "key": "cinematic-car-commercial/plan-around-reusable-assets",
+          "production_stage": "asset-lock",
+          "kie_method": "Build reusable character, product, prop, wardrobe, and location references before scene work; define immutable identity traits separately from changeable styling.",
+          "prompt_focus": "identity traits, reference views, materials, palette, scale, exclusions",
+          "recommended_kie_models": [
+            "gpt-image-2-text-to-image",
+            "gpt-image-2-image-to-image",
+            "nano-banana-2",
+            "nano-banana-pro"
+          ]
+        },
+        {
+          "slug": "build-characters-for-continuity",
+          "title": "Build characters for continuity",
+          "position": 2,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-car-commercial/build-characters-for-continuity",
+          "key": "cinematic-car-commercial/build-characters-for-continuity",
+          "production_stage": "storyboard",
+          "kie_method": "Convert the approved script into ordered shots with duration, composition, action, camera, audio, continuity inputs, and a specific approval criterion for each frame.",
+          "prompt_focus": "shot size, camera, blocking, timing, continuity in/out, transition",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "lock-the-look-and-assemble-scene",
+          "title": "Assemble a scene from locked references",
+          "position": 3,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-car-commercial/lock-the-look-and-assemble-scene",
+          "key": "cinematic-car-commercial/lock-the-look-and-assemble-scene",
+          "production_stage": "post-production",
+          "kie_method": "Assemble only approved takes, then check continuity at every cut before adding sound, captions, grade, reframing, upscale, or export as separate reversible passes.",
+          "prompt_focus": "selected take, edit point, transition, mix, captions, delivery format",
+          "recommended_kie_models": [],
+          "capability_boundary": "Final edit, compositing, captions, and assembly remain transparent local post-production steps."
+        },
+        {
+          "slug": "cast-and-clean-the-plate",
+          "title": "Cast and clean the plate",
+          "position": 4,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-car-commercial/cast-and-clean-the-plate",
+          "key": "cinematic-car-commercial/cast-and-clean-the-plate",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "repair-continuity-with-references",
+          "title": "Repair continuity with references",
+          "position": 5,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-car-commercial/repair-continuity-with-references",
+          "key": "cinematic-car-commercial/repair-continuity-with-references",
+          "production_stage": "storyboard",
+          "kie_method": "Convert the approved script into ordered shots with duration, composition, action, camera, audio, continuity inputs, and a specific approval criterion for each frame.",
+          "prompt_focus": "shot size, camera, blocking, timing, continuity in/out, transition",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "direct-dialogue-through-selection",
+          "title": "Direct dialogue through selection",
+          "position": 6,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-car-commercial/direct-dialogue-through-selection",
+          "key": "cinematic-car-commercial/direct-dialogue-through-selection",
+          "production_stage": "script",
+          "kie_method": "Write short producible beats where each beat has one dramatic purpose, one visible action, and only the dialogue or narration that can fit its duration.",
+          "prompt_focus": "hook, beat objective, action, dialogue, payoff",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "make-complex-driving-readable",
+          "title": "Make complex driving readable",
+          "position": 7,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-car-commercial/make-complex-driving-readable",
+          "key": "cinematic-car-commercial/make-complex-driving-readable",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "correct-performance-one-variable",
+          "title": "Correct performance one variable at a time",
+          "position": 8,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-car-commercial/correct-performance-one-variable",
+          "key": "cinematic-car-commercial/correct-performance-one-variable",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "stabilize-a-comic-set-piece",
+          "title": "Stabilize a comic set piece",
+          "position": 9,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-car-commercial/stabilize-a-comic-set-piece",
+          "key": "cinematic-car-commercial/stabilize-a-comic-set-piece",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "block-the-finale-backward",
+          "title": "Block the finale backward",
+          "position": 10,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-car-commercial/block-the-finale-backward",
+          "key": "cinematic-car-commercial/block-the-finale-backward",
+          "production_stage": "creative-brief",
+          "kie_method": "Turn the goal into a bounded production brief with audience, platform, duration, aspect ratio, required truth, references, and a clear definition of done.",
+          "prompt_focus": "subject, purpose, format, constraints, non-negotiables",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "finish-the-story-in-the-edit",
+          "title": "Finish the story in the edit",
+          "position": 11,
+          "source_url": "https://higgsfield.ai/academy/courses/cinematic-car-commercial/finish-the-story-in-the-edit",
+          "key": "cinematic-car-commercial/finish-the-story-in-the-edit",
+          "production_stage": "post-production",
+          "kie_method": "Assemble only approved takes, then check continuity at every cut before adding sound, captions, grade, reframing, upscale, or export as separate reversible passes.",
+          "prompt_focus": "selected take, edit point, transition, mix, captions, delivery format",
+          "recommended_kie_models": [],
+          "capability_boundary": "Final edit, compositing, captions, and assembly remain transparent local post-production steps."
+        }
+      ]
+    },
+    {
+      "slug": "direct-ai-fight-scenes",
+      "title": "Direct AI fight scenes through controlled iteration",
+      "source_url": "https://higgsfield.ai/academy/courses/direct-ai-fight-scenes",
+      "lesson_count": 5,
+      "duration_minutes": 16,
+      "difficulty": "Intermediate",
+      "lessons": [
+        {
+          "slug": "blueprint-the-fight",
+          "title": "Blueprint the fight before motion",
+          "position": 1,
+          "source_url": "https://higgsfield.ai/academy/courses/direct-ai-fight-scenes/blueprint-the-fight",
+          "key": "direct-ai-fight-scenes/blueprint-the-fight",
+          "production_stage": "storyboard",
+          "kie_method": "Convert the approved script into ordered shots with duration, composition, action, camera, audio, continuity inputs, and a specific approval criterion for each frame.",
+          "prompt_focus": "shot size, camera, blocking, timing, continuity in/out, transition",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "diagnose-and-repair-a-shot",
+          "title": "Diagnose and repair a complex shot",
+          "position": 2,
+          "source_url": "https://higgsfield.ai/academy/courses/direct-ai-fight-scenes/diagnose-and-repair-a-shot",
+          "key": "direct-ai-fight-scenes/diagnose-and-repair-a-shot",
+          "production_stage": "review",
+          "kie_method": "Compare the result with the brief and storyboard, reject visible defects instead of rationalizing them, and record reusable lessons for the next production.",
+          "prompt_focus": "brief match, continuity, defects, strongest take, next iteration",
+          "recommended_kie_models": []
+        },
+        {
+          "slug": "direct-scale-and-transformation",
+          "title": "Direct scale and transformation with measurements",
+          "position": 3,
+          "source_url": "https://higgsfield.ai/academy/courses/direct-ai-fight-scenes/direct-scale-and-transformation",
+          "key": "direct-ai-fight-scenes/direct-scale-and-transformation",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "preserve-physics-through-the-cut",
+          "title": "Preserve physics through the impact cut",
+          "position": 4,
+          "source_url": "https://higgsfield.ai/academy/courses/direct-ai-fight-scenes/preserve-physics-through-the-cut",
+          "key": "direct-ai-fight-scenes/preserve-physics-through-the-cut",
+          "production_stage": "motion",
+          "kie_method": "Animate only an approved keyframe, keep each shot to one primary action, and review geography, physics, identity, hands, props, dialogue timing, and camera intent before accepting the take.",
+          "prompt_focus": "first frame, primary action, camera path, temporal continuity, audio timing",
+          "recommended_kie_models": [
+            "bytedance/seedance-2-5"
+          ]
+        },
+        {
+          "slug": "replace-gameplay-with-cinematic-coverage",
+          "title": "Replace game-like coverage with cinematic direction",
+          "position": 5,
+          "source_url": "https://higgsfield.ai/academy/courses/direct-ai-fight-scenes/replace-gameplay-with-cinematic-coverage",
+          "key": "direct-ai-fight-scenes/replace-gameplay-with-cinematic-coverage",
+          "production_stage": "storyboard",
+          "kie_method": "Convert the approved script into ordered shots with duration, composition, action, camera, audio, continuity inputs, and a specific approval criterion for each frame.",
+          "prompt_focus": "shot size, camera, blocking, timing, continuity in/out, transition",
+          "recommended_kie_models": []
+        }
+      ]
+    }
+  ]
+}

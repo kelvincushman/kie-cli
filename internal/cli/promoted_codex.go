@@ -21,11 +21,11 @@ func newCodexPromotedCmd(flags *rootFlags) *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "codex",
-		Short: "GPT 5.",
-		Long:  "GPT 5.",
+		Short: "Shared Kie endpoint. Select a documented model value: gpt-5-4, gpt-5-5, gpt-5-6-luna, gpt-5-6-sol, gpt-5-6-terra.",
+		Long:  "Shared Kie endpoint. Select a documented model value: gpt-5-4, gpt-5-5, gpt-5-6-luna, gpt-5-6-sol, gpt-5-6-terra.",
 		// TODO: replace placeholder example values before relying on this for live dogfood.
 		Example:     "  kie-pp-cli codex --input example-value",
-		Annotations: map[string]string{"pp:endpoint": "codex.gpt-5-6-terra-completions", "pp:method": "POST", "pp:path": "/codex/v1/responses"},
+		Annotations: map[string]string{"pp:endpoint": "codex.openai-responses", "pp:method": "POST", "pp:path": "/codex/v1/responses"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// Bare invocation of a command with a required flag/body prints help
 			// instead of pflag's terse "required flag not set" error. Optional-
@@ -47,6 +47,9 @@ func newCodexPromotedCmd(flags *rootFlags) *cobra.Command {
 			}
 			if !cmd.Flags().Changed("input") && !flags.dryRun {
 				return fmt.Errorf("required flag \"%s\" not set", "input")
+			}
+			if !cmd.Flags().Changed("model") && !flags.dryRun {
+				return fmt.Errorf("required flag \"%s\" not set", "model")
 			}
 			c, err := flags.newClient()
 			if err != nil {
@@ -135,7 +138,7 @@ func newCodexPromotedCmd(flags *rootFlags) *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&bodyInput, "input", "", "Input")
-	cmd.Flags().StringVar(&bodyModel, "model", "gpt-5-6-terra", "Target model name. Allowed values: `gpt-5-6-terra`.")
+	cmd.Flags().StringVar(&bodyModel, "model", "", "Model identifier. Supported values: gpt-5-4, gpt-5-5, gpt-5-6-luna, gpt-5-6-sol, gpt-5-6-terra")
 	cmd.Flags().StringVar(&bodyReasoningEffort, "reasoning-effort", "", "Reasoning effort level. Higher values provide more thorough reasoning but may increase latency. Defaults to 'low'.")
 	cmd.Flags().BoolVar(&bodyStream, "stream", false, "When true, responses stream in real time as server-sent events.")
 	cmd.Flags().StringVar(&bodyToolChoice, "tool-choice", "", "Tool selection behavior.")

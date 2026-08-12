@@ -1,6 +1,9 @@
 /kie
 /kie-pp-cli
 /kie-pp-mcp
+/bin/
+__pycache__/
+*.py[cod]
 *.db
 *.sqlite
 .DS_Store

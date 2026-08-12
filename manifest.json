@@ -3,7 +3,7 @@
   "name": "kie-pp-mcp",
   "display_name": "Kie.ai",
   "version": "0.0.0-dev",
-  "description": "Generate images, video, and music and manage tasks across Kie.ai's unified AI model marketplace (120+ models) plus dedicated Suno, Veo3.1, Runway, Flux Kontext, and 4o Image APIs.",
+  "description": "Create image, video, music, speech, and chat media across 129 typed Kie Market models plus all current dedicated Kie APIs, with local direction and human approval gates.",
   "author": {
     "name": "CLI Printing Press"
   },

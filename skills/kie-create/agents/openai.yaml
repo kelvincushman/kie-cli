@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kie Create"
+  short_description: "Guide and resume local Kie media briefs"
+  default_prompt: "Use $kie-create to guide this media request through a local Kie.ai brief."

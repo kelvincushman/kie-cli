@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kie Product Photoshoot"
+  short_description: "Direct consistent product campaign imagery"
+  default_prompt: "Use $kie-product-photoshoot to create a consistent Kie.ai product shoot from my references."

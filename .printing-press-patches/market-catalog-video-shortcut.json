@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "id": "market-catalog-video-shortcut",
+  "applied_at": "2026-08-12",
+  "base_run_id": "20260803T075619Z-899a6d3a",
+  "base_printing_press_version": "4.30.1",
+  "summary": "Preserve the compact media model-discovery alias and direct Wan 2.7 video shortcut while keeping every request input and setting on the canonical complete 129-model registry.",
+  "reason": "A concurrent media shortcut originally embedded a separate 128-model summary snapshot. Keeping two model catalogs would create conflicting counts and allow model inputs, settings, and sources to drift. The integrated shortcut instead reads internal/kiecatalog, validates built-in Wan flags and every custom --model/--input payload against the complete captured contract, and retains optional task polling and result URL extraction. The direct command intentionally bypasses the director preview gate and is documented as an advanced automation surface.",
+  "files": [
+    "README.md",
+    "docs/ADVANCED_MEDIA_DIRECTOR.md",
+    "docs/MEDIA_DIRECTOR.md",
+    "internal/cli/market_video.go",
+    "internal/cli/market_video_test.go",
+    "internal/cli/media_director.go",
+    "internal/kiecatalog/catalog.go",
+    "internal/kiecatalog/catalog.json",
+    "skills/kie-create/SKILL.md"
+  ],
+  "validated_outcome": "The media models alias reports the canonical catalog count of 129 and exposes sourced compact summaries without a second embedded registry. Dry-run tests prove exact Wan 2.7 request construction and successful custom Wan 2.6 input handling. Failure tests reject invalid ranges, URLs, enums, raw Wan input, and unknown models before a live call. Polling and nested result URL parsing tests pass. Repository-wide Go tests, vet, race checks, all binary builds, generated-artifact drift validation, research tests, skill validation, Markdown link checks, JSON parsing, gofmt, and git diff checks pass. No paid/live Kie generation was submitted because no API credential was used.",
+  "upstream_issue": ""
+}

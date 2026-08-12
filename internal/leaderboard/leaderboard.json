@@ -1,0 +1,295 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-12T05:52:22.920811+00:00",
+  "methodology": "Task-specific evidence ledger. Source ranks and scores are not normalized or combined. Kie availability is a separate routing constraint, and character consistency uses image-edit performance only as a disclosed proxy.",
+  "sources": [
+    {
+      "id": "arena-text-to-image",
+      "name": "Arena Text-to-Image",
+      "url": "https://arena.ai/leaderboard/text-to-image/",
+      "evidence_type": "crowdsourced human preference",
+      "fetched_at": "2026-08-12T05:52:22.920811+00:00"
+    },
+    {
+      "id": "arena-image-edit",
+      "name": "Arena Image Edit",
+      "url": "https://arena.ai/leaderboard/image-edit/",
+      "evidence_type": "crowdsourced human preference",
+      "fetched_at": "2026-08-12T05:52:22.920811+00:00"
+    },
+    {
+      "id": "artificial-analysis-text-to-video",
+      "name": "Artificial Analysis Text-to-Video Arena",
+      "url": "https://artificialanalysis.ai/embed/text-to-video-leaderboard/leaderboard/text-to-video",
+      "evidence_type": "crowdsourced human preference",
+      "fetched_at": "2026-08-12T05:52:22.920811+00:00"
+    },
+    {
+      "id": "kie-market",
+      "name": "Kie.ai generated model-contract catalog",
+      "url": "https://docs.kie.ai/market/quickstart",
+      "evidence_type": "provider availability and input contract",
+      "fetched_at": "2026-08-12T05:52:22.920811+00:00"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "text-to-image",
+      "label": "Text-to-image quality",
+      "source_ids": [
+        "arena-text-to-image",
+        "kie-market"
+      ],
+      "ranking_kind": "direct independent human-preference evidence",
+      "entries": [
+        {
+          "source_rank": 1,
+          "source_score": 1381,
+          "score_type": "Arena score",
+          "source_model": "gpt-image-2 (medium)",
+          "kie_model": "gpt-image-2-text-to-image",
+          "kie_available": true,
+          "direct_match": true,
+          "strengths": [
+            "overall image quality",
+            "reference-led generation",
+            "precise image editing"
+          ]
+        },
+        {
+          "source_rank": 7,
+          "source_score": 1264,
+          "score_type": "Arena score",
+          "source_model": "gemini-3.1-flash-image (nano-banana-2) [web-search]",
+          "kie_model": "nano-banana-2",
+          "kie_available": true,
+          "direct_match": true,
+          "strengths": [
+            "fast iterative generation",
+            "reference edits",
+            "web-grounded variants when supported"
+          ]
+        },
+        {
+          "source_rank": 11,
+          "source_score": 1251,
+          "score_type": "Arena score",
+          "source_model": "gemini-3.1-flash-lite-image (nano-banana-2-lite)",
+          "kie_model": "nano-banana-2-lite",
+          "kie_available": true,
+          "direct_match": true,
+          "strengths": [
+            "lower-cost iteration",
+            "draft variations"
+          ]
+        },
+        {
+          "source_rank": 12,
+          "source_score": 1246,
+          "score_type": "Arena score",
+          "source_model": "gemini-3-pro-image-2k (nano-banana-pro)",
+          "kie_model": "nano-banana-pro",
+          "kie_available": true,
+          "direct_match": true,
+          "strengths": [
+            "high-resolution reference editing",
+            "character-sheet variants",
+            "layout control"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "image-edit",
+      "label": "Reference-led image editing",
+      "source_ids": [
+        "arena-image-edit",
+        "kie-market"
+      ],
+      "ranking_kind": "direct independent human-preference evidence",
+      "entries": [
+        {
+          "source_rank": 1,
+          "source_score": 1463,
+          "score_type": "Arena score",
+          "source_model": "gpt-image-2 (medium)",
+          "kie_model": "gpt-image-2-image-to-image",
+          "kie_available": true,
+          "direct_match": true,
+          "strengths": [
+            "overall image quality",
+            "reference-led generation",
+            "precise image editing"
+          ]
+        },
+        {
+          "source_rank": 8,
+          "source_score": 1389,
+          "score_type": "Arena score",
+          "source_model": "gemini-3-pro-image-2k (nano-banana-pro)",
+          "kie_model": "nano-banana-pro",
+          "kie_available": true,
+          "direct_match": true,
+          "strengths": [
+            "high-resolution reference editing",
+            "character-sheet variants",
+            "layout control"
+          ]
+        },
+        {
+          "source_rank": 10,
+          "source_score": 1385,
+          "score_type": "Arena score",
+          "source_model": "gemini-3.1-flash-image (nano-banana-2) [web-search]",
+          "kie_model": "nano-banana-2",
+          "kie_available": true,
+          "direct_match": true,
+          "strengths": [
+            "fast iterative generation",
+            "reference edits",
+            "web-grounded variants when supported"
+          ]
+        },
+        {
+          "source_rank": 17,
+          "source_score": 1314,
+          "score_type": "Arena score",
+          "source_model": "gemini-3.1-flash-lite-image (nano-banana-2-lite)",
+          "kie_model": "nano-banana-2-lite",
+          "kie_available": true,
+          "direct_match": true,
+          "strengths": [
+            "lower-cost iteration",
+            "draft variations"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "character-consistency",
+      "label": "Character/reference consistency",
+      "source_ids": [
+        "arena-image-edit",
+        "kie-market"
+      ],
+      "ranking_kind": "image-edit proxy plus local workflow constraints",
+      "warning": "No source used here publishes a cross-model character-consistency benchmark. Treat this as routing guidance, then inspect every generated reference sheet and shot.",
+      "entries": [
+        {
+          "source_rank": 1,
+          "source_score": 1463,
+          "score_type": "Arena score",
+          "source_model": "gpt-image-2 (medium)",
+          "kie_model": "gpt-image-2-image-to-image",
+          "kie_available": true,
+          "direct_match": true,
+          "strengths": [
+            "overall image quality",
+            "reference-led generation",
+            "precise image editing"
+          ]
+        },
+        {
+          "source_rank": 8,
+          "source_score": 1389,
+          "score_type": "Arena score",
+          "source_model": "gemini-3-pro-image-2k (nano-banana-pro)",
+          "kie_model": "nano-banana-pro",
+          "kie_available": true,
+          "direct_match": true,
+          "strengths": [
+            "high-resolution reference editing",
+            "character-sheet variants",
+            "layout control"
+          ]
+        },
+        {
+          "source_rank": 10,
+          "source_score": 1385,
+          "score_type": "Arena score",
+          "source_model": "gemini-3.1-flash-image (nano-banana-2) [web-search]",
+          "kie_model": "nano-banana-2",
+          "kie_available": true,
+          "direct_match": true,
+          "strengths": [
+            "fast iterative generation",
+            "reference edits",
+            "web-grounded variants when supported"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "text-to-video",
+      "label": "Text-to-video quality",
+      "source_ids": [
+        "artificial-analysis-text-to-video",
+        "kie-market"
+      ],
+      "ranking_kind": "direct evidence where model versions match; explicit family proxy otherwise",
+      "entries": [
+        {
+          "source_rank": null,
+          "source_score": null,
+          "score_type": "unscored successor",
+          "source_model": "Seedance 2.5 (direct independent score unavailable)",
+          "kie_model": "bytedance/seedance-2-5",
+          "kie_available": true,
+          "direct_match": false,
+          "proxy": {
+            "source_model": "Dreamina Seedance 2.0 720p",
+            "source_rank": 3,
+            "source_score": 1223,
+            "warning": "Family evidence only; do not transfer the score to Seedance 2.5."
+          },
+          "strengths": [
+            "Kie multimodal orchestration",
+            "first/last frames",
+            "image/video/audio references",
+            "generated audio"
+          ]
+        },
+        {
+          "source_rank": 3,
+          "source_score": 1223,
+          "score_type": "Elo",
+          "source_model": "Dreamina Seedance 2.0 720p",
+          "kie_model": "bytedance/seedance-2",
+          "kie_available": true,
+          "direct_match": true,
+          "strengths": [
+            "cinematic motion",
+            "prompt adherence",
+            "audio-capable family"
+          ]
+        },
+        {
+          "source_rank": 4,
+          "source_score": 1160,
+          "score_type": "Elo",
+          "source_model": "Wan2.7-260612",
+          "kie_model": "wan/2-7-text-to-video",
+          "kie_available": true,
+          "direct_match": true,
+          "strengths": [
+            "text-to-video quality",
+            "current Wan family"
+          ]
+        },
+        {
+          "source_rank": 8,
+          "source_score": 1109,
+          "score_type": "Elo",
+          "source_model": "Kling 3.0 1080p (Pro)",
+          "kie_model": "kling-3.0/video",
+          "kie_available": true,
+          "direct_match": true,
+          "strengths": [
+            "high-resolution motion",
+            "general video quality"
+          ]
+        }
+      ]
+    }
+  ]
+}

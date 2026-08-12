@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"kie-pp-cli/internal/cliutil"
@@ -23,44 +24,105 @@ func newAuthCmd(flags *rootFlags) *cobra.Command {
 
 	cmd.AddCommand(newAuthSetupCmd(flags))
 	cmd.AddCommand(newAuthStatusCmd(flags))
-	cmd.AddCommand(newAuthSetTokenCmd(flags))
 	cmd.AddCommand(newAuthLogoutCmd(flags))
 
 	return cmd
 }
 
-// newAuthSetupCmd prints concrete steps for getting a credential. Side-effect
-// rule: print by default, --launch opt-in to open the URL, short-circuit when
-// the verifier is running this in a sandboxed subprocess.
-func newAuthSetupCmd(_ *rootFlags) *cobra.Command {
+// newAuthSetupCmd starts the interactive, credential-safe first-run setup. It
+// prints non-blocking directions instead when stdout or stdin is not a terminal.
+func newAuthSetupCmd(flags *rootFlags) *cobra.Command {
 	var launch bool
 	cmd := &cobra.Command{
 		Use:     "setup",
-		Short:   "Print steps for obtaining a credential (use --launch to open the URL)",
+		Short:   "Guided API key setup",
 		Example: "  kie-pp-cli auth setup\n  kie-pp-cli auth setup --launch",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			w := cmd.OutOrStdout()
-			fmt.Fprintln(w, "Get a key at: https://kie.ai/api-key")
-			fmt.Fprintln(w, "")
-			fmt.Fprintln(w, "Then set:")
-			fmt.Fprintln(w, "  export KIE_BEARER_AUTH=\"your-token-here\"")
-			fmt.Fprintln(w, "  kie-pp-cli auth set-token <token>")
-			if !launch {
-				return nil
-			}
-			launchURL := "https://kie.ai/api-key"
-			if cliutil.IsVerifyEnv() {
-				fmt.Fprintf(w, "would launch: %s\n", launchURL)
-				return nil
-			}
-			if err := openSetupURL(launchURL); err != nil {
-				fmt.Fprintf(cmd.ErrOrStderr(), "could not open browser automatically: %v\nopen this URL manually: %s\n", err, launchURL)
-			}
-			return nil
+			return runAuthSetup(cmd, flags, launch, nil)
 		},
 	}
-	cmd.Flags().BoolVar(&launch, "launch", false, "Open the setup URL in your default browser")
+	cmd.Flags().BoolVar(&launch, "launch", false, "Open the Get API key page in your default browser")
 	return cmd
+}
+
+// runAuthSetup uses readKey only in tests. Production calls readMaskedAPIKey,
+// which disables terminal echo before it reads the key.
+func runAuthSetup(cmd *cobra.Command, flags *rootFlags, launch bool, readKey func(*cobra.Command) (string, error)) error {
+	if !canGuideAuthSetup(cmd, flags) && readKey == nil {
+		return printAuthSetupHint(cmd, flags)
+	}
+
+	w := cmd.OutOrStdout()
+	fmt.Fprintln(w, "Kie API key setup")
+	fmt.Fprintf(w, "Get API key: %s\n", cliutil.KieAPIKeyURL)
+	fmt.Fprintln(w, "Your key is entered hidden and is never placed in shell history.")
+	if launch {
+		if err := openSetupURL(cliutil.KieAPIKeyURL); err != nil {
+			fmt.Fprintf(cmd.ErrOrStderr(), "could not open browser automatically: %v\nOpen this URL manually: %s\n", err, cliutil.KieAPIKeyURL)
+		}
+	}
+
+	if readKey == nil {
+		readKey = readMaskedAPIKey
+	}
+	key, err := readKey(cmd)
+	if err != nil {
+		return configErr(fmt.Errorf("reading API key: %w", err))
+	}
+	key = strings.TrimSpace(key)
+	if key == "" {
+		return usageErr(fmt.Errorf("API key cannot be empty"))
+	}
+
+	cfg, err := config.Load(flags.configPath)
+	if err != nil {
+		return configErr(err)
+	}
+	if err := saveAuthToken(cfg, key); err != nil {
+		return configErr(fmt.Errorf("saving API key: %w", err))
+	}
+	fmt.Fprintf(w, "API key saved securely to %s\n", credentialSavePath(cfg))
+	fmt.Fprintln(w, "Run 'kie-pp-cli doctor --json' to check your setup.")
+	return nil
+}
+
+func canGuideAuthSetup(cmd *cobra.Command, flags *rootFlags) bool {
+	in, inputIsFile := cmd.InOrStdin().(*os.File)
+	return !cliutil.IsVerifyEnv() &&
+		!flags.noInput && !flags.agent && !flags.asJSON && !flags.csv && !flags.plain && !flags.quiet && !flags.dryRun && !flags.yes &&
+		inputIsFile && isTerminal(in) && isTerminal(cmd.OutOrStdout())
+}
+
+func printAuthSetupHint(cmd *cobra.Command, flags *rootFlags) error {
+	if flags.asJSON || flags.agent {
+		return printJSONFiltered(cmd.OutOrStdout(), map[string]any{
+			"setup_required": true,
+			"next_step":      "kie-pp-cli auth setup",
+			"get_api_key":    cliutil.KieAPIKeyURL,
+		}, flags)
+	}
+	if flags.csv {
+		_, err := fmt.Fprintln(cmd.OutOrStdout(), "setup_required,next_step\ntrue,kie-pp-cli auth setup")
+		return err
+	}
+	if flags.plain || flags.quiet {
+		_, err := fmt.Fprintln(cmd.OutOrStdout(), "kie-pp-cli auth setup")
+		return err
+	}
+	fmt.Fprintln(cmd.OutOrStdout(), "Get API key:", cliutil.KieAPIKeyURL)
+	fmt.Fprintln(cmd.OutOrStdout(), "Run 'kie-pp-cli auth setup' in an interactive terminal to enter and save your key securely.")
+	return nil
+}
+
+func readMaskedAPIKey(cmd *cobra.Command) (string, error) {
+	in, ok := cmd.InOrStdin().(*os.File)
+	if !ok {
+		return "", fmt.Errorf("standard input is not a terminal")
+	}
+	fmt.Fprint(cmd.OutOrStdout(), "API key (input hidden): ")
+	key, err := readMaskedTerminalLine(in)
+	fmt.Fprintln(cmd.OutOrStdout())
+	return key, err
 }
 
 // openSetupURL opens url in the OS default browser. Per the side-effect rule,
@@ -115,9 +177,8 @@ func newAuthStatusCmd(flags *rootFlags) *cobra.Command {
 			if !authed {
 				fmt.Fprintln(w, red("Not authenticated"))
 				fmt.Fprintln(w, "")
-				fmt.Fprintln(w, "Set your token:")
-				fmt.Fprintln(w, "  export KIE_BEARER_AUTH=\"your-token-here\"")
-				fmt.Fprintf(w, "  kie-pp-cli auth set-token <token>\n")
+				fmt.Fprintln(w, "Run 'kie-pp-cli auth setup' in an interactive terminal to save your API key securely.")
+				fmt.Fprintln(w, "For scripts and CI, set KIE_BEARER_AUTH through that environment's secret store.")
 				return authErr(fmt.Errorf("no credentials configured"))
 			}
 
@@ -129,45 +190,13 @@ func newAuthStatusCmd(flags *rootFlags) *cobra.Command {
 	}
 }
 
-func newAuthSetTokenCmd(flags *rootFlags) *cobra.Command {
-	return &cobra.Command{
-		Use:     "set-token <token>",
-		Short:   "Save an API token to the credentials file",
-		Example: "  kie-pp-cli auth set-token YOUR_TOKEN_HERE",
-		Args:    cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			cfg, err := config.Load(flags.configPath)
-			if err != nil {
-				return configErr(err)
-			}
-
-			// Clear any legacy auth_header so AuthHeader() falls through to
-			// the newly-saved credential. Without this, a pre-existing
-			// auth_header value (common after regenerate) shadows the saved
-			// token and set-token silently has no effect. Silent clear (no
-			// log line): a masked-tail variant could leak token bytes through
-			// scripted dogfood that captures stderr.
-			cfg.AuthHeaderVal = ""
-			if err := cfg.SaveTokens("", "", args[0], "", cfg.TokenExpiry); err != nil {
-				return configErr(fmt.Errorf("saving token: %w", err))
-			}
-
-			savePath := credentialSavePath(cfg)
-			// JSON envelope: {saved, config_path, credentials_path}.
-			if flags.asJSON {
-				out := map[string]any{
-					"saved":       true,
-					"config_path": cfg.Path,
-				}
-				if !cfg.AgentcookieManagedByExternalStore() {
-					out["credentials_path"] = savePath
-				}
-				return printJSONFiltered(cmd.OutOrStdout(), out, flags)
-			}
-			fmt.Fprintf(cmd.OutOrStdout(), "Token saved to %s\n", savePath)
-			return nil
-		},
-	}
+// saveAuthToken is shared by the hidden-input wizard and its tests so both use
+// the existing private credential store.
+func saveAuthToken(cfg *config.Config, token string) error {
+	// Clear any legacy auth_header so AuthHeader() falls through to the saved
+	// credential. Keep this silent: output must never reveal token bytes.
+	cfg.AuthHeaderVal = ""
+	return cfg.SaveTokens("", "", token, "", cfg.TokenExpiry)
 }
 
 func credentialSavePath(cfg *config.Config) string {

@@ -145,7 +145,7 @@ func Load(configPath string) (*Config, error) {
 	}
 	// Label config-file-derived credentials so doctor can distinguish
 	// "credentials persisted on disk" from "no credentials at all" — without
-	// this, users who saved via set-token without an env var see a blank
+	// this, users who save via guided setup without an env var see a blank
 	// auth_source and can't tell whether their config is being picked up.
 	// The label is the literal "config" rather than "config:<path>"; the
 	// config file path is exposed separately as report["config_path"], and

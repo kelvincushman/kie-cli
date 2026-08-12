@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kie Video Explainer"
+  short_description: "Produce narrated explainer video blocks"
+  default_prompt: "Use $kie-video-explainer to plan and produce a narrated Kie.ai explainer video."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kie Brand Kit"
+  short_description: "Build a local, approval-led brand system"
+  default_prompt: "Use $kie-brandkit to create a reusable brand identity and asset system with Kie.ai."
