@@ -16,6 +16,8 @@ command -v "$PRINTING_PRESS_BIN" >/dev/null || {
 command -v rsync >/dev/null || { echo "missing required command: rsync" >&2; exit 1; }
 
 "$PYTHON_BIN" research/build_spec.py
+"$PYTHON_BIN" research/build_academy_map.py --preserve-generated-at-if-unchanged
+"$PYTHON_BIN" research/refresh_model_leaderboard.py --preserve-generated-at-if-unchanged
 
 # --force recreates its output directory. Run it only against a disposable
 # mirror; pointing it at the live checkout would remove .git and hand-authored
@@ -103,9 +105,10 @@ done < <(find "$REPO_DIR/internal/cli" -maxdepth 1 -type f -name '*.go' | sort)
 cd "$REPO_DIR"
 "$PYTHON_BIN" research/build_spec.py
 
-gofmt -w cmd internal/cli internal/kiecatalog internal/mcp internal/types
+gofmt -w cmd internal/academy internal/cli internal/kiecatalog internal/leaderboard internal/mcp internal/media internal/mediamcp internal/types
+"$PYTHON_BIN" -m unittest discover -s research -p 'test_*.py'
 go test ./...
 go vet ./...
 make build-all
 
-echo "Kie API refresh complete. Review git diff, then commit the generated artifacts."
+echo "Kie API, Academy method, and model-evidence refresh complete. Review git diff, then commit the generated artifacts."

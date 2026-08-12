@@ -494,8 +494,8 @@ func TestStoreAcceptsCurrentSeedDanceVideoAndAudioFormats(t *testing.T) {
 
 func TestWorkflowCatalogAndBriefRouting(t *testing.T) {
 	workflows := ListWorkflows()
-	if len(workflows) != 8 {
-		t.Fatalf("workflow count = %d, want 8", len(workflows))
+	if len(workflows) != 9 {
+		t.Fatalf("workflow count = %d, want 9", len(workflows))
 	}
 	for _, workflow := range workflows {
 		for _, mediaType := range workflow.MediaTypes {
@@ -531,6 +531,29 @@ func TestWorkflowCatalogAndBriefRouting(t *testing.T) {
 	}
 }
 
+func TestAcademyWorkflowSelectsAndEmbedsLessonMethod(t *testing.T) {
+	brief, err := NewBrief(BriefInput{
+		Workflow: "academy", Request: "one consistent character travelling through many worlds",
+		MediaType: "video", Purpose: "short film", Platform: "youtube", AspectRatio: "16:9",
+		DurationSeconds: 30, AudioMode: "on", VideoMode: "multimodal", Style: "cinematic",
+		References: []string{"https://example.test/character-sheet.png"}, ProductionMode: "storyboard",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if brief.Lesson != "blockbuster-4k/one-character-many-worlds-watch-the-film" {
+		t.Fatalf("selected lesson = %q", brief.Lesson)
+	}
+	if brief.Plan == nil || brief.Plan.Method == "" || brief.Plan.PromptFocus == "" {
+		t.Fatalf("Academy method was not embedded in plan: %#v", brief.Plan)
+	}
+	if got := brief.Plan.Input["prompt"].(string); !strings.Contains(got, "Production priorities:") {
+		t.Fatalf("Academy prompt omitted production priorities: %q", got)
+	} else if strings.Contains(got, brief.Plan.Method) {
+		t.Fatalf("Agent-facing method leaked into provider prompt: %q", got)
+	}
+}
+
 func TestProductWorkflowSelectsSeedreamReferenceSchema(t *testing.T) {
 	brief, err := NewBrief(BriefInput{
 		Workflow: "product-photoshoot", Request: "Bottle hero", MediaType: "image",
@@ -545,5 +568,27 @@ func TestProductWorkflowSelectsSeedreamReferenceSchema(t *testing.T) {
 	}
 	if _, ok := brief.Plan.Input["image_urls"]; !ok {
 		t.Fatalf("Seedream plan input = %#v", brief.Plan.Input)
+	}
+}
+
+func TestPreviewModelSupportsNanoBananaReferenceSchema(t *testing.T) {
+	brief, err := NewBrief(BriefInput{
+		Request: "Consistent character enters a new world", MediaType: "video", Purpose: "short film",
+		Platform: "youtube", AspectRatio: "16:9", DurationSeconds: 5, AudioMode: "off",
+		VideoMode: "multimodal", Style: "cinematic", References: []string{"https://example.test/character.png"},
+		PreviewModel: "nano-banana-pro",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	plan := BuildPreviewPlan(brief)
+	if plan.Model != "nano-banana-pro" {
+		t.Fatalf("preview model = %q", plan.Model)
+	}
+	if _, ok := plan.Input["image_input"]; !ok {
+		t.Fatalf("Nano Banana plan omitted image_input: %#v", plan.Input)
+	}
+	if err := validatePaidPlan(plan); err != nil {
+		t.Fatalf("Nano Banana preview plan failed embedded contract: %v", err)
 	}
 }

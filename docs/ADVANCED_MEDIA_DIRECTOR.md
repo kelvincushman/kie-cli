@@ -15,7 +15,11 @@ Implemented and verified in the current local command surface:
   submission blocking.
 - `kie-media-mcp` as a focused local MCP server.
 - Local reference vault and consented identity-reference bundles.
-- Eight routed production workflows delivered through nine Markdown skills.
+- Nine routed production workflows delivered through ten Markdown skills.
+- A 16-course, 171-lesson public source map with original Kie-native methods,
+  exposed through `/kie-lesson`, terminal commands, and MCP.
+- A dated task-specific model evidence ledger refreshed weekly without combining
+  unlike benchmark scores.
 - Seventy current API operations and a 129-model Market snapshot with complete
   embedded request/input schemas and local validation.
 - A compact `media models` catalog view and direct `media video` shortcut backed
@@ -98,6 +102,8 @@ Core commands:
 kie-pp-cli media setup --agent
 kie-pp-cli media workflow list --agent
 kie-pp-cli media workflow show <workflow> --agent
+kie-pp-cli lesson recommend "<production outcome>" --agent
+kie-pp-cli media leaderboard character-consistency --agent
 kie-pp-cli create "<request>" --agent
 kie-pp-cli create --workflow <workflow> "<request>" --agent
 kie-pp-cli create --brief <brief_id> --answer "<answer>" --agent
@@ -124,6 +130,21 @@ kie-pp-cli create --brief <brief_id> --reject-preview --agent
 kie-pp-cli create --brief <brief_id> --submit --wait --agent
 kie-pp-cli media generation status <generation_id> --wait --agent
 ```
+
+Lesson and evidence commands:
+
+```bash
+kie-pp-cli lesson list --agent
+kie-pp-cli lesson recommend "one character across several worlds" --agent
+kie-pp-cli lesson show <course-slug/lesson-slug> --agent
+kie-pp-cli lesson start "<request>" --lesson <course/lesson> --agent
+kie-pp-cli media leaderboard <task> --agent
+```
+
+`/kie-lesson` is available where the host turns installed skills into slash
+commands. CLI and MCP remain the portable contracts. The Academy artifact
+stores public discovery metadata and source links plus original Kie methods;
+it is not a mirror of lesson prose, scripts, prompts, or media.
 
 The advanced direct path omits the director preview gate:
 
@@ -170,13 +191,17 @@ Do not bind HTTP MCP to a wildcard or non-loopback address. The HTTP transport
 implements the finalized MCP `2026-07-28` stateless protocol. Stdio remains the
 recommended local child-process transport.
 
-The implemented focused server exposes twenty-five media tools:
+The implemented focused server exposes twenty-nine media tools:
 
 - `media_brief_start`
 - `media_brief_answer`
 - `media_brief_get`
 - `media_workflow_list`
 - `media_workflow_get`
+- `media_lesson_list`
+- `media_lesson_get`
+- `media_lesson_recommend`
+- `media_leaderboard_get`
 - `media_model_list`
 - `media_model_get`
 - `media_model_example`
@@ -263,6 +288,7 @@ Safe to automate:
 
 - setup checks
 - workflow discovery
+- lesson discovery and task-specific evidence lookup
 - brief inspection
 - reference listing
 - status polling
@@ -349,3 +375,12 @@ Model behavior differs from the documented plan:
   recorded current upstream Kie model page.
 - Use `--model` only when the requested model supports the required reference,
   duration, audio, and output constraints.
+
+Evidence looks stale or incomplete:
+
+- Run `kie-pp-cli media leaderboard --agent` and inspect `generated_at`, each
+  source URL, direct-versus-proxy status, and current Kie availability.
+- Run `scripts/weekly-refresh.sh` to rebuild Kie contracts, verify every mapped
+  Academy lesson URL, and refresh the external task tables.
+- A missing independent score stays null. In particular, never transfer a
+  Seedance 2.0 family score to Seedance 2.5.

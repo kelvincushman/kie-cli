@@ -20,6 +20,12 @@ type Workflow struct {
 }
 
 var workflowCatalog = map[string]Workflow{
+	"academy": {
+		Name: "academy", Skill: "kie-lesson", MediaTypes: []string{"image", "video"},
+		Description: "Select a source-linked public production lesson, adapt its method into an original Kie brief, then enforce script, storyboard, keyframe, and human approval gates.",
+		Stages:      []string{"select-lesson", "qualify", "script", "lock-assets", "storyboard", "prompt-each-shot", "preview-each-shot", "approve-anchor", "generate", "continuity-review", "local-assembly"},
+		Unsupported: []string{"copied-course-prompts", "trained-cross-model-soul", "automatic-quality-acceptance"},
+	},
 	"generate": {
 		Name: "generate", Skill: "kie-generate", MediaTypes: []string{"image", "video"},
 		Description: "Route general image and video generation through the shared director; the skill uses dedicated CLI commands for audio and music.",
@@ -90,6 +96,8 @@ func normalizeWorkflow(name string) string {
 	name = strings.ToLower(strings.TrimSpace(name))
 	name = strings.TrimPrefix(name, "kie-")
 	switch name {
+	case "lesson", "academy-film", "academy-director":
+		return "academy"
 	case "brand-kit":
 		return "brandkit"
 	case "marketplace", "cards":

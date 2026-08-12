@@ -24,6 +24,7 @@ const (
 type Brief struct {
 	ID                   string     `json:"id"`
 	Workflow             string     `json:"workflow,omitempty"`
+	Lesson               string     `json:"lesson,omitempty"`
 	Request              string     `json:"request,omitempty"`
 	MediaType            string     `json:"media_type,omitempty"`
 	Purpose              string     `json:"purpose,omitempty"`
@@ -46,6 +47,7 @@ type Brief struct {
 	IdentityIDs          []string   `json:"identity_ids,omitempty"`
 	IdentityComplete     bool       `json:"identity_complete"`
 	Model                string     `json:"model,omitempty"`
+	PreviewModel         string     `json:"preview_model,omitempty"`
 	Status               string     `json:"status"`
 	CreatedAt            time.Time  `json:"created_at"`
 	UpdatedAt            time.Time  `json:"updated_at"`
@@ -88,9 +90,13 @@ type Turn struct {
 }
 
 type Plan struct {
-	Model     string         `json:"model"`
-	Input     map[string]any `json:"input"`
-	Rationale string         `json:"rationale"`
+	Model           string         `json:"model"`
+	Input           map[string]any `json:"input"`
+	Rationale       string         `json:"rationale"`
+	Lesson          string         `json:"lesson,omitempty"`
+	ProductionStage string         `json:"production_stage,omitempty"`
+	Method          string         `json:"method,omitempty"`
+	PromptFocus     string         `json:"prompt_focus,omitempty"`
 }
 
 type Reference struct {

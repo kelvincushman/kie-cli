@@ -16,11 +16,12 @@ AGENT MEDIA FACTORY
 </p>
 
 <p align="center">
-  Seedance 2.5 · Local-first direction · CLI · Stateless MCP · 9 agent skills · 129 typed models · Human approval gates
+  Seedance 2.5 · 171 source-linked methods · CLI · Stateless MCP · 10 agent skills · 129 typed models · Human approval gates
 </p>
 
 <p align="center">
   <a href="docs/VIBE_CODER_QUICKSTART.md">Start with a coding assistant</a> ·
+  <a href="docs/ACADEMY_METHODS.md">Production lessons</a> ·
   <a href="docs/MEDIA_DIRECTOR.md">CLI and MCP reference</a> ·
   <a href="docs/SCRIPT_AND_STORYBOARD.md">Script and storyboard</a> ·
   <a href="docs/ADVANCED_MEDIA_DIRECTOR.md">Advanced operation</a> ·
@@ -51,11 +52,13 @@ Higgsfield clone and does not claim unsupported provider features.
 | --- | --- |
 | Local media director | Guided, resumable image and video briefs with one question per turn |
 | Production planning | Single-shot or multi-shot script/storyboard workflows with durable IDs |
+| Lesson director | 16 public Academy courses mapped to 171 source-linked, original Kie-native methods |
 | Video safety gate | Preview still → display to user → explicit approval → final video |
 | Creative memory | Private image/video/audio reference vault and consented likeness bundles |
 | Agent access | Compact `--agent` JSON, durable handles, focused MCP, and reusable skills |
-| Focused MCP | 25 media tools over stdio or loopback stateless HTTP using MCP `2026-07-28` |
-| Skills | 1 core director skill plus 8 production skills for common media jobs |
+| Focused MCP | 29 media tools over stdio or loopback stateless HTTP using MCP `2026-07-28` |
+| Skills | 1 core director skill plus 9 production skills for common media jobs |
+| Model evidence | Dated, task-specific rankings with live Kie route availability and explicit proxy warnings |
 | Kie coverage | 70 current API operations plus 129 Market models with complete embedded input/settings schemas |
 | Local learning | SQLite-backed recall, teach, playbooks, and command discovery for repeat work |
 | Broad generated CLI | Image, video, music, speech, chat, upload, account, and task endpoints |
@@ -147,6 +150,58 @@ For a complete copy-paste setup and first-job prompt, use the
 verify the binaries, protect the API key, ask one question at a time, show plans
 before live calls, and enforce every preview gate.
 
+## Start with a production lesson
+
+`/kie-lesson` is the guided entry point in agent hosts that expose installed
+skills as slash commands. The portable terminal contract is
+`kie-pp-cli lesson`, and the focused MCP exposes the same discovery operations.
+
+```bash
+# Browse courses or search the 171 source-linked methods
+kie-pp-cli lesson list --agent
+kie-pp-cli lesson list "character consistency" --agent
+
+# Match a production method to the outcome, then inspect it
+kie-pp-cli lesson recommend \
+  "one consistent character travelling through several worlds" --agent
+kie-pp-cli lesson show \
+  blockbuster-4k/one-character-many-worlds-watch-the-film --agent
+
+# Start a durable, storyboard-first brief
+kie-pp-cli lesson start \
+  "one consistent character travelling through several worlds" \
+  --lesson blockbuster-4k/one-character-many-worlds-watch-the-film --agent
+```
+
+The selected lesson contributes its production stage, an original Kie-native
+method, prompt focus, model candidates, and source link to the plan. It does not
+copy Higgsfield scripts, prompts, lesson prose, videos, or downloads. Agents
+should open a linked lesson when the user wants to study the original teaching.
+
+The checked-in map currently covers:
+
+| Public course | Lessons | Duration | Level |
+| --- | ---: | ---: | --- |
+| [Blockbuster 4K: The AI Filmmaking Pipeline](https://higgsfield.ai/academy/courses/blockbuster-4k) | 10 | 40 min | Intermediate |
+| [Build an Ultra-Realistic Short Film in 4K](https://higgsfield.ai/academy/courses/santiago-cinematic) | 19 | 33 min | Intermediate |
+| [Add AI VFX to Real Footage](https://higgsfield.ai/academy/courses/ai-vfx-real-footage) | 11 | 12 min | Advanced |
+| [Make an AI Animated Short](https://higgsfield.ai/academy/courses/ai-animated-short) | 11 | 17 min | Intermediate |
+| [How to evaluate AI filmmaking demos](https://higgsfield.ai/academy/courses/seedance-25-ai-filmmaking) | 11 | 20 min | Beginner |
+| [The 3-Step Realistic AI Ad Workflow](https://higgsfield.ai/academy/courses/ai-ad-3-step) | 16 | 36 min | Intermediate |
+| [Build an AI Ad Agency with Claude + Higgsfield](https://higgsfield.ai/academy/courses/claude-higgsfield-ai-ad-agency) | 12 | 22 min | Beginner |
+| [Seedance 4K: Cinematic Realism](https://higgsfield.ai/academy/courses/cinematic-realism-4k) | 8 | 14 min | Intermediate |
+| [Build a Brand's Visuals with AI](https://higgsfield.ai/academy/courses/brand-visuals-ai) | 9 | 26 min | Intermediate |
+| [Make a Cinematic Ad End-to-End](https://higgsfield.ai/academy/courses/cinematic-ad-e2e) | 10 | 46 min | Intermediate |
+| [Automate a Faceless Niche Channel](https://higgsfield.ai/academy/courses/automate-faceless-niche) | 11 | 10 min | Intermediate |
+| [Build a Faceless Channel](https://higgsfield.ai/academy/courses/faceless-channel) | 7 | 14 min | Beginner |
+| [Mix AI with Real Footage](https://higgsfield.ai/academy/courses/mix-ai-real-footage) | 10 | 5 min | Intermediate |
+| [Build 3D Games with MCP](https://higgsfield.ai/academy/courses/build-3d-games-mcp) | 10 | 12 min | Beginner |
+| [Direct a cinematic AI car commercial](https://higgsfield.ai/academy/courses/cinematic-car-commercial) | 11 | 35 min | Intermediate |
+| [Direct AI fight scenes through controlled iteration](https://higgsfield.ai/academy/courses/direct-ai-fight-scenes) | 5 | 16 min | Intermediate |
+
+See [Academy-Inspired Production Methods](docs/ACADEMY_METHODS.md) for every
+lesson, source URL, production stage, and safe Kie-native adaptation.
+
 ## Direct an image or single-shot video
 
 Agents should add `--agent` for compact, machine-readable, non-interactive
@@ -170,7 +225,8 @@ For video, preview and final generation are deliberately separate live actions:
 
 ```bash
 kie-pp-cli create "a vertical launch video" --type video --agent
-kie-pp-cli create --brief brief_ab12cd34 --preview --wait --agent
+kie-pp-cli create --brief brief_ab12cd34 \
+  --preview-model nano-banana-pro --preview --wait --agent
 # Display result_urls[0] to the user and wait for an explicit yes.
 kie-pp-cli create --brief brief_ab12cd34 --approve-preview --agent
 kie-pp-cli create --brief brief_ab12cd34 --submit --wait --agent
@@ -228,15 +284,16 @@ display, approval, and final-generation sequence separately for every shot,
 then assemble the approved clips locally with ffmpeg, Remotion, or an editor.
 See [Script and Storyboard Workflow](docs/SCRIPT_AND_STORYBOARD.md).
 
-## Nine production skills
+## Ten production skills
 
-The `skills/` directory contains a core director and eight Kie-native production
+The `skills/` directory contains a core director and nine Kie-native production
 workflows. They keep domain guidance out of repeated agent prompts while handing
 compact workflow names and durable handles back to the CLI/MCP layer.
 
 | Skill | Production job |
 | --- | --- |
 | `kie-create` | Guided intake, references, scripts, storyboards, approvals, and polling |
+| `kie-lesson` | Source-linked lesson selection, original Kie methods, and storyboard-first direction |
 | `kie-generate` | General image/video routing plus audio and music handoff |
 | `kie-brandkit` | Approval-led brand concepts and reusable visual direction |
 | `kie-marketplace-cards` | Truthful marketplace assets with local exact-copy composition |
@@ -330,7 +387,7 @@ turn. Use `--no-learn` when a deterministic run should not update local memory.
 
 Two MCP binaries serve different jobs:
 
-- `kie-media-mcp` is the recommended creative surface. It exposes 25 focused
+- `kie-media-mcp` is the recommended creative surface. It exposes 29 focused
   director tools, uses the official MCP Go SDK, supports stdio, and serves
   loopback-only stateless HTTP for MCP `2026-07-28`.
 - `kie-pp-mcp` exposes the broad generated Printing Press tool surface for
@@ -359,9 +416,20 @@ agent discovery token-efficient without allowing model counts, input fields, or
 settings to drift between command namespaces.
 
 The director currently defaults to GPT Image 2 for stills and the configured
-`bytedance/seedance-2-5` route for video. Model availability and parameter
-contracts can change upstream; inspect current Kie documentation and use
-`--model` only when a specific route is required.
+`bytedance/seedance-2-5` route for video. Inspect dated, task-specific evidence
+without loading full schemas into an agent prompt:
+
+```bash
+kie-pp-cli media leaderboard text-to-image --agent
+kie-pp-cli media leaderboard character-consistency --agent
+kie-pp-cli media leaderboard text-to-video --agent
+```
+
+Rankings from Arena and Artificial Analysis remain separate; the CLI never
+combines unlike scores into a made-up universal number. Seedance 2.5 has no
+direct independent score in the current snapshot, so its entry is unranked and
+labels Seedance 2.0 data only as family context. See
+[Model Evidence Leaderboard](docs/MODEL_LEADERBOARD.md).
 
 ## Documentation
 
@@ -370,6 +438,8 @@ contracts can change upstream; inspect current Kie documentation and use
 | [Vibe Coder Quickstart](docs/VIBE_CODER_QUICKSTART.md) | Copy-paste agent setup prompt and first safe generation |
 | [Media Director](docs/MEDIA_DIRECTOR.md) | Complete CLI/MCP workflow, qualification protocol, references, and tools |
 | [Script and Storyboard](docs/SCRIPT_AND_STORYBOARD.md) | Multi-shot schemas, approvals, shot generation, and assembly boundary |
+| [Academy-Inspired Production Methods](docs/ACADEMY_METHODS.md) | All 16 courses and 171 source-linked original Kie workflow adaptations |
+| [Model Evidence Leaderboard](docs/MODEL_LEADERBOARD.md) | Dated image/edit/video evidence, Kie availability, and proxy disclosures |
 | [Advanced Media Director](docs/ADVANCED_MEDIA_DIRECTOR.md) | Architecture, state, transports, automation, security, and troubleshooting |
 | [Model Catalog](docs/MODELS.md) | All currently indexed Kie Market model IDs |
 | [Model Inputs and Settings](docs/MODEL_INPUTS.md) | Every per-model field, type, requirement, default, enum, limit, example, and source |
@@ -384,11 +454,14 @@ families.
 1. `research/build_spec.py` discovers every English Markdown page in Kie's
    official `llms.txt`, parses every OpenAPI block, merges shared endpoints,
    and writes the spec, model registry, field reference, and coverage report.
-2. `scripts/weekly-refresh.sh` runs that merger, safely regenerates the Go
-   CLI/MCP through a disposable mirror, preserves the live Git worktree and
-   recorded patches, then runs the complete Go verification suite.
-3. `.github/workflows/kie-api-refresh.yml` runs this every Monday and opens a
-   draft review PR only when Kie has changed.
+2. The same refresh verifies every current public Academy lesson URL, rebuilds
+   the original method map, and updates task-specific Arena/Artificial Analysis
+   evidence plus current Kie route availability.
+3. `scripts/weekly-refresh.sh` safely regenerates the Go CLI/MCP through a
+   disposable mirror, preserves the live Git worktree and recorded patches,
+   then runs research tests and the complete Go verification suite.
+4. `.github/workflows/kie-api-refresh.yml` runs this every Monday and opens a
+   draft review PR only when any API, Academy, or evidence artifact changed.
 
 ```bash
 python3 -m pip install -r research/requirements.txt
@@ -402,6 +475,10 @@ scripts/weekly-refresh.sh
 - Kie generation requires the user's own API key and consumes Kie credits.
 - Identity bundles are consented local reference sets; there is no portable,
   cross-model trained Soul/likeness endpoint in this project.
+- Academy output contains public factual metadata and source links plus original
+  Kie-native abstractions; it does not mirror paid or copyrighted lessons.
+- External benchmark scores are evidence for a specific task and date, not a
+  quality guarantee. Family proxies remain explicitly labelled and unscored.
 - Final clip ordering, exact typography, captions, audio mix, and publishing
   remain explicit local assembly or delivery steps.
 - The project does not claim Higgsfield's proprietary virality prediction,
@@ -423,7 +500,8 @@ unscored dimensions are `path_validity`, `auth_protocol`, and
 - API and documentation: [Kie.ai](https://kie.ai) and
   [docs.kie.ai](https://docs.kie.ai).
 - Agent workflow inspiration: [Higgsfield CLI](https://higgsfield.ai/cli),
-  [Higgsfield skills](https://github.com/higgsfield-ai/skills), and Matt
+  [Higgsfield skills](https://github.com/higgsfield-ai/skills),
+  [Higgsfield Academy](https://higgsfield.ai/academy/courses), and Matt
   Pocock's [Grill With Docs](https://www.aihero.dev/skills-grill-with-docs).
 - CLI generation: [CLI Printing Press](https://github.com/mvanhorn/cli-printing-press)
   by Matt Van Horn and Trevin Chow.

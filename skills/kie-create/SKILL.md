@@ -205,8 +205,9 @@ Register the focused local MCP server with an agent host using stdio:
 claude mcp add kie-media -- kie-media-mcp
 ```
 
-`kie-media-mcp` exposes twenty-five focused workflow, model-contract, brief, script, storyboard,
-reference, identity, preview, generation, and status tools. Its optional HTTP
+`kie-media-mcp` exposes twenty-nine focused lesson, evidence, workflow,
+model-contract, brief, script, storyboard, reference, identity, preview,
+generation, and status tools. Its optional HTTP
 mode is local-only, stateless, and negotiates MCP `2026-07-28`:
 
 ```bash

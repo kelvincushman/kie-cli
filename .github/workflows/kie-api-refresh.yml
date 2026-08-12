@@ -1,4 +1,4 @@
-name: Refresh Kie API
+name: Refresh Kie API, Academy, and model evidence
 
 on:
   schedule:
@@ -29,14 +29,14 @@ jobs:
         run: |
           python -m pip install -r research/requirements.txt
           go install github.com/mvanhorn/cli-printing-press/v4/cmd/cli-printing-press@v4.30.1
-      - name: Rebuild complete API and model contracts
+      - name: Rebuild API, Academy methods, and model evidence
         run: scripts/weekly-refresh.sh
       - name: Open a draft refresh PR when Kie changed
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           if git diff --quiet && test -z "$(git ls-files --others --exclude-standard)"; then
-            echo "Kie documentation has not changed."
+            echo "Kie contracts, Academy methods, and ranking evidence have not changed."
             exit 0
           fi
           branch="automation/kie-api-refresh-${GITHUB_RUN_ID}"
@@ -44,15 +44,15 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git switch -c "$branch"
           git add -A
-          git commit -m "Keep the printed CLI aligned with Kie.ai's live contract
+          git commit -m "Keep the media factory aligned with current public evidence
 
-Constraint: Generated from the official Kie documentation index with CLI Printing Press 4.30.1
-Confidence: high
-Scope-risk: moderate
-Directive: Preserve the embedded per-model schemas and local media-factory patches on future reprints
-Tested: research unit tests; go test ./...; go vet ./...; make build-all
-Not-tested: paid live generations require a maintainer-owned Kie API key"
+          Constraint: Kie contracts come from official Kie docs; Academy output stores public metadata and original adaptations only; rankings preserve external source scores without combining them
+          Confidence: high
+          Scope-risk: moderate
+          Directive: Preserve copyright boundaries, source provenance, task-specific ranks, and embedded per-model schemas on future refreshes
+          Tested: Academy lesson URL verification; research unit tests; go test ./...; go vet ./...; make build-all
+          Not-tested: paid live generations require a maintainer-owned Kie API key"
           git push --set-upstream origin "$branch"
           gh pr create --draft \
-            --title "chore: refresh complete Kie API contracts" \
-            --body "Automated weekly refresh from Kie.ai's official documentation index. Includes the merged OpenAPI, full per-model input/settings registry, generated CLI/MCP changes, coverage evidence, and fresh tests. No paid generation was submitted."
+            --title "chore: refresh media contracts and production evidence" \
+            --body "Automated weekly refresh of official Kie API/model contracts, the public Academy lesson-method map, and task-specific external model evidence. Academy output contains links, factual metadata, and original Kie-native abstractions—not copied lesson prose or prompts. No paid generation was submitted."

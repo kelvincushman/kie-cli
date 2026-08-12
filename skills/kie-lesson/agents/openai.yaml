@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kie Lesson Director"
+  short_description: "Turn a proven lesson pattern into Kie media"
+  default_prompt: "Use $kie-lesson to select a production lesson and guide me from brief through approved Kie.ai generation."

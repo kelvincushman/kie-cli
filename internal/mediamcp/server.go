@@ -14,10 +14,12 @@ import (
 	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
+	"kie-pp-cli/internal/academy"
 	"kie-pp-cli/internal/cli"
 	"kie-pp-cli/internal/client"
 	"kie-pp-cli/internal/config"
 	"kie-pp-cli/internal/kiecatalog"
+	"kie-pp-cli/internal/leaderboard"
 	"kie-pp-cli/internal/media"
 )
 
@@ -29,6 +31,10 @@ var ToolNames = []string{
 	"media_brief_get",
 	"media_workflow_list",
 	"media_workflow_get",
+	"media_lesson_list",
+	"media_lesson_get",
+	"media_lesson_recommend",
+	"media_leaderboard_get",
 	"media_model_list",
 	"media_model_get",
 	"media_model_example",
@@ -58,6 +64,7 @@ type Dependencies struct {
 
 type briefStartInput struct {
 	Workflow        string   `json:"workflow,omitempty" jsonschema:"optional Kie-native workflow name from media_workflow_list"`
+	Lesson          string   `json:"lesson,omitempty" jsonschema:"optional Academy course-slug/lesson-slug from media_lesson_recommend"`
 	Request         string   `json:"request" jsonschema:"what the user wants to create"`
 	MediaType       string   `json:"media_type,omitempty" jsonschema:"optional image or video"`
 	Purpose         string   `json:"purpose,omitempty" jsonschema:"optional intended use"`
@@ -78,6 +85,7 @@ type briefStartInput struct {
 	LastFrame       string   `json:"last_frame,omitempty" jsonschema:"optional SeedDance last frame path, URL, or ref:<id>"`
 	IdentityIDs     []string `json:"identity_ids,omitempty" jsonschema:"optional local identity:<id> likeness bundles"`
 	Model           string   `json:"model,omitempty" jsonschema:"optional explicit Kie.ai model override"`
+	PreviewModel    string   `json:"preview_model,omitempty" jsonschema:"optional still gate model: gpt-image-2-text-to-image, gpt-image-2-image-to-image, nano-banana-2, nano-banana-2-lite, or nano-banana-pro"`
 	ProductionMode  string   `json:"production_mode,omitempty" jsonschema:"optional single-shot or storyboard video production"`
 }
 
@@ -112,6 +120,34 @@ type workflowListOutput struct {
 
 type workflowGetOutput struct {
 	Workflow media.Workflow `json:"workflow"`
+}
+
+type lessonListInput struct {
+	Query  string `json:"query,omitempty" jsonschema:"optional request or topic to match"`
+	Course string `json:"course,omitempty" jsonschema:"optional exact Academy course slug"`
+	Stage  string `json:"stage,omitempty" jsonschema:"optional production stage such as script, asset-lock, storyboard, keyframe, motion, post-production, or review"`
+	Limit  int    `json:"limit,omitempty" jsonschema:"maximum results; defaults to 10"`
+}
+
+type lessonGetInput struct {
+	Key string `json:"key" jsonschema:"exact course-slug/lesson-slug returned by media_lesson_list or media_lesson_recommend"`
+}
+
+type lessonListOutput struct {
+	Recommendations []academy.Recommendation `json:"recommendations"`
+}
+
+type lessonOutput struct {
+	Lesson academy.Lesson `json:"lesson"`
+}
+
+type leaderboardGetInput struct {
+	Task string `json:"task,omitempty" jsonschema:"optional text-to-image, image-edit, character-consistency, or text-to-video"`
+}
+
+type leaderboardOutput struct {
+	Ledger *leaderboard.Ledger `json:"ledger,omitempty"`
+	Task   *leaderboard.Task   `json:"task,omitempty"`
 }
 
 type modelListInput struct {
@@ -221,7 +257,7 @@ func NewServer(version string, dependencies *Dependencies) *mcp.Server {
 	server := mcp.NewServer(
 		&mcp.Implementation{Name: "kie-media-mcp", Version: version},
 		&mcp.ServerOptions{
-			Instructions: "Qualify image and video requests one question at a time. Use media_model_list and media_model_get to select a model and inspect every documented input setting, then media_model_validate before a paid generation. For storyboard video, save and explicitly approve a local script and storyboard, then use each returned shot_brief_id. For every video shot, call media_preview_generate, poll with media_generation_status, display the returned preview image URL, and call media_preview_approve only after explicit approval. media_generate rejects video briefs without that approval and rejects storyboard master briefs. Preview and final generation are separate live actions that may consume Kie.ai credits.",
+			Instructions: "Qualify image and video requests one question at a time. When a production method would help, use media_lesson_recommend, explain the source-linked original Kie adaptation, and pass its key to media_brief_start with workflow academy. Use media_leaderboard_get as dated task evidence, then media_model_get and media_model_validate for the exact live input contract before a paid generation. For storyboard video, save and explicitly approve a local script and storyboard, then use each returned shot_brief_id. For every video shot, call media_preview_generate, poll with media_generation_status, display the returned preview image URL, and call media_preview_approve only after explicit approval. media_generate rejects video briefs without that approval and rejects storyboard master briefs. Preview and final generation are separate live actions that may consume Kie.ai credits.",
 			Capabilities: &mcp.ServerCapabilities{},
 		},
 	)
@@ -265,13 +301,13 @@ func registerTools(server *mcp.Server, deps Dependencies) {
 		Name: "media_brief_start", Description: "Start a durable local image/video brief. Returns exactly one next question for the agent to ask the user.", Annotations: localMutation,
 	}, func(ctx context.Context, _ *mcp.CallToolRequest, input briefStartInput) (*mcp.CallToolResult, media.Turn, error) {
 		brief, err := media.NewBrief(media.BriefInput{
-			Workflow: input.Workflow, Request: input.Request, MediaType: input.MediaType, Purpose: input.Purpose,
+			Workflow: input.Workflow, Lesson: input.Lesson, Request: input.Request, MediaType: input.MediaType, Purpose: input.Purpose,
 			Platform: input.Platform, AspectRatio: input.AspectRatio, DurationSeconds: input.DurationSeconds,
 			Resolution: input.Resolution, AudioMode: input.AudioMode, VideoMode: input.VideoMode,
 			OutputFormat: input.OutputFormat, ReturnLastFrame: input.ReturnLastFrame, WebSearch: input.WebSearch,
 			Style: input.Style, References: input.References, ReferenceVideos: input.ReferenceVideos,
 			ReferenceAudio: input.ReferenceAudio, FirstFrame: input.FirstFrame, LastFrame: input.LastFrame,
-			IdentityIDs: input.IdentityIDs, Model: input.Model,
+			IdentityIDs: input.IdentityIDs, Model: input.Model, PreviewModel: input.PreviewModel,
 			ProductionMode: input.ProductionMode,
 		})
 		if err != nil {
@@ -304,6 +340,53 @@ func registerTools(server *mcp.Server, deps Dependencies) {
 			return nil, workflowGetOutput{}, err
 		}
 		return nil, workflowGetOutput{Workflow: workflow}, nil
+	})
+
+	mcp.AddTool(server, &mcp.Tool{
+		Name: "media_lesson_list", Description: "Search the checked-in map of public Academy lesson titles and original Kie-native production methods. No copied lesson scripts or prompts are stored.", Annotations: readLocal,
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input lessonListInput) (*mcp.CallToolResult, lessonListOutput, error) {
+		results, err := academy.Search(input.Query, input.Course, input.Stage, input.Limit)
+		if err != nil {
+			return nil, lessonListOutput{}, err
+		}
+		return nil, lessonListOutput{Recommendations: results}, nil
+	})
+
+	mcp.AddTool(server, &mcp.Tool{
+		Name: "media_lesson_get", Description: "Get one public lesson link plus its original Kie method, prompt focus, candidate models, and capability boundary.", Annotations: readLocal,
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input lessonGetInput) (*mcp.CallToolResult, lessonOutput, error) {
+		lesson, err := academy.GetLesson(input.Key)
+		if err != nil {
+			return nil, lessonOutput{}, err
+		}
+		return nil, lessonOutput{Lesson: *lesson}, nil
+	})
+
+	mcp.AddTool(server, &mcp.Tool{
+		Name: "media_lesson_recommend", Description: "Recommend source-linked production lessons for what the user wants to create. Use the selected key in media_brief_start.lesson with workflow academy.", Annotations: readLocal,
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input lessonListInput) (*mcp.CallToolResult, lessonListOutput, error) {
+		results, err := academy.Recommend(input.Query, input.Limit)
+		if err != nil {
+			return nil, lessonListOutput{}, err
+		}
+		return nil, lessonListOutput{Recommendations: results}, nil
+	})
+
+	mcp.AddTool(server, &mcp.Tool{
+		Name: "media_leaderboard_get", Description: "Inspect the dated, task-specific external model evidence ledger and Kie route availability. Scores from different sources are never combined.", Annotations: readLocal,
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input leaderboardGetInput) (*mcp.CallToolResult, leaderboardOutput, error) {
+		if strings.TrimSpace(input.Task) == "" {
+			ledger, err := leaderboard.Load()
+			if err != nil {
+				return nil, leaderboardOutput{}, err
+			}
+			return nil, leaderboardOutput{Ledger: ledger}, nil
+		}
+		task, err := leaderboard.GetTask(input.Task)
+		if err != nil {
+			return nil, leaderboardOutput{}, err
+		}
+		return nil, leaderboardOutput{Task: task}, nil
 	})
 
 	mcp.AddTool(server, &mcp.Tool{

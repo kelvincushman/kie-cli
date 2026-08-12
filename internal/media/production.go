@@ -324,7 +324,7 @@ func newShotBrief(master *Brief, storyboardID, shotID string, number int, shot S
 		videoMode, firstFrame, lastFrame = "multimodal", "", ""
 	}
 	child, err := NewBrief(BriefInput{
-		Workflow: master.Workflow, Request: strings.Join(prompt, ". "), MediaType: "video",
+		Workflow: master.Workflow, Lesson: master.Lesson, Request: strings.Join(prompt, ". "), MediaType: "video",
 		Purpose: master.Purpose, Platform: master.Platform, AspectRatio: master.AspectRatio,
 		DurationSeconds: shot.DurationSeconds, Resolution: master.Resolution, AudioMode: master.AudioMode,
 		VideoMode: videoMode, OutputFormat: master.OutputFormat, ReturnLastFrame: master.ReturnLastFrame,
@@ -332,7 +332,7 @@ func newShotBrief(master *Brief, storyboardID, shotID string, number int, shot S
 		References:      append(append([]string(nil), master.References...), shot.References...),
 		ReferenceVideos: master.ReferenceVideos, ReferenceAudio: master.ReferenceAudio,
 		FirstFrame: firstFrame, LastFrame: lastFrame, IdentityIDs: master.IdentityIDs,
-		Model: master.Model, ProductionMode: ProductionModeSingleShot,
+		Model: master.Model, PreviewModel: master.PreviewModel, ProductionMode: ProductionModeSingleShot,
 	})
 	if err != nil {
 		return nil, err

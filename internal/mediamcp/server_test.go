@@ -62,6 +62,30 @@ func TestHTTPNegotiatesLatestStatelessProtocolAndListsMediaTools(t *testing.T) {
 		t.Fatalf("workflow output = %#v", workflowOutput)
 	}
 
+	lessonResult, err := session.CallTool(context.Background(), &mcp.CallToolParams{
+		Name: "media_lesson_recommend", Arguments: map[string]any{"query": "one consistent character across many worlds", "limit": 1},
+	})
+	if err != nil || lessonResult.IsError {
+		t.Fatalf("media_lesson_recommend error=%v result=%#v", err, lessonResult)
+	}
+	var lessonView lessonListOutput
+	decodeStructured(t, lessonResult.StructuredContent, &lessonView)
+	if len(lessonView.Recommendations) != 1 || lessonView.Recommendations[0].Lesson.Key != "blockbuster-4k/one-character-many-worlds-watch-the-film" {
+		t.Fatalf("lesson recommendation = %#v", lessonView)
+	}
+
+	leaderboardResult, err := session.CallTool(context.Background(), &mcp.CallToolParams{
+		Name: "media_leaderboard_get", Arguments: map[string]any{"task": "character-consistency"},
+	})
+	if err != nil || leaderboardResult.IsError {
+		t.Fatalf("media_leaderboard_get error=%v result=%#v", err, leaderboardResult)
+	}
+	var leaderboardView leaderboardOutput
+	decodeStructured(t, leaderboardResult.StructuredContent, &leaderboardView)
+	if leaderboardView.Task == nil || len(leaderboardView.Task.Entries) == 0 || leaderboardView.Task.Entries[0].KieModel != "gpt-image-2-image-to-image" {
+		t.Fatalf("leaderboard output = %#v", leaderboardView)
+	}
+
 	modelResult, err := session.CallTool(context.Background(), &mcp.CallToolParams{
 		Name: "media_model_get", Arguments: map[string]any{"model": "bytedance/seedance-2-5"},
 	})

@@ -10,10 +10,14 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"kie-pp-cli/internal/academy"
+	"kie-pp-cli/internal/leaderboard"
 )
 
 type BriefInput struct {
 	Workflow        string
+	Lesson          string
 	Request         string
 	MediaType       string
 	Purpose         string
@@ -34,6 +38,7 @@ type BriefInput struct {
 	LastFrame       string
 	IdentityIDs     []string
 	Model           string
+	PreviewModel    string
 	ProductionMode  string
 }
 
@@ -42,6 +47,7 @@ func NewBrief(input BriefInput) (*Brief, error) {
 	b := &Brief{
 		ID:               newID("brief"),
 		Workflow:         normalizeWorkflow(input.Workflow),
+		Lesson:           strings.Trim(strings.TrimSpace(input.Lesson), "/"),
 		Request:          strings.TrimSpace(input.Request),
 		MediaType:        normalizeMediaType(input.MediaType),
 		Purpose:          strings.TrimSpace(input.Purpose),
@@ -63,10 +69,16 @@ func NewBrief(input BriefInput) (*Brief, error) {
 		IdentityIDs:      cleanStrings(input.IdentityIDs),
 		IdentityComplete: true,
 		Model:            strings.TrimSpace(input.Model),
+		PreviewModel:     strings.TrimSpace(input.PreviewModel),
 		ProductionMode:   normalizeProductionMode(input.ProductionMode),
 		Status:           StatusDraft,
 		CreatedAt:        now,
 		UpdatedAt:        now,
+	}
+	if b.Workflow == "academy" && b.Lesson == "" && b.Request != "" {
+		if recommendations, err := academy.Recommend(b.Request, 1); err == nil && len(recommendations) > 0 {
+			b.Lesson = recommendations[0].Lesson.Key
+		}
 	}
 	if b.ProductionMode == "" {
 		b.ProductionMode = ProductionModeSingleShot
@@ -317,6 +329,11 @@ func ValidateBrief(b *Brief) error {
 			return fmt.Errorf("workflow %s does not support media type %s", b.Workflow, b.MediaType)
 		}
 	}
+	if b.Lesson != "" {
+		if _, err := academy.GetLesson(b.Lesson); err != nil {
+			return err
+		}
+	}
 	if b.MediaType != "" && b.MediaType != "image" && b.MediaType != "video" {
 		return fmt.Errorf("media type must be image or video")
 	}
@@ -371,6 +388,12 @@ func ValidateBrief(b *Brief) error {
 	if b.LastFrame != "" && b.FirstFrame == "" {
 		return fmt.Errorf("last frame requires a first frame")
 	}
+	if b.PreviewModel != "" && !supportedPreviewModel(b.PreviewModel) {
+		return fmt.Errorf("preview model %q is not supported by the guided still contract", b.PreviewModel)
+	}
+	if len(previewImageSources(b)) > 0 && b.PreviewModel == "gpt-image-2-text-to-image" {
+		return fmt.Errorf("gpt-image-2-text-to-image cannot receive preview references; use gpt-image-2-image-to-image or a Nano Banana reference model")
+	}
 	return nil
 }
 
@@ -383,9 +406,9 @@ func BuildPlan(b *Brief) *Plan {
 		case len(b.References)+len(b.IdentityIDs) > 0 && (b.Workflow == "product-photoshoot" || b.Workflow == "marketplace-cards"):
 			model = "seedream/5-pro-image-to-image"
 		case len(b.References)+len(b.IdentityIDs) > 0:
-			model = "gpt-image-2-image-to-image"
+			model = rankedModel("character-consistency", "gpt-image-2-image-to-image")
 		default:
-			model = "gpt-image-2-text-to-image"
+			model = rankedModel("text-to-image", "gpt-image-2-text-to-image")
 		}
 	}
 	promptParts := []string{b.Request}
@@ -400,6 +423,10 @@ func BuildPlan(b *Brief) *Plan {
 	}
 	if b.Style != "" {
 		promptParts = append(promptParts, "Visual direction: "+b.Style)
+	}
+	lesson := selectedLesson(b)
+	if lesson != nil {
+		promptParts = append(promptParts, "Production priorities: "+lesson.PromptFocus)
 	}
 	input := map[string]any{
 		"prompt":       strings.Join(promptParts, ". ") + ".",
@@ -461,7 +488,9 @@ func BuildPlan(b *Brief) *Plan {
 		}
 		input[key] = values
 	}
-	return &Plan{Model: model, Input: input, Rationale: planRationale(b, model)}
+	plan := &Plan{Model: model, Input: input, Rationale: planRationale(b, model)}
+	applyLessonToPlan(plan, lesson)
+	return plan
 }
 
 // BuildPreviewPlan creates a still-image preflight for a ready video brief.
@@ -469,13 +498,16 @@ func BuildPlan(b *Brief) *Plan {
 // been returned and explicitly approved by the user.
 func BuildPreviewPlan(b *Brief) *Plan {
 	imageSources := previewImageSources(b)
-	model := "gpt-image-2-text-to-image"
+	model := rankedModel("text-to-image", "gpt-image-2-text-to-image")
 	if len(imageSources) > 0 {
 		if b.Workflow == "product-photoshoot" || b.Workflow == "marketplace-cards" {
 			model = "seedream/5-pro-image-to-image"
 		} else {
-			model = "gpt-image-2-image-to-image"
+			model = rankedModel("character-consistency", "gpt-image-2-image-to-image")
 		}
+	}
+	if strings.TrimSpace(b.PreviewModel) != "" {
+		model = strings.TrimSpace(b.PreviewModel)
 	}
 	promptParts := []string{
 		"Create one production-ready still image as the visual anchor and proposed first frame for the planned video",
@@ -493,6 +525,10 @@ func BuildPreviewPlan(b *Brief) *Plan {
 	if b.Style != "" {
 		promptParts = append(promptParts, "Visual direction: "+b.Style)
 	}
+	lesson := selectedLesson(b)
+	if lesson != nil {
+		promptParts = append(promptParts, "Production priorities: "+lesson.PromptFocus)
+	}
 	promptParts = append(promptParts, "Use a clear composition, stable subject identity, and production-ready lighting; avoid motion blur and do not add unrequested text")
 	input := map[string]any{
 		"prompt":       strings.Join(promptParts, ". ") + ".",
@@ -501,11 +537,13 @@ func BuildPreviewPlan(b *Brief) *Plan {
 	if len(imageSources) > 0 {
 		input[imageInputKey(model)] = append([]string(nil), imageSources...)
 	}
-	return &Plan{
+	plan := &Plan{
 		Model:     model,
 		Input:     input,
-		Rationale: "A still-image preflight lets the user inspect composition, subject, identity, product fidelity, and style before spending credits on the final video.",
+		Rationale: "A leaderboard-informed still-image preflight lets the user inspect composition, subject, identity, product fidelity, and style before spending credits on the final video.",
 	}
+	applyLessonToPlan(plan, lesson)
+	return plan
 }
 
 func ApproveVideoPreview(b *Brief) error {
@@ -566,6 +604,7 @@ func creativeBriefFingerprint(b *Brief) string {
 	}
 	creativeState := struct {
 		Workflow        string   `json:"workflow"`
+		Lesson          string   `json:"lesson"`
 		Request         string   `json:"request"`
 		MediaType       string   `json:"media_type"`
 		Purpose         string   `json:"purpose"`
@@ -586,12 +625,13 @@ func creativeBriefFingerprint(b *Brief) string {
 		LastFrame       string   `json:"last_frame"`
 		IdentityIDs     []string `json:"identity_ids"`
 		Model           string   `json:"model"`
+		PreviewModel    string   `json:"preview_model"`
 		ProductionMode  string   `json:"production_mode"`
 	}{
-		b.Workflow, b.Request, b.MediaType, b.Purpose, b.Platform, b.AspectRatio,
+		b.Workflow, b.Lesson, b.Request, b.MediaType, b.Purpose, b.Platform, b.AspectRatio,
 		b.DurationSeconds, b.Resolution, b.AudioMode, b.VideoMode, b.OutputFormat,
 		b.ReturnLastFrame, b.WebSearch, b.Style, cleanStrings(b.References), cleanStrings(b.ReferenceVideos),
-		cleanStrings(b.ReferenceAudio), b.FirstFrame, b.LastFrame, cleanStrings(b.IdentityIDs), b.Model, b.ProductionMode,
+		cleanStrings(b.ReferenceAudio), b.FirstFrame, b.LastFrame, cleanStrings(b.IdentityIDs), b.Model, b.PreviewModel, b.ProductionMode,
 	}
 	data, err := json.Marshal(creativeState)
 	if err != nil {
@@ -642,10 +682,23 @@ func imageInputKey(model string) string {
 	switch {
 	case strings.HasPrefix(model, "seedream/5-pro-"):
 		return "image_urls"
+	case model == "nano-banana-2" || model == "nano-banana-pro":
+		return "image_input"
+	case model == "nano-banana-2-lite":
+		return "image_urls"
 	case strings.HasPrefix(model, "ideogram/character"):
 		return "reference_image_urls"
 	default:
 		return "input_urls"
+	}
+}
+
+func supportedPreviewModel(model string) bool {
+	switch strings.TrimSpace(model) {
+	case "gpt-image-2-text-to-image", "gpt-image-2-image-to-image", "nano-banana-2", "nano-banana-2-lite", "nano-banana-pro", "seedream/5-pro-image-to-image":
+		return true
+	default:
+		return false
 	}
 }
 
@@ -663,6 +716,35 @@ func planRationale(b *Brief, model string) string {
 		return "GPT Image 2 image-to-image preserves the supplied visual references."
 	}
 	return "GPT Image 2 text-to-image is the default high-fidelity image route."
+}
+
+func rankedModel(task, fallback string) string {
+	entry, err := leaderboard.BestAvailable(task)
+	if err != nil || strings.TrimSpace(entry.KieModel) == "" {
+		return fallback
+	}
+	return entry.KieModel
+}
+
+func selectedLesson(b *Brief) *academy.Lesson {
+	if b == nil || strings.TrimSpace(b.Lesson) == "" {
+		return nil
+	}
+	lesson, err := academy.GetLesson(b.Lesson)
+	if err != nil {
+		return nil
+	}
+	return lesson
+}
+
+func applyLessonToPlan(plan *Plan, lesson *academy.Lesson) {
+	if plan == nil || lesson == nil {
+		return
+	}
+	plan.Lesson = lesson.Key
+	plan.ProductionStage = lesson.ProductionStage
+	plan.Method = lesson.KieMethod
+	plan.PromptFocus = lesson.PromptFocus
 }
 
 func isSkipAnswer(answer string) bool {

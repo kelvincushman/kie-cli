@@ -27,6 +27,8 @@ Use the product commands for normal operation:
 kie-pp-cli media setup --agent
 kie-pp-cli media workflow list --agent
 kie-pp-cli media workflow show <workflow> --agent
+kie-pp-cli lesson recommend "<what you want to create>" --agent
+kie-pp-cli media leaderboard <task> --agent
 kie-pp-cli create "a polished product image for a website hero" --agent
 kie-pp-cli create --workflow product-photoshoot "a polished product image" --agent
 kie-pp-cli create --brief <brief_id> --answer <value> --agent
@@ -106,13 +108,14 @@ State is organized around opaque handles:
 
 The local store contains brief answers, selected model, the generated plan, reference handles, provider task IDs, generation status, and result URLs. It must not contain credentials, bearer tokens, cookies, or auth headers. Public CLI/MCP reference responses omit local source and vault paths.
 
-The workflow catalog keeps repeated routing metadata in Go instead of agent prompts. `media workflow list/show` returns the eight Kie-native skill ports, their compact stages, supported media, and unsupported provider gaps. Pass the selected name through `create --workflow <name>` or MCP `media_brief_start.workflow`.
+The workflow catalog keeps repeated routing metadata in Go instead of agent prompts. `media workflow list/show` returns the nine Kie-native skill ports, their compact stages, supported media, and unsupported provider gaps. Pass the selected name through `create --workflow <name>` or MCP `media_brief_start.workflow`.
 
 ## Workflow Catalog
 
 | Workflow | Media | Purpose |
 | --- | --- | --- |
 | `generate` | Image, video | General model routing; audio and music use dedicated CLI commands |
+| `academy` | Image, video | Source-linked lesson selection, original Kie method, storyboard, and per-shot approvals |
 | `brandkit` | Image | Approval-led brand concepts and local brand-system handoff |
 | `marketplace-cards` | Image | Truthful listing visuals and local exact-copy composition |
 | `product-photoshoot` | Image | Reference-led product campaign imagery |
@@ -121,9 +124,31 @@ The workflow catalog keeps repeated routing metadata in Go instead of agent prom
 | `websites` | Image, video | Site/app media assets with a separate local build/deploy step |
 | `youtube-thumbnail` | Image | 16:9 concepts with local exact-text composition |
 
-The nine installable skills are the core `kie-create` director plus one skill
+The ten installable skills are the core `kie-create` director plus one skill
 for each workflow above. Workflow metadata is intentionally compact for token
 savings; load a specialized skill only when its domain guidance is needed.
+
+## Lesson Director
+
+In hosts that expose installed skills as slash commands, `/kie-lesson` invokes
+the `kie-lesson` skill. The stable cross-host terminal contract is:
+
+```bash
+kie-pp-cli lesson list --agent
+kie-pp-cli lesson recommend "<what you want to create>" --agent
+kie-pp-cli lesson show <course-slug/lesson-slug> --agent
+kie-pp-cli lesson start "<what you want to create>" \
+  --lesson <course-slug/lesson-slug> --agent
+```
+
+`lesson start` creates an `academy` workflow video brief in storyboard mode and
+returns exactly one next question. An agent may instead pass the selected
+`lesson` with `--workflow academy --type image` for an image-only job.
+
+The checked-in map contains public lesson titles, ordering, duration, difficulty,
+and source URLs plus original Kie-native method abstractions. It does not copy
+course scripts, prompts, prose, videos, or downloads. See
+[ACADEMY_METHODS.md](ACADEMY_METHODS.md) for all 171 mapped lessons.
 
 ## Qualification Protocol
 
@@ -279,7 +304,13 @@ The implemented defaults are:
 - SeedDance modes are text, first-frame, first+last-frame, or multimodal image/video/audio references.
 - Platform aspect-ratio recommendations: Instagram image `3:4`, Instagram/TikTok video `9:16`, YouTube/website/LinkedIn `16:9`, general video `16:9`, general image `1:1`
 
-Model override is available with `--model`, but agents should prefer the implemented defaults unless the user requests a specific model or the current CLI/model docs require a different route.
+The preview-still model can be selected independently with `--preview-model`.
+Supported routes are GPT Image 2 text/image modes and Nano Banana 2, 2 Lite,
+or Pro. Use `media leaderboard character-consistency --agent` to inspect dated
+task evidence, then validate the actual plan input against the captured Kie
+schema. Model override is available with `--model`, but agents should prefer
+the implemented defaults unless the user requests a specific model or current
+evidence and input requirements support a better route.
 
 ## Approval and MCP
 
@@ -311,13 +342,17 @@ kie-media-mcp --transport http --addr 127.0.0.1:7780
 ```
 
 The HTTP listener intentionally rejects wildcard and non-loopback addresses.
-The twenty-five stable tools are:
+The twenty-nine stable tools are:
 
 - `media_brief_start`
 - `media_brief_answer`
 - `media_brief_get`
 - `media_workflow_list`
 - `media_workflow_get`
+- `media_lesson_list`
+- `media_lesson_get`
+- `media_lesson_recommend`
+- `media_leaderboard_get`
 - `media_model_list`
 - `media_model_get`
 - `media_model_example`

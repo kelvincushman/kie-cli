@@ -21,6 +21,8 @@ Rules:
 - Use the CLI's --agent mode for machine-readable output.
 - Keep briefs, references, identity bundles, scripts, storyboards, and generation records local unless an explicit live action needs an upload.
 - Ask one useful qualifying question at a time. Do not give me a large intake form.
+- If I ask for a film, ad, story, character-consistency, or unfamiliar production outcome, run `./bin/kie-pp-cli lesson recommend "<my request>" --agent`, explain up to three source-linked original Kie methods, and let me choose one before starting.
+- Use `./bin/kie-pp-cli media leaderboard <task> --agent` as dated evidence for model choice. Never combine scores from unlike sources or present a family proxy as a direct score.
 - Do not submit any paid/live generation until I approve the ready plan.
 - For video, generate the preview still first, show me the returned image URL or rendered image, and wait for my explicit approval before final video submission.
 - If the preview is wrong, reject it, revise the brief, and generate another preview.
@@ -44,7 +46,8 @@ Setup:
 First media job:
 1. Ask me what I want to create.
 2. Start the brief:
-   ./bin/kie-pp-cli create "<my request>" --agent
+   ./bin/kie-pp-cli lesson start "<my request>" --lesson <selected-course/lesson> --agent
+   Use `create` directly when a lesson workflow is not useful.
 3. Ask only the returned next_question.prompt.
 4. Resume with:
    ./bin/kie-pp-cli create --brief <brief_id> --answer "<my answer>" --agent
@@ -73,6 +76,8 @@ The currently verified core commands are:
 ./bin/kie-pp-cli create --help
 ./bin/kie-pp-cli media --help
 ./bin/kie-pp-cli media setup --agent
+./bin/kie-pp-cli lesson --help
+./bin/kie-pp-cli media leaderboard --agent
 ./bin/kie-pp-cli create "<request>" --agent
 ./bin/kie-pp-cli create --brief <brief_id> --answer "<answer>" --agent
 ./bin/kie-pp-cli create --brief <brief_id> --preview --wait --agent
@@ -89,6 +94,11 @@ building:
 ./bin/kie-pp-cli media script --help
 ./bin/kie-pp-cli media storyboard --help
 ```
+
+In agent hosts that expose installed skills as slash commands, `/kie-lesson`
+starts the same guided selection flow. `kie-pp-cli lesson` remains the stable
+terminal surface, and MCP clients use `media_lesson_recommend`,
+`media_lesson_get`, `media_leaderboard_get`, and `media_brief_start`.
 
 The storyboard state machine is:
 

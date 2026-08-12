@@ -174,7 +174,7 @@ Validation rules:
 
 ## MCP Storyboard Tools
 
-The focused MCP server exposes twenty-five tools, including six local
+The focused MCP server exposes twenty-nine tools, including six local
 script/storyboard tools:
 
 - `media_script_set`

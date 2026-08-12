@@ -27,6 +27,7 @@ func init() {
 
 type mediaCreateOptions struct {
 	workflow        string
+	lesson          string
 	briefID         string
 	answer          string
 	mediaType       string
@@ -48,6 +49,7 @@ type mediaCreateOptions struct {
 	lastFrame       string
 	identityIDs     []string
 	model           string
+	previewModel    string
 	productionMode  string
 	planOnly        bool
 	preview         bool
@@ -77,7 +79,8 @@ func newMediaCreateCmd(flags *rootFlags) *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&options.briefID, "brief", "", "Resume an existing local media brief")
-	cmd.Flags().StringVar(&options.workflow, "workflow", "", "Kie workflow: generate, brandkit, marketplace-cards, product-photoshoot, identity, video-explainer, websites, or youtube-thumbnail")
+	cmd.Flags().StringVar(&options.workflow, "workflow", "", "Kie workflow: generate, academy, brandkit, marketplace-cards, product-photoshoot, identity, video-explainer, websites, or youtube-thumbnail")
+	cmd.Flags().StringVar(&options.lesson, "lesson", "", "Academy lesson key from 'lesson recommend', such as course-slug/lesson-slug")
 	cmd.Flags().StringVar(&options.answer, "answer", "", "Answer the brief's current question (use with --brief)")
 	cmd.Flags().StringVar(&options.mediaType, "type", "", "Media type: image or video")
 	cmd.Flags().StringVar(&options.purpose, "purpose", "", "Intended use, such as social post or website hero")
@@ -98,6 +101,7 @@ func newMediaCreateCmd(flags *rootFlags) *cobra.Command {
 	cmd.Flags().StringVar(&options.lastFrame, "last-frame", "", "SeedDance last-frame image path, URL, or ref:<id>")
 	cmd.Flags().StringSliceVar(&options.identityIDs, "identity", nil, "Local identity:<id> likeness bundle; repeat or comma-separate")
 	cmd.Flags().StringVar(&options.model, "model", "", "Override the recommended Kie.ai model")
+	cmd.Flags().StringVar(&options.previewModel, "preview-model", "", "Still gate model: GPT Image 2 or a supported Nano Banana route")
 	cmd.Flags().StringVar(&options.productionMode, "production-mode", "", "Video production: single-shot or storyboard")
 	cmd.Flags().BoolVar(&options.planOnly, "plan-only", false, "Build and save the brief without submitting a live generation")
 	cmd.Flags().BoolVar(&options.preview, "preview", false, "Generate the review image required before a video can be submitted")
@@ -154,7 +158,7 @@ func runMediaCreate(cmd *cobra.Command, flags *rootFlags, options mediaCreateOpt
 			return fmt.Errorf("--answer requires --brief <id>")
 		}
 		brief, err = media.NewBrief(media.BriefInput{
-			Workflow: options.workflow, Request: request, MediaType: options.mediaType, Purpose: options.purpose,
+			Workflow: options.workflow, Lesson: options.lesson, Request: request, MediaType: options.mediaType, Purpose: options.purpose,
 			Platform: options.platform, AspectRatio: options.aspectRatio,
 			DurationSeconds: options.durationSeconds, Resolution: options.resolution,
 			AudioMode: options.audioMode, VideoMode: options.videoMode, OutputFormat: options.outputFormat,
@@ -162,7 +166,7 @@ func runMediaCreate(cmd *cobra.Command, flags *rootFlags, options mediaCreateOpt
 			References: options.references, ReferenceVideos: options.referenceVideos,
 			ReferenceAudio: options.referenceAudio, FirstFrame: options.firstFrame,
 			LastFrame: options.lastFrame, IdentityIDs: options.identityIDs, Model: options.model,
-			ProductionMode: options.productionMode,
+			PreviewModel: options.previewModel, ProductionMode: options.productionMode,
 		})
 		if err != nil {
 			return err
@@ -307,7 +311,7 @@ func runMediaCreate(cmd *cobra.Command, flags *rootFlags, options mediaCreateOpt
 }
 
 func mediaCreateHasOverrides(options mediaCreateOptions, request string) bool {
-	return strings.TrimSpace(request) != "" || strings.TrimSpace(options.workflow) != "" || strings.TrimSpace(options.mediaType) != "" ||
+	return strings.TrimSpace(request) != "" || strings.TrimSpace(options.workflow) != "" || strings.TrimSpace(options.lesson) != "" || strings.TrimSpace(options.mediaType) != "" ||
 		strings.TrimSpace(options.purpose) != "" || strings.TrimSpace(options.platform) != "" ||
 		strings.TrimSpace(options.aspectRatio) != "" || options.durationSeconds != 0 ||
 		strings.TrimSpace(options.resolution) != "" || strings.TrimSpace(options.audioMode) != "" ||
@@ -315,6 +319,7 @@ func mediaCreateHasOverrides(options mediaCreateOptions, request string) bool {
 		options.returnLastFrame || options.webSearch || strings.TrimSpace(options.style) != "" ||
 		len(options.references)+len(options.referenceVideos)+len(options.referenceAudio)+len(options.identityIDs) > 0 ||
 		strings.TrimSpace(options.firstFrame) != "" || strings.TrimSpace(options.lastFrame) != "" || strings.TrimSpace(options.model) != "" ||
+		strings.TrimSpace(options.previewModel) != "" ||
 		strings.TrimSpace(options.productionMode) != ""
 }
 
@@ -325,6 +330,9 @@ func applyMediaOverrides(brief *media.Brief, options mediaCreateOptions, request
 		} else {
 			brief.Workflow = value
 		}
+	}
+	if value := strings.Trim(strings.TrimSpace(options.lesson), "/"); value != "" {
+		brief.Lesson = value
 	}
 	if value := strings.TrimSpace(request); value != "" {
 		brief.Request = value
@@ -389,6 +397,9 @@ func applyMediaOverrides(brief *media.Brief, options mediaCreateOptions, request
 	}
 	if value := strings.TrimSpace(options.model); value != "" {
 		brief.Model = value
+	}
+	if value := strings.TrimSpace(options.previewModel); value != "" {
+		brief.PreviewModel = value
 	}
 	if value := strings.TrimSpace(options.productionMode); value != "" {
 		brief.ProductionMode = strings.ToLower(value)
@@ -531,6 +542,7 @@ func newMediaCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{Use: "media", Short: "Inspect and resume local media briefs, references, and generations"}
 	cmd.AddCommand(newMediaSetupCmd(flags))
 	cmd.AddCommand(newMediaWorkflowCmd(flags))
+	cmd.AddCommand(newMediaLeaderboardCmd(flags))
 	cmd.AddCommand(newMediaBriefCmd(flags))
 	cmd.AddCommand(newMediaReferenceCmd(flags))
 	cmd.AddCommand(newMediaIdentityCmd(flags))

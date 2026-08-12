@@ -10,6 +10,8 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"kie-pp-cli/internal/kiecatalog"
 )
 
 type API interface {
@@ -114,6 +116,9 @@ func (s *Service) Submit(ctx context.Context, b *Brief) (*Generation, error) {
 			return nil, err
 		}
 	}
+	if err := validatePaidPlan(plan); err != nil {
+		return nil, err
+	}
 	body := map[string]any{"model": plan.Model, "input": plan.Input}
 	data, status, err := s.API.PostWithParams(ctx, "/api/v1/jobs/createTask", map[string]string{}, body)
 	if err != nil {
@@ -198,6 +203,9 @@ func (s *Service) SubmitPreview(ctx context.Context, b *Brief) (*Generation, err
 			return nil, err
 		}
 	}
+	if err := validatePaidPlan(plan); err != nil {
+		return nil, err
+	}
 	body := map[string]any{"model": plan.Model, "input": plan.Input}
 	data, status, err := s.API.PostWithParams(ctx, "/api/v1/jobs/createTask", map[string]string{}, body)
 	if err != nil {
@@ -230,6 +238,35 @@ func (s *Service) SubmitPreview(ctx context.Context, b *Brief) (*Generation, err
 	}
 	*requestedBrief = *stored
 	return g, nil
+}
+
+func validatePaidPlan(plan *Plan) error {
+	if plan == nil {
+		return fmt.Errorf("generation plan is required")
+	}
+	// The catalog validator receives JSON-shaped values from CLI/MCP callers.
+	// Director plans use native []string slices, so normalize through JSON before
+	// applying the exact same contract.
+	encoded, err := json.Marshal(plan.Input)
+	if err != nil {
+		return fmt.Errorf("encoding %s input for local validation: %w", plan.Model, err)
+	}
+	normalized := map[string]any{}
+	if err := json.Unmarshal(encoded, &normalized); err != nil {
+		return fmt.Errorf("normalizing %s input for local validation: %w", plan.Model, err)
+	}
+	issues, err := kiecatalog.Validate(plan.Model, normalized)
+	if err != nil {
+		return fmt.Errorf("validating %s input before paid generation: %w", plan.Model, err)
+	}
+	if len(issues) == 0 {
+		return nil
+	}
+	parts := make([]string, 0, len(issues))
+	for _, issue := range issues {
+		parts = append(parts, strings.TrimSpace(issue.Path+" "+issue.Message))
+	}
+	return fmt.Errorf("%s input failed local contract validation: %s", plan.Model, strings.Join(parts, "; "))
 }
 
 func (s *Service) requireApprovedStoryboardForShot(brief *Brief) error {
