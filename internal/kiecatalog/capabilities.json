@@ -114,7 +114,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "landscape_16_9",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "image_size"
         ]
@@ -134,7 +134,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "landscape_16_9",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "image_size"
         ]
@@ -154,7 +154,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "landscape_16_9",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "image_size"
         ]
@@ -328,7 +328,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "1K",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "resolution"
         ]
@@ -348,7 +348,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "1K",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "resolution"
         ]
@@ -368,7 +368,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "1K",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "resolution"
         ]
@@ -388,7 +388,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "1K",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "resolution"
         ]
@@ -512,7 +512,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "16:9",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "image_size"
         ]
@@ -532,7 +532,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "16:9",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "image_size"
         ]
@@ -552,7 +552,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "1K",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "resolution"
         ]
@@ -572,7 +572,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "1K",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "resolution"
         ]
@@ -989,7 +989,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "landscape_16_9",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "image_size"
         ]
@@ -1031,7 +1031,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "landscape_16_9",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "image_size"
         ]
@@ -1071,7 +1071,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "landscape_16_9",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "image_size"
         ]
@@ -1091,7 +1091,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "landscape_16_9",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "image_size"
         ]
@@ -1449,7 +1449,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "1K",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "resolution"
         ]
@@ -1487,7 +1487,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "1K",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "resolution"
         ]
@@ -1505,7 +1505,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "1080",
+        "lowest_faithful_tier": "720",
         "resolution_fields": [
           "output_resolution"
         ]
@@ -1648,7 +1648,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "landscape_16_9",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "image_size"
         ]
@@ -1686,7 +1686,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "landscape_16_9",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "image_size"
         ]
@@ -1706,7 +1706,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "16:9",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "image_size"
         ]
@@ -1726,7 +1726,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "16:9",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "image_size"
         ]
@@ -1746,7 +1746,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "16:9",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "resolution",
           "image_size"
@@ -1767,7 +1767,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "16:9",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "resolution",
           "image_size"
@@ -1788,7 +1788,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "16:9",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "resolution",
           "image_size"
@@ -1809,7 +1809,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "16:9",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "resolution",
           "image_size"
@@ -1960,7 +1960,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "1.5K",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "size"
         ]
@@ -2028,7 +2028,7 @@
       ],
       "proof": {
         "alternate_allowed": true,
-        "lowest_faithful_tier": "basic",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "mode"
         ]
@@ -2273,7 +2273,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "1K",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "resolution"
         ]
@@ -2293,7 +2293,7 @@
       ],
       "proof": {
         "alternate_allowed": false,
-        "lowest_faithful_tier": "1K",
+        "lowest_faithful_tier": "",
         "resolution_fields": [
           "resolution"
         ]

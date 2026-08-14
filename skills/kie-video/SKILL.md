@@ -25,10 +25,12 @@ kie-pp-cli create --brief <brief_id> --preview --confirm-paid --wait --agent
 # Show the actual still; then record the user's decision.
 kie-pp-cli create --brief <brief_id> --approve-preview --agent
 
-# Optional complete-shot dry run at the returned lowest faithful tier.
+# If the user declines the optional complete-shot proof, do not generate it.
+kie-pp-cli create --brief <brief_id> --skip-proof --agent
+
+# If the user accepts it, obtain a new confirmation, then generate and show it.
 kie-pp-cli create --brief <brief_id> --proof --confirm-paid --wait --agent
-# Show the actual clip; then approve/reject, or use --skip-proof if declined.
-kie-pp-cli create --brief <brief_id> --approve-proof --agent
+kie-pp-cli create --brief <brief_id> --approve-proof --agent # or --reject-proof
 
 # Final render needs another new explicit yes.
 kie-pp-cli create --brief <brief_id> --submit --confirm-paid --wait --agent

@@ -521,12 +521,14 @@ func registerTools(server *mcp.Server, deps Dependencies) {
 		if err != nil {
 			return nil, capabilityListOutput{}, err
 		}
+		modelFilter := strings.TrimSpace(input.Model)
+		capabilityFilter := strings.TrimSpace(input.Capability)
 		models := make([]kiecatalog.ModelCapability, 0, len(registry.Models))
 		for _, item := range registry.Models {
-			if input.Model != "" && item.ModelID != strings.TrimSpace(input.Model) {
+			if modelFilter != "" && item.ModelID != modelFilter {
 				continue
 			}
-			if input.Capability != "" && item.PrimaryCapability != strings.TrimSpace(input.Capability) {
+			if capabilityFilter != "" && item.PrimaryCapability != capabilityFilter {
 				continue
 			}
 			models = append(models, item)

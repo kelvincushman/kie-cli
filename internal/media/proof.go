@@ -52,24 +52,31 @@ func ResolveProofOption(modelID string) ProofOption {
 		option.UnsupportedReason = "the selected model has no documented lower-fidelity setting for a faithful proof"
 		return option
 	}
-	for _, field := range fields {
-		schema, _ := properties[field].(map[string]any)
-		values := stringValues(schema["enum"])
-		if len(values) == 0 {
-			continue
-		}
+	field, value := selectProofTier(fields, properties)
+	if field != "" {
 		option.ResolutionField = field
-		option.ResolutionValue = lowestProofValue(values)
+		option.ResolutionValue = value
 		option.LowestTier = option.ResolutionValue
 		option.SourceSchemaFields = fields
-		option.Supported = option.ResolutionValue != ""
-		if option.Supported && proofPixels(option.ResolutionValue) >= 720 {
+		option.Supported = true
+		if proofPixels(option.ResolutionValue) >= 720 {
 			option.Disclosure += " No cheaper faithful same-model tier is documented; this proof uses the model's lowest supported tier."
 		}
 		return option
 	}
 	option.UnsupportedReason = "resolution-like fields exist but do not publish selectable tiers"
 	return option
+}
+
+func selectProofTier(fields []string, properties map[string]any) (string, string) {
+	for _, field := range fields {
+		schema, _ := properties[field].(map[string]any)
+		value := lowestProofValue(stringValues(schema["enum"]))
+		if value != "" {
+			return field, value
+		}
+	}
+	return "", ""
 }
 
 func stringValues(value any) []string {

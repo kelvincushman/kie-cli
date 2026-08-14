@@ -60,6 +60,19 @@ class DocumentationTests(unittest.TestCase):
             with self.subTest(relative=relative):
                 self.assertTrue((ROOT / relative).exists())
 
+    def test_guides_keep_still_and_optional_video_proof_paths_distinct(self):
+        root_skill = (ROOT / "SKILL.md").read_text()
+        director = (ROOT / "docs" / "MEDIA_DIRECTOR.md").read_text()
+        storyboard = (ROOT / "docs" / "SCRIPT_AND_STORYBOARD.md").read_text()
+        create_skill = (ROOT / "skills" / "kie-create" / "SKILL.md").read_text()
+        self.assertIn("Still-image submission", root_skill)
+        self.assertIn("Video-only preview, proof, and final gates", root_skill)
+        self.assertIn("Decline the optional proof without making a live proof call", director)
+        self.assertIn("Accept the optional proof only after a fresh paid confirmation", director)
+        self.assertIn("--skip-proof", storyboard)
+        self.assertIn("--reject-proof", storyboard)
+        self.assertIn("new proof-scoped `media_paid_confirm`", create_skill)
+
 
 if __name__ == "__main__":
     unittest.main()

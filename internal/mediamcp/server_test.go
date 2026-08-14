@@ -54,6 +54,9 @@ func TestHTTPNegotiatesLatestStatelessProtocolAndListsMediaTools(t *testing.T) {
 	if stringSliceJSON(gotNames) != stringSliceJSON(wantNames) {
 		t.Fatalf("tools = %v, want %v", gotNames, wantNames)
 	}
+	if len(ToolNames) != 40 || len(listed.Tools) != 40 {
+		t.Fatalf("focused MCP tool count = constants:%d registered:%d, want 40", len(ToolNames), len(listed.Tools))
+	}
 
 	setupResult, err := session.CallTool(context.Background(), &mcp.CallToolParams{Name: "media_setup_get"})
 	if err != nil || setupResult.IsError {
@@ -114,6 +117,17 @@ func TestHTTPNegotiatesLatestStatelessProtocolAndListsMediaTools(t *testing.T) {
 	}
 	if _, ok := modelView.Model.InputSchema["properties"].(map[string]any)["reference_video_urls"]; !ok {
 		t.Fatalf("Seedance settings missing from MCP model output: %#v", modelView.Model.InputSchema)
+	}
+	capabilityResult, err := session.CallTool(context.Background(), &mcp.CallToolParams{
+		Name: "media_capability_list", Arguments: map[string]any{"model": "  ", "capability": "\t"},
+	})
+	if err != nil || capabilityResult.IsError {
+		t.Fatalf("media_capability_list whitespace filter error=%v result=%#v", err, capabilityResult)
+	}
+	var capabilityView capabilityListOutput
+	decodeStructured(t, capabilityResult.StructuredContent, &capabilityView)
+	if len(capabilityView.Models) != 129 {
+		t.Fatalf("whitespace capability filters returned %d models, want 129", len(capabilityView.Models))
 	}
 
 	result, err := session.CallTool(context.Background(), &mcp.CallToolParams{

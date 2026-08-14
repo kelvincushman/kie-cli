@@ -46,6 +46,7 @@
     "internal/mediamcp/server_test.go",
     "research/build_spec.py",
     "research/generate_capabilities.py",
+    "research/test_generate_capabilities.py",
     "research/test_documentation.py",
     "research/test_skills.py",
     "skills/kie-brandkit/SKILL.md",
@@ -93,6 +94,6 @@
     "skills/kie-youtube-thumbnail/agents/openai.yaml",
     "skills/kie-youtube-thumbnail/references/thumbnail-frameworks.md"
   ],
-  "validated_outcome": "Final local regression evidence covers all 129 model classifications, 70 operations/219 documented variants, concise grill inference and wrap-up, route rationale/overrides, durable old-brief migration, rights acknowledgement, still/proof invalidation, exact current-turn scoped ten-minute single-use paid confirmations, zero Kie calls for missing/wrong/stale/reused or out-of-sequence confirmation, CLI/MCP parity, all 40 focused MCP tools, MCP 2026-07-28, all 17 skill descriptors, scripts, storyboards, and one gated child brief per shot. Fresh verification passed: 25 Python tests, go test ./..., go vet ./..., make build-all, focused Go race tests for media and mediamcp, deterministic capability regeneration, JSON parsing, gofmt, and git diff checks. Independent code review returned APPROVE and independent architecture review returned CLEAR before publication. No paid/live Kie generation was authorized or submitted; structural and dry-run evidence does not establish provider output quality.",
+  "validated_outcome": "Final local regression evidence covers all 129 model classifications, 70 operations/219 documented variants, model-schema-derived media inputs and settings, concise grill inference and wrap-up, route rationale/overrides, durable old-brief migration, rights acknowledgement, still/proof invalidation, exact current-turn scoped ten-minute single-use paid confirmations, zero Kie calls for missing/wrong/stale/reused, oversized-reference, unsupported-reference, or out-of-sequence confirmation paths, unchanged-result approval preservation, CLI/MCP parity, all 40 focused MCP tools, MCP 2026-07-28, all 17 skill descriptors, scripts, storyboards, and one gated child brief per shot. The optional proof branch records a skip without a live call when declined and requires a fresh paid confirmation before generation when accepted. Fresh verification passed: 32 Python tests, go test ./..., go vet ./..., make build-all, focused Go race tests for media, mediamcp, and cli, deterministic capability regeneration at SHA-256 ea5564c9faa4283920507d096a1d5fbe608058785b1e9475b529f897811a9c61, JSON parsing, gofmt, and git diff checks. Independent code review returned APPROVE and independent architecture review returned CLEAR before publication. No paid/live Kie generation was authorized or submitted; structural and dry-run evidence does not establish provider output quality.",
   "upstream_issue": ""
 }

@@ -524,11 +524,9 @@ func BuildPlan(b *Brief) *Plan {
 	if lesson != nil {
 		promptParts = append(promptParts, "Production priorities: "+lesson.PromptFocus)
 	}
-	input := map[string]any{
-		"prompt":       strings.Join(promptParts, ". ") + ".",
-		"aspect_ratio": b.AspectRatio,
-	}
+	input := map[string]any{"prompt": strings.Join(promptParts, ". ") + "."}
 	if b.MediaType == "video" && model == "bytedance/seedance-2-5" {
+		input["aspect_ratio"] = b.AspectRatio
 		input["duration"] = b.DurationSeconds
 		input["resolution"] = defaultString(b.Resolution, "720p")
 		input["generate_audio"] = b.AudioMode == "on"
@@ -566,17 +564,21 @@ func BuildPlan(b *Brief) *Plan {
 			}
 		}
 	} else if b.MediaType == "video" {
-		input["duration"] = strconv.Itoa(b.DurationSeconds)
-		input["sound"] = b.AudioMode == "on"
-		input["mode"] = "std"
+		applyDocumentedVideoDefaults(input, b, model)
 		imageRefs := append([]string(nil), b.References...)
+		for _, id := range b.IdentityIDs {
+			imageRefs = append(imageRefs, "identity:"+strings.TrimPrefix(id, "identity:"))
+		}
 		if VideoPreviewApproved(b) {
 			imageRefs = append([]string{b.PreviewURL}, imageRefs...)
 		}
-		if len(imageRefs) > 0 {
-			input["image_urls"] = imageRefs
-		}
-	} else if len(b.References)+len(b.IdentityIDs) > 0 {
+		setDocumentedMediaSources(input, model, "image", imageRefs)
+		setDocumentedMediaSources(input, model, "video", b.ReferenceVideos)
+		setDocumentedMediaSources(input, model, "audio", b.ReferenceAudio)
+	} else {
+		input["aspect_ratio"] = b.AspectRatio
+	}
+	if b.MediaType != "video" && len(b.References)+len(b.IdentityIDs) > 0 {
 		key := imageInputKey(model)
 		values := append([]string(nil), b.References...)
 		for _, id := range b.IdentityIDs {
@@ -869,6 +871,98 @@ func imageInputKey(model string) string {
 	}
 }
 
+// documentedMediaInput returns the first model-schema field that can carry the
+// requested reference type. The boolean records whether the field is an array;
+// callers must not invent generic keys for models that do not document one.
+func documentedMediaInput(model, mediaType string) (string, bool, bool) {
+	item, err := kiecatalog.Get(strings.TrimSpace(model))
+	if err != nil {
+		return "", false, false
+	}
+	properties, _ := item.InputSchema["properties"].(map[string]any)
+	candidates := map[string][]string{
+		"image": {"reference_image_urls", "image_urls", "input_urls", "image_input", "image_url", "first_frame_url"},
+		"video": {"reference_video_urls", "video_urls", "video_url"},
+		"audio": {"reference_audio_urls", "audio_urls", "audio_url"},
+	}[mediaType]
+	for _, field := range candidates {
+		raw, ok := properties[field]
+		if !ok {
+			continue
+		}
+		schema, _ := raw.(map[string]any)
+		return field, schema["type"] == "array", true
+	}
+	return "", false, false
+}
+
+func setDocumentedMediaSources(input map[string]any, model, mediaType string, sources []string) {
+	field, array, ok := documentedMediaInput(model, mediaType)
+	if !ok || len(sources) == 0 {
+		return
+	}
+	if array {
+		input[field] = append([]string(nil), sources...)
+	} else if len(sources) == 1 {
+		input[field] = sources[0]
+	}
+}
+
+func applyDocumentedVideoDefaults(input map[string]any, b *Brief, model string) {
+	item, err := kiecatalog.Get(model)
+	if err != nil {
+		return
+	}
+	properties, _ := item.InputSchema["properties"].(map[string]any)
+	if _, ok := properties["aspect_ratio"]; ok {
+		input["aspect_ratio"] = b.AspectRatio
+	} else if _, ok := properties["ratio"]; ok {
+		input["ratio"] = b.AspectRatio
+	}
+	if raw, ok := properties["duration"].(map[string]any); ok {
+		if raw["type"] == "string" {
+			input["duration"] = strconv.Itoa(b.DurationSeconds)
+		} else {
+			input["duration"] = b.DurationSeconds
+		}
+	}
+	if _, ok := properties["sound"]; ok {
+		input["sound"] = b.AudioMode == "on"
+	}
+	if _, ok := properties["multi_shots"]; ok {
+		input["multi_shots"] = false
+	}
+	if _, ok := properties["multi_prompt"]; ok {
+		input["multi_prompt"] = []any{}
+	}
+	for _, field := range []string{"mode", "resolution"} {
+		raw, ok := properties[field].(map[string]any)
+		if !ok {
+			continue
+		}
+		if field == "resolution" && enumContains(raw["enum"], b.Resolution) {
+			input[field] = b.Resolution
+			continue
+		}
+		if value, ok := raw["default"]; ok {
+			input[field] = value
+		}
+	}
+}
+
+func enumContains(value any, candidate string) bool {
+	if strings.TrimSpace(candidate) == "" {
+		return false
+	}
+	values, _ := value.([]any)
+	for _, raw := range values {
+		if text, ok := raw.(string); ok && text == candidate {
+			return true
+		}
+	}
+	return false
+}
+
 func supportedPreviewModel(model string) bool {
 	switch strings.TrimSpace(model) {
 	case "gpt-image-2-text-to-image", "gpt-image-2-image-to-image", "nano-banana-2", "nano-banana-2-lite", "nano-banana-pro", "seedream/5-pro-image-to-image":
@@ -939,8 +1033,18 @@ func requiresRightsAcknowledgement(b *Brief) bool {
 	if b == nil {
 		return false
 	}
-	model := strings.ToLower(strings.TrimSpace(b.Model))
-	return containsAny(model, "avatar", "voice", "text-to-speech", "text-to-dialogue", "infinitalk", "omnihuman")
+	model := strings.TrimSpace(BuildPlan(b).Model)
+	if classified, err := kiecatalog.GetCapability(model); err == nil {
+		if classified.PrimaryCapability == "kie-avatar" || classified.PrimaryCapability == "kie-audio" {
+			return true
+		}
+		for _, secondary := range classified.SecondaryCapabilities {
+			if secondary == "kie-avatar" {
+				return true
+			}
+		}
+	}
+	return containsAny(strings.ToLower(model), "avatar", "voice", "text-to-speech", "text-to-dialogue", "infinitalk", "omnihuman")
 }
 
 var durationPattern = regexp.MustCompile(`(?i)\b(\d{1,3})\s*(?:seconds?|secs?|s)\b`)
@@ -979,7 +1083,15 @@ func inferBriefFromRequest(b *Brief) {
 	}
 	if b.DurationSeconds == 0 && b.MediaType == "video" {
 		if match := durationPattern.FindStringSubmatch(request); len(match) == 2 {
-			b.DurationSeconds, _ = strconv.Atoi(match[1])
+			if seconds, err := strconv.Atoi(match[1]); err == nil && seconds >= 4 {
+				maxDuration := 30
+				if b.ProductionMode == ProductionModeStoryboard {
+					maxDuration = 600
+				}
+				if seconds <= maxDuration {
+					b.DurationSeconds = seconds
+				}
+			}
 		}
 	}
 	if b.Purpose == "" {
@@ -994,8 +1106,16 @@ func inferBriefFromRequest(b *Brief) {
 			b.Purpose = "social post"
 		}
 	}
-	if b.Style == "" && containsAny(request, "cinematic", "photorealistic", "documentary", "handheld", "editorial", "minimal", "studio", "anime", "watercolor") {
-		b.Style = b.Request
+	if b.Style == "" {
+		var matched []string
+		for _, token := range []string{"cinematic", "photorealistic", "documentary", "handheld", "editorial", "minimal", "studio", "anime", "watercolor"} {
+			if strings.Contains(request, token) {
+				matched = append(matched, token)
+			}
+		}
+		if len(matched) > 0 {
+			b.Style = strings.Join(matched, ", ")
+		}
 	}
 	if b.MediaType == "video" {
 		if b.AudioMode == "" {

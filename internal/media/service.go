@@ -50,7 +50,9 @@ func (s *Service) Submit(ctx context.Context, b *Brief, confirmationIDs ...strin
 	} else if previous != nil {
 		stored.Status = StatusSubmitted
 		stored.GenerationID = previous.ID
-		_ = s.Store.SaveBrief(stored)
+		if err := s.Store.SaveBrief(stored); err != nil {
+			return nil, fmt.Errorf("recording existing final generation %s on brief %s: %w", previous.ID, stored.ID, err)
+		}
 		return nil, fmt.Errorf("brief %s was already submitted as generation %s; check its status instead", stored.ID, previous.ID)
 	}
 	b = stored
@@ -82,46 +84,15 @@ func (s *Service) Submit(ctx context.Context, b *Brief, confirmationIDs ...strin
 	if err != nil {
 		return nil, err
 	}
-	if b.MediaType == "video" && VideoPreviewApproved(b) && (plan.Model != "bytedance/seedance-2-5" || b.VideoMode == "multimodal") {
-		imageSources = append([]string{b.PreviewURL}, imageSources...)
-	}
-	if plan.Model == "bytedance/seedance-2-5" && len(imageSources) > 30 {
-		return nil, fmt.Errorf("SeedDance 2.5 accepts at most 30 total image and identity references; got %d", len(imageSources))
-	}
 	if strings.HasPrefix(plan.Model, "seedream/5-pro-") && len(imageSources) > 10 {
 		return nil, fmt.Errorf("Seedream 5 Pro accepts at most 10 image references; got %d", len(imageSources))
 	}
-	if b.MediaType == "video" && plan.Model == "bytedance/seedance-2-5" {
-		switch b.VideoMode {
-		case "multimodal":
-			if err := s.resolvePlanReferences(ctx, b.ID, plan.Input, "reference_image_urls", imageSources, "image"); err != nil {
-				return nil, err
-			}
-			if err := s.resolvePlanReferences(ctx, b.ID, plan.Input, "reference_video_urls", b.ReferenceVideos, "video"); err != nil {
-				return nil, err
-			}
-			if err := s.resolvePlanReferences(ctx, b.ID, plan.Input, "reference_audio_urls", b.ReferenceAudio, "audio"); err != nil {
-				return nil, err
-			}
-		default:
-			firstFrame, err := s.resolveReference(ctx, b.ID, b.PreviewURL, "image")
-			if err != nil {
-				return nil, err
-			}
-			plan.Input["first_frame_url"] = firstFrame
-			if b.LastFrame != "" {
-				lastFrame, err := s.resolveReference(ctx, b.ID, b.LastFrame, "image")
-				if err != nil {
-					return nil, err
-				}
-				plan.Input["last_frame_url"] = lastFrame
-			}
+	if b.MediaType == "video" {
+		if err := s.prepareVideoPlanReferences(ctx, b, plan, imageSources); err != nil {
+			return nil, err
 		}
 	} else if len(imageSources) > 0 {
 		key := imageInputKey(plan.Model)
-		if b.MediaType == "video" {
-			key = "image_urls"
-		}
 		if err := s.resolvePlanReferences(ctx, b.ID, plan.Input, key, imageSources, "image"); err != nil {
 			return nil, err
 		}
@@ -197,7 +168,9 @@ func (s *Service) SubmitPreview(ctx context.Context, b *Brief, confirmationIDs .
 		if len(previous.ResultURLs) > 0 {
 			stored.PreviewURL = previous.ResultURLs[0]
 		}
-		_ = s.Store.SaveBrief(stored)
+		if err := s.Store.SaveBrief(stored); err != nil {
+			return nil, fmt.Errorf("recording existing preview generation %s on brief %s: %w", previous.ID, stored.ID, err)
+		}
 		return nil, fmt.Errorf("brief %s already has preview generation %s; refresh its status, then approve or reject it", stored.ID, previous.ID)
 	}
 	plan := BuildPreviewPlan(stored)
@@ -305,26 +278,8 @@ func (s *Service) SubmitProof(ctx context.Context, b *Brief, confirmationIDs ...
 	if err != nil {
 		return nil, err
 	}
-	if plan.Model == "bytedance/seedance-2-5" {
-		switch stored.VideoMode {
-		case "multimodal":
-			imageSources = append([]string{stored.PreviewURL}, imageSources...)
-			if err := s.resolvePlanReferences(ctx, stored.ID, plan.Input, "reference_image_urls", imageSources, "image"); err != nil {
-				return nil, err
-			}
-			if err := s.resolvePlanReferences(ctx, stored.ID, plan.Input, "reference_video_urls", stored.ReferenceVideos, "video"); err != nil {
-				return nil, err
-			}
-			if err := s.resolvePlanReferences(ctx, stored.ID, plan.Input, "reference_audio_urls", stored.ReferenceAudio, "audio"); err != nil {
-				return nil, err
-			}
-		default:
-			firstFrame, err := s.resolveReference(ctx, stored.ID, stored.PreviewURL, "image")
-			if err != nil {
-				return nil, err
-			}
-			plan.Input["first_frame_url"] = firstFrame
-		}
+	if err := s.prepareVideoPlanReferences(ctx, stored, plan, imageSources); err != nil {
+		return nil, err
 	}
 	if err := validatePaidPlan(plan); err != nil {
 		return nil, err
@@ -459,16 +414,20 @@ func (s *Service) RefreshGeneration(ctx context.Context, id string) (*Generation
 		if g.Kind == GenerationKindPreview && brief.PreviewGenerationID == g.ID && brief.PreviewBriefHash == g.Fingerprint {
 			brief.PreviewStatus = g.Status
 			if len(g.ResultURLs) > 0 {
-				brief.PreviewURL = g.ResultURLs[0]
-				brief.PreviewApprovedAt = nil
+				if brief.PreviewURL != g.ResultURLs[0] {
+					brief.PreviewURL = g.ResultURLs[0]
+					brief.PreviewApprovedAt = nil
+				}
 			}
 			brief.UpdatedAt = g.UpdatedAt
 			brief.Plan = BuildPlan(brief)
 		} else if g.Kind == GenerationKindProof && brief.ProofGenerationID == g.ID && brief.ProofBriefHash == g.Fingerprint {
 			brief.ProofStatus = g.Status
 			if len(g.ResultURLs) > 0 {
-				brief.ProofURL = g.ResultURLs[0]
-				brief.ProofApprovedAt = nil
+				if brief.ProofURL != g.ResultURLs[0] {
+					brief.ProofURL = g.ResultURLs[0]
+					brief.ProofApprovedAt = nil
+				}
 			}
 			brief.UpdatedAt = g.UpdatedAt
 		}
@@ -492,6 +451,74 @@ func (s *Service) imageSourcesForBrief(b *Brief, includeFirstFrame bool) ([]stri
 		imageSources = append(imageSources, identity.ImageReferences...)
 	}
 	return imageSources, nil
+}
+
+func (s *Service) prepareVideoPlanReferences(ctx context.Context, b *Brief, plan *Plan, explicitImages []string) error {
+	if plan.Model == "bytedance/seedance-2-5" {
+		switch b.VideoMode {
+		case "multimodal":
+			images := append([]string{b.PreviewURL}, explicitImages...)
+			if len(images) > 30 {
+				return fmt.Errorf("SeedDance 2.5 accepts at most 30 total preview, image, and identity references; got %d", len(images))
+			}
+			if err := s.resolvePlanReferences(ctx, b.ID, plan.Input, "reference_image_urls", images, "image"); err != nil {
+				return err
+			}
+			if err := s.resolvePlanReferences(ctx, b.ID, plan.Input, "reference_video_urls", b.ReferenceVideos, "video"); err != nil {
+				return err
+			}
+			return s.resolvePlanReferences(ctx, b.ID, plan.Input, "reference_audio_urls", b.ReferenceAudio, "audio")
+		default:
+			firstFrame, err := s.resolveReference(ctx, b.ID, b.PreviewURL, "image")
+			if err != nil {
+				return err
+			}
+			plan.Input["first_frame_url"] = firstFrame
+			if b.LastFrame != "" {
+				lastFrame, err := s.resolveReference(ctx, b.ID, b.LastFrame, "image")
+				if err != nil {
+					return err
+				}
+				plan.Input["last_frame_url"] = lastFrame
+			}
+			return nil
+		}
+	}
+
+	images := append([]string{b.PreviewURL}, explicitImages...)
+	if _, _, ok := documentedMediaInput(plan.Model, "image"); ok {
+		if err := s.resolveDocumentedMediaReferences(ctx, b.ID, plan, "image", images); err != nil {
+			return err
+		}
+	} else if len(explicitImages) > 0 {
+		return fmt.Errorf("model %s does not document image references; remove the image/identity references or choose a compatible video model", plan.Model)
+	}
+	if err := s.resolveDocumentedMediaReferences(ctx, b.ID, plan, "video", b.ReferenceVideos); err != nil {
+		return err
+	}
+	return s.resolveDocumentedMediaReferences(ctx, b.ID, plan, "audio", b.ReferenceAudio)
+}
+
+func (s *Service) resolveDocumentedMediaReferences(ctx context.Context, briefID string, plan *Plan, mediaType string, sources []string) error {
+	if len(sources) == 0 {
+		return nil
+	}
+	field, array, ok := documentedMediaInput(plan.Model, mediaType)
+	if !ok {
+		return fmt.Errorf("model %s does not document %s references", plan.Model, mediaType)
+	}
+	if array {
+		return s.resolvePlanReferences(ctx, briefID, plan.Input, field, sources, mediaType)
+	}
+	if len(sources) != 1 {
+		return fmt.Errorf("model %s accepts one %s reference in %s; got %d", plan.Model, mediaType, field, len(sources))
+	}
+	resolved, err := s.resolveReference(ctx, briefID, sources[0], mediaType)
+	if err != nil {
+		return err
+	}
+	plan.Input[field] = resolved
+	return nil
 }
 
 func (s *Service) resolvePlanReferences(ctx context.Context, briefID string, input map[string]any, key string, sources []string, mediaType string) error {

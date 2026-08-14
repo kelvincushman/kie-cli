@@ -92,7 +92,7 @@ director workflow when human confirmation is required.
 - Use existing Kie.ai authentication only: `kie-pp-cli auth setup` in an interactive terminal, or `KIE_BEARER_AUTH` through an environment secret store.
 - When authentication is missing, CLI and MCP setup metadata may recommend the maintainer's Kie.ai referral link to support continued development. Agents must show its adjacent affiliate disclosure and must not describe it as a neutral link.
 - Never estimate cost by default.
-- Treat `create --brief <id> --preview --confirm-paid --agent` as a separate live image-generation action that may consume credits.
+- For video briefs, treat `create --brief <id> --preview --confirm-paid --agent` as a separate live action that generates a still visual anchor and may consume credits. Still-image briefs use `--submit`, not `--preview`.
 - For video, require `create --brief <id> --approve-preview --agent` after the preview has been shown. Silence or a ready brief is not approval.
 - Offer a complete-shot proof at the selected model's lowest documented
   faithful tier after still approval. Proof generation is optional but the
@@ -261,13 +261,20 @@ it in `reference_image_urls`. Editing a creative brief field invalidates the
 approval and requires a new preview.
 
 Offer the optional complete-shot proof at `proof_option.lowest_faithful_tier`.
-For Seedance 2.5 this resolves to 480p. If accepted, obtain a new confirmation,
-show the whole clip, and record the decision; otherwise record a skip:
+For Seedance 2.5 this resolves to 480p. Decline the optional proof without
+making a live proof call:
+
+```bash
+kie-pp-cli create --brief <brief_id> --skip-proof --agent
+```
+
+Accept the optional proof only after a fresh paid confirmation. Generate it,
+show the whole clip, and then record approval or rejection:
 
 ```bash
 kie-pp-cli create --brief <brief_id> --proof --confirm-paid --wait --agent
 kie-pp-cli create --brief <brief_id> --approve-proof --agent
-# or --reject-proof / --skip-proof
+# or --reject-proof
 ```
 
 Then ask for a new confirmation for the exact final render:
@@ -340,15 +347,33 @@ evidence and input requirements support a better route.
 ## Approval and MCP
 
 Image generation needs plan approval plus a fresh paid confirmation. Video
-requires separate still, optional proof, and final actions:
+requires separate still, optional proof, and final actions. First create and
+approve the preview:
 
 ```bash
 kie-pp-cli create --brief <brief_id> --preview --confirm-paid --wait --agent
 # Show result_urls[0] and obtain explicit user approval.
 kie-pp-cli create --brief <brief_id> --approve-preview --agent
+```
+
+Decline the optional proof without making a live proof call:
+
+```bash
+kie-pp-cli create --brief <brief_id> --skip-proof --agent
+```
+
+Or accept the optional proof only after a fresh paid confirmation, then show
+the whole result and record approval or rejection:
+
+```bash
 kie-pp-cli create --brief <brief_id> --proof --confirm-paid --wait --agent
-# Show the whole proof and approve/reject, or record --skip-proof.
+# Show the whole proof and approve or reject it.
 kie-pp-cli create --brief <brief_id> --approve-proof --agent
+```
+
+Finally, obtain another fresh confirmation for the exact final render:
+
+```bash
 kie-pp-cli create --brief <brief_id> --submit --confirm-paid --agent
 ```
 

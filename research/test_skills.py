@@ -65,6 +65,11 @@ class SkillSuiteTests(unittest.TestCase):
                 self.assertIn("fresh", text)
                 self.assertIn("paid", text)
 
+    def test_identity_video_skill_preserves_the_optional_proof_branch(self):
+        text = (SKILLS / "kie-identity" / "SKILL.md").read_text()
+        for decision in ("--approve-proof", "--reject-proof", "--skip-proof"):
+            self.assertIn(decision, text)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -5,6 +5,7 @@ package media
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -303,7 +304,10 @@ func TestCompleteShotProofLifecycleAndSeparateFinalConfirmation(t *testing.T) {
 	if _, err := service.RefreshGeneration(context.Background(), proof.ID); err != nil {
 		t.Fatal(err)
 	}
-	brief, _ = store.GetBrief(brief.ID)
+	brief, err = store.GetBrief(brief.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if err := ApproveVideoProof(brief); err != nil {
 		t.Fatal(err)
 	}
@@ -327,7 +331,7 @@ func TestAvatarRouteRequiresExplicitRightsAcknowledgement(t *testing.T) {
 	brief, err := NewBrief(BriefInput{
 		Request: "A presenter speaks", MediaType: "video", Purpose: "explainer", Platform: "website",
 		AspectRatio: "16:9", DurationSeconds: 5, AudioMode: "on", VideoMode: "multimodal", Style: "studio",
-		References: []string{"https://example.test/presenter.png"}, Model: "kling/ai-avatar-pro",
+		References: []string{"https://example.test/presenter.png"}, ReferenceAudio: []string{"https://example.test/voice.mp3"}, Model: "kling/ai-avatar-pro",
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -339,6 +343,257 @@ func TestAvatarRouteRequiresExplicitRightsAcknowledgement(t *testing.T) {
 		t.Fatal("rights denial was accepted")
 	}
 	if err := ApplyNextAnswer(brief, "yes"); err != nil {
+		t.Fatal(err)
+	}
+	if brief.Plan == nil || brief.Plan.Input["image_url"] != "https://example.test/presenter.png" || brief.Plan.Input["audio_url"] != "https://example.test/voice.mp3" {
+		t.Fatalf("avatar plan inputs = %#v", brief.Plan)
+	}
+}
+
+func TestCapabilityRoutedVoiceModelRequiresRightsAcknowledgement(t *testing.T) {
+	brief, err := NewBrief(BriefInput{
+		Request: "A narrated product walkthrough", MediaType: "video", Purpose: "explainer", Platform: "website",
+		AspectRatio: "16:9", DurationSeconds: 5, AudioMode: "on", VideoMode: "text", Style: "studio",
+		Model: "elevenlabs/text-to-speech-turbo-2-5",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if question := NextQuestion(brief); question == nil || question.Key != "rights_acknowledged" {
+		t.Fatalf("voice rights question = %#v", question)
+	}
+}
+
+func TestInferenceLeavesUnsupportedDurationUnsetAndExtractsStyleTokens(t *testing.T) {
+	single, err := NewBrief(BriefInput{
+		Request: "Create a 60 second cinematic documentary product video", MediaType: "video", Purpose: "ad",
+		Platform: "youtube", AspectRatio: "16:9", AudioMode: "off", VideoMode: "text",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := InferBrief(single); err != nil {
+		t.Fatal(err)
+	}
+	if single.DurationSeconds != 0 {
+		t.Fatalf("single-shot inferred duration = %d, want unset", single.DurationSeconds)
+	}
+	if question := NextQuestion(single); question == nil || question.Key != "duration_seconds" {
+		t.Fatalf("next question = %#v, want duration", question)
+	}
+	if single.Style != "cinematic, documentary" {
+		t.Fatalf("inferred style = %q", single.Style)
+	}
+
+	storyboard, err := NewBrief(BriefInput{
+		Request: "Create a 60 second cinematic documentary product video", MediaType: "video", Purpose: "ad",
+		Platform: "youtube", AspectRatio: "16:9", AudioMode: "off", VideoMode: "text", ProductionMode: ProductionModeStoryboard,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := InferBrief(storyboard); err != nil {
+		t.Fatal(err)
+	}
+	if storyboard.DurationSeconds != 60 {
+		t.Fatalf("storyboard inferred duration = %d, want 60", storyboard.DurationSeconds)
+	}
+	requestCount := strings.Count(storyboard.Plan.Input["prompt"].(string), storyboard.Request)
+	if requestCount != 1 {
+		t.Fatalf("request appears %d times in prompt %q", requestCount, storyboard.Plan.Input["prompt"])
+	}
+}
+
+func TestProofTierSelectionSkipsUnrankableFields(t *testing.T) {
+	properties := map[string]any{
+		"quality":    map[string]any{"enum": []any{"balanced", "creative"}},
+		"resolution": map[string]any{"enum": []any{"1080p", "720p"}},
+	}
+	field, value := selectProofTier([]string{"quality", "resolution"}, properties)
+	if field != "resolution" || value != "720p" {
+		t.Fatalf("selected proof tier = %s/%s", field, value)
+	}
+	field, value = selectProofTier([]string{"quality"}, properties)
+	if field != "" || value != "" {
+		t.Fatalf("unrankable proof tier = %s/%s", field, value)
+	}
+}
+
+func TestProofUsesDocumentedModelReferenceInputs(t *testing.T) {
+	t.Run("Kling expands identity images", func(t *testing.T) {
+		store := NewStore(filepath.Join(t.TempDir(), "media"))
+		identity, err := store.CreateIdentity("Presenter", []string{
+			"https://example.test/front.png", "https://example.test/profile.png",
+		}, true)
+		if err != nil {
+			t.Fatal(err)
+		}
+		brief, err := NewBrief(BriefInput{
+			Request: "A consistent presenter reveal", MediaType: "video", Purpose: "ad", Platform: "youtube",
+			AspectRatio: "16:9", DurationSeconds: 5, AudioMode: "off", VideoMode: "multimodal", Style: "studio",
+			References: []string{"https://example.test/prop.png"}, IdentityIDs: []string{identity.ID}, Model: "kling-3.0/video",
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		approvePreviewForProofTest(t, brief)
+		if err := store.SaveBrief(brief); err != nil {
+			t.Fatal(err)
+		}
+		plan, _, err := BuildProofPlan(brief)
+		if err != nil {
+			t.Fatal(err)
+		}
+		api := &fakeAPI{}
+		service := &Service{API: api, Store: store}
+		confirmationID := paidConfirmationForTest(t, store, brief, plan, PaidScopeProof, GenerationKindProof)
+		if _, err := service.SubmitProof(context.Background(), brief, confirmationID); err != nil {
+			t.Fatal(err)
+		}
+		input := api.body["input"].(map[string]any)
+		images, ok := input["image_urls"].([]string)
+		wantImages := "https://cdn.example.test/preview.png,https://example.test/prop.png,https://example.test/front.png,https://example.test/profile.png"
+		if !ok || strings.Join(images, ",") != wantImages {
+			t.Fatalf("Kling proof images = %#v", input["image_urls"])
+		}
+	})
+
+	t.Run("Wan remains text to video", func(t *testing.T) {
+		store := NewStore(filepath.Join(t.TempDir(), "media"))
+		brief, err := NewBrief(BriefInput{
+			Request: "A landscape product reveal", MediaType: "video", Purpose: "ad", Platform: "youtube",
+			AspectRatio: "16:9", DurationSeconds: 5, AudioMode: "off", VideoMode: "text", Style: "cinematic",
+			Model: "wan/2-7-text-to-video",
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		approvePreviewForProofTest(t, brief)
+		if err := store.SaveBrief(brief); err != nil {
+			t.Fatal(err)
+		}
+		plan, _, err := BuildProofPlan(brief)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if _, ok := plan.Input["image_urls"]; ok {
+			t.Fatalf("Wan proof plan invented image_urls: %#v", plan.Input)
+		}
+		api := &fakeAPI{}
+		service := &Service{API: api, Store: store}
+		confirmationID := paidConfirmationForTest(t, store, brief, plan, PaidScopeProof, GenerationKindProof)
+		if _, err := service.SubmitProof(context.Background(), brief, confirmationID); err != nil {
+			t.Fatal(err)
+		}
+		input := api.body["input"].(map[string]any)
+		if _, ok := input["image_urls"]; ok {
+			t.Fatalf("Wan proof submitted image_urls: %#v", input)
+		}
+	})
+}
+
+func TestSeedanceProofRejectsMoreThanThirtyExpandedImages(t *testing.T) {
+	store := NewStore(filepath.Join(t.TempDir(), "media"))
+	identityImages := make([]string, 20)
+	for i := range identityImages {
+		identityImages[i] = fmt.Sprintf("https://example.test/identity-%02d.png", i)
+	}
+	identity, err := store.CreateIdentity("Presenter", identityImages, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	references := make([]string, 10)
+	for i := range references {
+		references[i] = fmt.Sprintf("https://example.test/reference-%02d.png", i)
+	}
+	brief, err := NewBrief(BriefInput{
+		Request: "A reference-heavy film shot", MediaType: "video", Purpose: "film", Platform: "youtube",
+		AspectRatio: "16:9", DurationSeconds: 5, AudioMode: "off", VideoMode: "multimodal", Style: "cinematic",
+		References: references, IdentityIDs: []string{identity.ID},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	approvePreviewForProofTest(t, brief)
+	if err := store.SaveBrief(brief); err != nil {
+		t.Fatal(err)
+	}
+	plan, _, err := BuildProofPlan(brief)
+	if err != nil {
+		t.Fatal(err)
+	}
+	api := &fakeAPI{}
+	service := &Service{API: api, Store: store}
+	confirmationID := paidConfirmationForTest(t, store, brief, plan, PaidScopeProof, GenerationKindProof)
+	if _, err := service.SubmitProof(context.Background(), brief, confirmationID); err == nil || !strings.Contains(err.Error(), "at most 30") {
+		t.Fatalf("SeedDance expanded reference limit error = %v", err)
+	}
+	if api.posts != 0 {
+		t.Fatalf("SeedDance over-limit proof made %d live calls", api.posts)
+	}
+}
+
+func TestRefreshGenerationPreservesApprovalForUnchangedURL(t *testing.T) {
+	for _, kind := range []string{GenerationKindPreview, GenerationKindProof} {
+		t.Run(kind, func(t *testing.T) {
+			store := NewStore(filepath.Join(t.TempDir(), "media"))
+			brief, err := NewBrief(BriefInput{
+				Request: "A product reveal", MediaType: "video", Purpose: "ad", Platform: "youtube",
+				AspectRatio: "16:9", DurationSeconds: 5, AudioMode: "off", VideoMode: "text", Style: "studio",
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			now := time.Now().UTC()
+			fingerprint := previewBriefFingerprint(brief)
+			generation := &Generation{ID: newID("gen"), BriefID: brief.ID, Kind: kind, Fingerprint: fingerprint, TaskID: "task_123", Model: "bytedance/seedance-2-5", Status: "success", CreatedAt: now, UpdatedAt: now}
+			if kind == GenerationKindPreview {
+				brief.PreviewGenerationID = generation.ID
+				brief.PreviewBriefHash = fingerprint
+				brief.PreviewStatus = "success"
+				brief.PreviewURL = "https://cdn.example.test/final.png"
+				brief.PreviewApprovedAt = &now
+			} else {
+				approvePreviewForProofTest(t, brief)
+				fingerprint = proofBriefFingerprint(brief)
+				generation.Fingerprint = fingerprint
+				brief.ProofGenerationID = generation.ID
+				brief.ProofBriefHash = fingerprint
+				brief.ProofStatus = "success"
+				brief.ProofURL = "https://cdn.example.test/final.png"
+				brief.ProofApprovedAt = &now
+			}
+			if err := store.SaveBrief(brief); err != nil {
+				t.Fatal(err)
+			}
+			if err := store.SaveGeneration(generation); err != nil {
+				t.Fatal(err)
+			}
+			service := &Service{API: &fakeAPI{}, Store: store}
+			if _, err := service.RefreshGeneration(context.Background(), generation.ID); err != nil {
+				t.Fatal(err)
+			}
+			refreshed, err := store.GetBrief(brief.ID)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if kind == GenerationKindPreview && refreshed.PreviewApprovedAt == nil {
+				t.Fatal("unchanged preview refresh cleared approval")
+			}
+			if kind == GenerationKindProof && refreshed.ProofApprovedAt == nil {
+				t.Fatal("unchanged proof refresh cleared approval")
+			}
+		})
+	}
+}
+
+func approvePreviewForProofTest(t *testing.T, brief *Brief) {
+	t.Helper()
+	brief.PreviewGenerationID = "gen_preview"
+	brief.PreviewStatus = "success"
+	brief.PreviewURL = "https://cdn.example.test/preview.png"
+	brief.PreviewBriefHash = previewBriefFingerprint(brief)
+	if err := ApproveVideoPreview(brief); err != nil {
 		t.Fatal(err)
 	}
 }

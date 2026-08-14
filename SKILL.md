@@ -52,8 +52,14 @@ kie-pp-cli grill-me "<what the user wants>" --agent
 kie-pp-cli create --workflow <workflow> "<what the user wants>" --agent
 kie-pp-cli create "<what the user wants>" --agent
 kie-pp-cli create --brief <brief_id> --answer "<one answer>" --agent
+# Still-image submission after the brief and plan are reviewed:
+kie-pp-cli create --brief <image_brief_id> --submit --confirm-paid --wait --agent
+# Video-only preview, proof, and final gates:
 kie-pp-cli create --brief <brief_id> --preview --confirm-paid --wait --agent
 kie-pp-cli create --brief <brief_id> --approve-preview --agent
+# If the optional proof is declined, make no proof call:
+kie-pp-cli create --brief <brief_id> --skip-proof --agent
+# If it is accepted, obtain a new paid confirmation, then generate and decide it:
 kie-pp-cli create --brief <brief_id> --proof --confirm-paid --wait --agent
 kie-pp-cli create --brief <brief_id> --approve-proof --agent
 kie-pp-cli create --brief <brief_id> --submit --confirm-paid --wait --agent

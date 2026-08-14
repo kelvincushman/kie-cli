@@ -62,7 +62,10 @@ Before submitting any likeness video, ask for a fresh paid confirmation, run
 returned still, and let the person/user inspect identity match. Record approval
 with `--approve-preview` only after an explicit yes. Use `--reject-preview` for
 identity drift or an unwanted portrayal. Offer the complete-shot low-resolution
-proof, and use a separate confirmation for both that proof and the final render.
+proof. If accepted, obtain a fresh confirmation, generate and display it, then
+record `--approve-proof` or `--reject-proof`. If the user declines the proof,
+record `--skip-proof` without generating it. In either branch, obtain a separate
+fresh confirmation for the final render.
 The final video call is blocked until the current gates are satisfied.
 
 Review identity match, age, skin tone, facial geometry, hair, distinguishing features, and unwanted stereotyping. Do not claim perfect identity preservation. Deliver the identity handle, authorized use summary, generation provenance, and any match caveat.

@@ -69,14 +69,17 @@ def production_fit(primary: str, model_id: str) -> list[str]:
 def proof_metadata(primary: str, schema: dict) -> dict:
     properties = schema.get("properties", {}) if isinstance(schema, dict) else {}
     fields = [field for field in RESOLUTION_FIELDS if field in properties]
-    values: list[str] = []
+    selected = ""
     for field in fields:
         raw = properties.get(field, {})
         enum = raw.get("enum", []) if isinstance(raw, dict) else []
-        values.extend(str(value) for value in enum if isinstance(value, (str, int, float)))
+        values = [str(value) for value in enum if isinstance(value, (str, int, float))]
+        selected = lowest_tier(values)
+        if selected:
+            break
     return {
         "resolution_fields": fields,
-        "lowest_faithful_tier": lowest_tier(values),
+        "lowest_faithful_tier": selected,
         "alternate_allowed": primary == "kie-video",
     }
 
@@ -84,15 +87,16 @@ def proof_metadata(primary: str, schema: dict) -> dict:
 def lowest_tier(values: list[str]) -> str:
     if not values:
         return ""
-    numeric: list[tuple[int, str]] = []
-    for value in values:
-        match = re.fullmatch(r"(\d+)[pP]", value.strip())
+    order = {"low": 1, "draft": 1, "std": 2, "standard": 2, "medium": 3, "high": 4, "pro": 5}
+
+    def rank(value: str) -> int:
+        match = re.fullmatch(r"(\d+)(?:[pP])?", value.strip())
         if match:
-            numeric.append((int(match.group(1)), value))
-    if numeric:
-        return min(numeric)[1]
-    order = {"low": 0, "draft": 0, "std": 1, "standard": 1, "medium": 2, "high": 3, "pro": 4}
-    return min(values, key=lambda value: (order.get(value.lower(), 100), value.lower()))
+            return int(match.group(1))
+        return order.get(value.strip().lower(), 100000)
+
+    selected = min(values, key=rank)
+    return "" if rank(selected) == 100000 else selected
 
 
 def parse_operations(openapi_text: str, coverage: dict) -> list[dict]:

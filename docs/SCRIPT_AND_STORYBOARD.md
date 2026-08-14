@@ -52,9 +52,15 @@ Then use the preview gate for every returned `shot_brief_id`:
 kie-pp-cli create --brief <shot_brief_id> --preview --confirm-paid --wait --agent
 # Show result_urls[0] to the user.
 kie-pp-cli create --brief <shot_brief_id> --approve-preview --agent
+# Ask whether the user wants the optional paid complete-shot proof.
+# If they decline, record the decision without generating it:
+kie-pp-cli create --brief <shot_brief_id> --skip-proof --agent
+# If they accept instead, obtain a fresh confirmation for the proof:
 kie-pp-cli create --brief <shot_brief_id> --proof --confirm-paid --wait --agent
-# Show the entire proof; approve/reject it, or record --skip-proof if declined.
+# Show the entire proof and explicitly record the user's decision:
 kie-pp-cli create --brief <shot_brief_id> --approve-proof --agent
+# Or use --reject-proof, revise, and regenerate before final submission.
+# Obtain another fresh confirmation for the separate final render:
 kie-pp-cli create --brief <shot_brief_id> --submit --confirm-paid --wait --agent
 ```
 

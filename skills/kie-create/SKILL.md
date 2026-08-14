@@ -202,12 +202,16 @@ and requires a new preview.
 After still approval, offer the optional complete-shot proof at the returned
 lowest faithful resolution. If the user accepts, obtain a new paid confirmation,
 generate the proof, show the entire clip, and record approval or rejection. If
-the user declines, explicitly record the skip:
+the user declines, explicitly record the skip without making a proof call. If
+the user accepts, obtain a fresh proof-scoped confirmation, generate and show
+the complete shot, then record approval or rejection:
 
 ```bash
+kie-pp-cli create --brief <brief_id> --skip-proof --agent
+# Or, after an explicit yes:
 kie-pp-cli create --brief <brief_id> --proof --confirm-paid --wait --agent
 kie-pp-cli create --brief <brief_id> --approve-proof --agent
-# or --reject-proof / --skip-proof
+# Or use --reject-proof, revise, and regenerate.
 ```
 
 Still/proof approval never authorizes the final paid call. Ask again for that
@@ -221,9 +225,12 @@ For MCP video, use a fresh `media_paid_confirm` before
 `media_preview_generate`, poll it with `media_generation_status`, display the
 returned image URL, obtain explicit approval, then call
 `media_preview_approve`. Use `media_preview_reject` for another direction. Next
-offer `media_proof_generate`; record `media_proof_approve`,
-`media_proof_reject`, or `media_proof_skip`. Use another fresh confirmation for
-`media_generate`. Each confirmation is scoped, expiring, and single-use.
+ask whether the user wants a proof. If declined, call `media_proof_skip` without
+generating. If accepted, obtain a new proof-scoped `media_paid_confirm`, call
+`media_proof_generate`, display the result, and record `media_proof_approve` or
+`media_proof_reject`. Use another fresh confirmation for `media_generate` only
+after the proof is approved or skipped. Each confirmation is scoped, expiring,
+and single-use.
 
 Register the focused local MCP server with an agent host using stdio:
 
