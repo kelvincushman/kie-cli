@@ -5,6 +5,10 @@ description: Build a local website, generative media app, or browser game while 
 
 # Kie Websites
 
+Start with `$kie-grilling`, then route still assets through `$kie-image` and
+motion assets through `$kie-video`. This skill owns local code and asset
+integration; Kie does not build or deploy the website.
+
 Kie is the media provider, not a hosted full-stack website platform. Do not claim Higgsfield subdomains, repositories, Quanta/fnf SDKs, Cloudflare resources, multiplayer rooms, community publishing, contests, or deployment are available through Kie.
 
 Prefer `kie-pp-cli media workflow show websites --agent` and `kie-pp-cli create --workflow websites ... --agent` for compact asset jobs. MCP hosts use `workflow: "websites"`; keep code/build/deploy operations in the local coding environment.
@@ -36,7 +40,12 @@ kie-pp-cli create --workflow websites "<site-specific asset brief>" --type image
 
 Use `$kie-product-photoshoot`, `$kie-brandkit`, `$kie-identity`, or `$kie-video-explainer` when those specialized constraints apply.
 
-For every short video asset, generate the director preview, render the returned still in the review surface, and obtain explicit approval with `--approve-preview` before final submission. Use `--reject-preview` and revise when the hero composition, crop, product fidelity, identity, or safe text area is wrong. The final service enforces this gate.
+For every short video asset, obtain a fresh paid confirmation, generate the
+director preview, render the returned still in the review surface, and obtain
+explicit approval with `--approve-preview`. Offer the low-resolution
+complete-shot proof before the final. Use `--reject-preview` and revise when the
+hero composition, crop, product fidelity, identity, or safe text area is wrong.
+Every preview, proof, and final is a separate paid action.
 
 For games, use Kie for concept art, spritesheet references, textures, UI art, backgrounds, sound, and music. Kie does not currently document true 3D mesh/rig/animation generation; use user-supplied models or an explicitly approved external 3D tool. Treat generated textures and animation references as source material that still needs local engine validation.
 

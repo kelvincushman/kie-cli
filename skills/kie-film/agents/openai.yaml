@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kie Film"
+  short_description: "Script, storyboard, and produce gated films"
+  default_prompt: "Use $kie-film to develop this idea into an approved script, storyboard, and per-shot Kie production."

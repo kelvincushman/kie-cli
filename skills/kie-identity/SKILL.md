@@ -7,6 +7,10 @@ description: Create and use consented local likeness-reference bundles for consi
 
 This is a local reference-bundle workflow, not biometric model training. Kie does not document a cross-model Soul-equivalent endpoint. State that limitation before creating the profile.
 
+Use `$kie-grilling` for the surrounding creative brief. This skill owns the
+rights and reusable-reference decision, then hands the durable identity handle
+back to `$kie-image`, `$kie-video`, `$kie-avatar`, or `$kie-film`.
+
 Prefer `kie-pp-cli media workflow show identity --agent` plus the `media identity` CLI commands. MCP hosts use `media_workflow_get`, `media_identity_create`, `media_identity_get`, and `media_identity_list` so photo bundles stay handle-based and token-light.
 
 Read [references/photo-guide.md](references/photo-guide.md) before accepting a set.
@@ -53,6 +57,12 @@ kie-pp-cli create "<video scene>" --type video --video-mode multimodal \
 
 For stills, the director expands the profile into image-to-image references. For video, SeedDance 2.5 receives the images as multimodal references. Inspect current docs before using provider-specific `characterId` features such as Gemini Omni; keep those IDs provider-scoped and do not describe them as portable Soul models.
 
-Before submitting any likeness video, run `create --brief <brief_id> --preview --wait --agent`, display the returned still, and let the person/user inspect identity match. Record approval with `--approve-preview` only after an explicit yes. Use `--reject-preview` for identity drift or an unwanted portrayal. The final video call is blocked until this current visual anchor is approved.
+Before submitting any likeness video, ask for a fresh paid confirmation, run
+`create --brief <brief_id> --preview --confirm-paid --wait --agent`, display the
+returned still, and let the person/user inspect identity match. Record approval
+with `--approve-preview` only after an explicit yes. Use `--reject-preview` for
+identity drift or an unwanted portrayal. Offer the complete-shot low-resolution
+proof, and use a separate confirmation for both that proof and the final render.
+The final video call is blocked until the current gates are satisfied.
 
 Review identity match, age, skin tone, facial geometry, hair, distinguishing features, and unwanted stereotyping. Do not claim perfect identity preservation. Deliver the identity handle, authorized use summary, generation provenance, and any match caveat.

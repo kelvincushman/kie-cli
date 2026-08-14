@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kie Grill Me"
+  short_description: "Qualify a media idea without over-interviewing"
+  default_prompt: "Use $kie-grill-me to help me turn this idea into an approved Kie.ai media plan."

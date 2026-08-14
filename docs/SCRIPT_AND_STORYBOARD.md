@@ -10,11 +10,11 @@ Use a normal single-shot `create` brief for one continuous clip. Use storyboard
 mode for explainers, ads, UGC sequences, product walkthroughs, tutorials, or
 anything whose shots must be planned and approved independently.
 
-Every video shot still goes through the same human approval gate:
+Every video shot goes through the same human and paid-action gates:
 
 ```text
 master brief -> approved script -> approved storyboard -> shot brief
-shot brief -> preview still -> user approval -> final video generation
+shot brief -> paid still -> user approval -> optional paid complete-shot proof -> fresh-confirmed final
 ```
 
 ## Workflow
@@ -25,7 +25,9 @@ shot brief -> preview still -> user approval -> final video generation
 4. Read the returned `shot_brief_id` for each ordered shot.
 5. Generate and show the preview still for each shot.
 6. Approve or reject each displayed shot preview.
-7. Submit only approved shots, then assemble the clips locally.
+7. Offer a complete-shot proof at each model's lowest faithful resolution.
+8. Show/approve or reject the proof, or record an explicit skip.
+9. Obtain a new paid confirmation for every final shot, then assemble locally.
 
 Start the master production:
 
@@ -47,10 +49,13 @@ kie-pp-cli media storyboard approve <brief_id> --agent
 Then use the preview gate for every returned `shot_brief_id`:
 
 ```bash
-kie-pp-cli create --brief <shot_brief_id> --preview --wait --agent
+kie-pp-cli create --brief <shot_brief_id> --preview --confirm-paid --wait --agent
 # Show result_urls[0] to the user.
 kie-pp-cli create --brief <shot_brief_id> --approve-preview --agent
-kie-pp-cli create --brief <shot_brief_id> --submit --wait --agent
+kie-pp-cli create --brief <shot_brief_id> --proof --confirm-paid --wait --agent
+# Show the entire proof; approve/reject it, or record --skip-proof if declined.
+kie-pp-cli create --brief <shot_brief_id> --approve-proof --agent
+kie-pp-cli create --brief <shot_brief_id> --submit --confirm-paid --wait --agent
 ```
 
 Reject and revise a bad shot:
@@ -58,7 +63,7 @@ Reject and revise a bad shot:
 ```bash
 kie-pp-cli create --brief <shot_brief_id> --reject-preview --agent
 kie-pp-cli create --brief <shot_brief_id> --style "tighter crop, more product detail, less background" --agent
-kie-pp-cli create --brief <shot_brief_id> --preview --wait --agent
+kie-pp-cli create --brief <shot_brief_id> --preview --confirm-paid --wait --agent
 ```
 
 ## Native Command Surface
@@ -90,9 +95,11 @@ prompt-only video. Each storyboard shot includes a normal `shot_brief_id`, which
 uses the ordinary video command surface:
 
 ```bash
-kie-pp-cli create --brief <shot_brief_id> --preview --wait --agent
+kie-pp-cli create --brief <shot_brief_id> --preview --confirm-paid --wait --agent
 kie-pp-cli create --brief <shot_brief_id> --approve-preview --agent
-kie-pp-cli create --brief <shot_brief_id> --submit --wait --agent
+kie-pp-cli create --brief <shot_brief_id> --proof --confirm-paid --wait --agent
+kie-pp-cli create --brief <shot_brief_id> --approve-proof --agent
+kie-pp-cli create --brief <shot_brief_id> --submit --confirm-paid --wait --agent
 ```
 
 The aggregate master actions progress through `draft_script`, `review_script`,
@@ -174,7 +181,7 @@ Validation rules:
 
 ## MCP Storyboard Tools
 
-The focused MCP server exposes thirty tools, including six local
+The focused MCP server exposes 40 tools, including six local
 script/storyboard tools:
 
 - `media_script_set`
@@ -187,17 +194,23 @@ script/storyboard tools:
 Expected MCP flow:
 
 ```text
-media_brief_start
+media_grill_start
 media_script_set
 media_script_decide approve
 media_storyboard_set
 media_storyboard_decide approve
 for each shot_brief_id:
+  media_paid_confirm for preview
   media_preview_generate
   media_generation_status
   display preview image to user
   media_preview_approve or media_preview_reject
-  media_generate only after approval
+  offer a complete-shot proof
+  if accepted: media_paid_confirm, media_proof_generate, display full proof,
+    then media_proof_approve or media_proof_reject
+  otherwise: media_proof_skip
+  media_paid_confirm for final
+  media_generate only after the current gates
   media_generation_status
 ```
 
@@ -244,7 +257,11 @@ Example manifest fields:
 - Do not approve a storyboard unless the user accepts shot order, framing,
   identity/reference use, and continuity.
 - Do not approve a preview still unless the user has actually seen it.
-- Do not submit final video for any shot whose current preview is unapproved.
+- Do not approve a complete-shot proof unless the user has seen the whole clip.
+- Do not submit final video for any shot whose current still/proof decision is
+  incomplete.
+- Still and proof approval are not paid confirmation for the final render.
+- Obtain a fresh confirmation for every paid still, proof, final, retry, or edit.
 - Do not assume motion will fix a bad still.
 - Do not submit the storyboard master through `create --submit` or
   `media_generate`; only its child shot briefs are generation targets.

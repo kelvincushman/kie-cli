@@ -166,7 +166,8 @@ func TestServiceUploadsLocalReferenceSubmitsAndRefreshes(t *testing.T) {
 	}
 	api := &fakeAPI{}
 	service := &Service{API: api, Store: store}
-	generation, err := service.Submit(context.Background(), brief)
+	confirmationID := paidConfirmationForTest(t, store, brief, brief.Plan, PaidScopeFinal, GenerationKindFinal)
+	generation, err := service.Submit(context.Background(), brief, confirmationID)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -220,7 +221,8 @@ func TestVideoRequiresGeneratedPreviewAndExplicitApproval(t *testing.T) {
 		t.Fatalf("blocked final video submitted %d paid tasks", api.posts)
 	}
 
-	preview, err := service.SubmitPreview(context.Background(), brief)
+	previewConfirmation := paidConfirmationForTest(t, store, brief, BuildPreviewPlan(brief), PaidScopePreview, GenerationKindPreview)
+	preview, err := service.SubmitPreview(context.Background(), brief, previewConfirmation)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -248,10 +250,17 @@ func TestVideoRequiresGeneratedPreviewAndExplicitApproval(t *testing.T) {
 		t.Fatal(err)
 	}
 	turn = TurnFor(brief)
-	if !turn.CanSubmit || turn.NextAction != "review_then_submit" {
+	if turn.CanSubmit || turn.NextAction != "offer_proof" {
 		t.Fatalf("approved turn = %#v", turn)
 	}
-	final, err := service.Submit(context.Background(), brief)
+	if err := SkipVideoProof(brief); err != nil {
+		t.Fatal(err)
+	}
+	if err := store.SaveBrief(brief); err != nil {
+		t.Fatal(err)
+	}
+	finalConfirmation := paidConfirmationForTest(t, store, brief, BuildPlan(brief), PaidScopeFinal, GenerationKindFinal)
+	final, err := service.Submit(context.Background(), brief, finalConfirmation)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -279,7 +288,8 @@ func TestVideoPreviewApprovalBecomesStaleAndRejectedPreviewCanRegenerate(t *test
 	}
 	api := &fakeAPI{}
 	service := &Service{API: api, Store: store}
-	preview, err := service.SubmitPreview(context.Background(), brief)
+	previewConfirmation := paidConfirmationForTest(t, store, brief, BuildPreviewPlan(brief), PaidScopePreview, GenerationKindPreview)
+	preview, err := service.SubmitPreview(context.Background(), brief, previewConfirmation)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -302,7 +312,8 @@ func TestVideoPreviewApprovalBecomesStaleAndRejectedPreviewCanRegenerate(t *test
 	if err := store.SaveBrief(brief); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := service.SubmitPreview(context.Background(), brief); err != nil {
+	regenerateConfirmation := paidConfirmationForTest(t, store, brief, BuildPreviewPlan(brief), PaidScopePreview, GenerationKindPreview)
+	if _, err := service.SubmitPreview(context.Background(), brief, regenerateConfirmation); err != nil {
 		t.Fatalf("regenerating rejected preview: %v", err)
 	}
 	if api.posts != 2 {
@@ -446,7 +457,8 @@ func TestStoreCreatesConsentedIdentityAndExpandsItOnSubmit(t *testing.T) {
 		t.Fatal(err)
 	}
 	api := &fakeAPI{}
-	if _, err := (&Service{API: api, Store: store}).Submit(context.Background(), brief); err != nil {
+	confirmationID := paidConfirmationForTest(t, store, brief, brief.Plan, PaidScopeFinal, GenerationKindFinal)
+	if _, err := (&Service{API: api, Store: store}).Submit(context.Background(), brief, confirmationID); err != nil {
 		t.Fatal(err)
 	}
 	urls := api.body["input"].(map[string]any)["input_urls"].([]string)

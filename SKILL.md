@@ -1,6 +1,6 @@
 ---
 name: pp-kie
-description: "Operate the open-source Kie agent media factory and broad Printing Press CLI: guided image/video direction, script/storyboard production, human preview gates, local references, focused MCP, and Kie.ai image, video, music, speech, chat, account, file, and task APIs."
+description: "Operate the open-source Kie agent media factory and broad Printing Press CLI: concise media grilling, script/storyboard production, still/proof/paid gates, local references, focused MCP, and Kie.ai image, video, music, speech, chat, account, file, and task APIs."
 author: "Kelvin Cushman"
 license: "Apache-2.0"
 argument-hint: "<command> [args] | install cli|mcp"
@@ -33,7 +33,7 @@ This skill covers both product layers: the local agent media factory and the
 broad generated Kie.ai CLI. Prefer the director for creative work; use raw
 commands for direct endpoint control. The current tree contains 70 current
 operations, a 129-model Market snapshot with complete input/settings schemas,
-nine media skills, eight compact workflow routes, and a focused 25-tool MCP
+17 media skills, nine compact workflow routes, and a focused 40-tool MCP
 server. Async generation endpoints
 return a `taskId`; poll the matching record-info/get-details endpoint or use a
 callback URL.
@@ -48,36 +48,43 @@ with loading every specialized skill document:
 ```bash
 kie-pp-cli media workflow list --agent
 kie-pp-cli media workflow show <workflow> --agent
+kie-pp-cli grill-me "<what the user wants>" --agent
 kie-pp-cli create --workflow <workflow> "<what the user wants>" --agent
 kie-pp-cli create "<what the user wants>" --agent
 kie-pp-cli create --brief <brief_id> --answer "<one answer>" --agent
-kie-pp-cli create --brief <brief_id> --preview --wait --agent
+kie-pp-cli create --brief <brief_id> --preview --confirm-paid --wait --agent
 kie-pp-cli create --brief <brief_id> --approve-preview --agent
-kie-pp-cli create --brief <brief_id> --submit --wait --agent
+kie-pp-cli create --brief <brief_id> --proof --confirm-paid --wait --agent
+kie-pp-cli create --brief <brief_id> --approve-proof --agent
+kie-pp-cli create --brief <brief_id> --submit --confirm-paid --wait --agent
 # For multi-shot video:
 kie-pp-cli create --production-mode storyboard "<complete request>" --agent
 kie-pp-cli media script set <brief_id> --file <script.md|-> --agent
 kie-pp-cli media storyboard set <brief_id> --file <storyboard.json|-> --agent
 ```
 
-Ask the returned `next_question` exactly once, preserve the returned `brief.id`,
-and call `--submit` only after the user approves the ready plan. For video,
-first generate the preview, display its returned image URL, and call
-`--approve-preview` only after an explicit user yes; final submission is blocked
-until then. Use `--reject-preview` and revise the brief when the still is wrong.
+Ask the returned `next_question` exactly once, show its recommendation/reason,
+preserve the returned `brief.id`, and let the user override the route. Every
+paid action needs a fresh just-in-time confirmation. For video, first generate
+the preview, display its returned image URL, and call `--approve-preview` only
+after an explicit user yes. Then offer the model's lowest-faithful-resolution
+complete-shot proof; display and decide it, or record `--skip-proof`. Ask again
+before final generation. Use `--reject-preview`/`--reject-proof` and revise when
+an artifact is wrong.
 For multi-shot video, explicitly approve the local script and storyboard, then
-run the same preview/show/approve/final sequence on every returned
+run the same still/proof/final sequence on every returned
 `shot_brief_id`; never submit the storyboard master as one prompt-only video.
 Local image, video, and audio files can be vaulted with `media reference add`; consented
 likeness sets use `media identity create` and reusable `identity:<id>` handles.
 For an MCP agent, register the focused MCP `2026-07-28` server with
 `claude mcp add kie-media -- kie-media-mcp`; it exposes the same workflows,
-briefs, references, identities, and generation status. Never include Kie
+briefs, capabilities, proofs, paid confirmations, references, identities, and
+generation status. Never include Kie
 credentials in a brief or response. See `skills/kie-create/SKILL.md` and the
-eight specialized `skills/kie-*` ports when full domain guidance is needed.
+capability/outcome `skills/kie-*` ports when full domain guidance is needed.
 The user-facing guides are `docs/VIBE_CODER_QUICKSTART.md`,
-`docs/MEDIA_DIRECTOR.md`, `docs/SCRIPT_AND_STORYBOARD.md`, and
-`docs/ADVANCED_MEDIA_DIRECTOR.md`.
+`docs/MEDIA_DIRECTOR.md`, `docs/SCRIPT_AND_STORYBOARD.md`, `docs/SKILLS.md`,
+`docs/PROOF_AND_PAID_CONFIRMATION.md`, and `docs/ADVANCED_MEDIA_DIRECTOR.md`.
 
 Before selecting a raw Market model, use the local registry instead of guessing
 fields or loading the full documentation into context:

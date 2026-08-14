@@ -25,7 +25,7 @@ type Service struct {
 	Store *Store
 }
 
-func (s *Service) Submit(ctx context.Context, b *Brief) (*Generation, error) {
+func (s *Service) Submit(ctx context.Context, b *Brief, confirmationIDs ...string) (*Generation, error) {
 	if s == nil || s.API == nil || s.Store == nil {
 		return nil, fmt.Errorf("media service is not configured")
 	}
@@ -68,6 +68,16 @@ func (s *Service) Submit(ctx context.Context, b *Brief) (*Generation, error) {
 		return nil, fmt.Errorf("video brief %s requires an approved preview image before final submission; generate, show, and explicitly approve the preview first", b.ID)
 	}
 	plan := BuildPlan(b)
+	if b.MediaType == "video" && ResolveProofOption(plan.Model).Supported && !VideoProofApproved(b) && !VideoProofSkipped(b) {
+		return nil, fmt.Errorf("video brief %s requires an explicit proof decision before final submission; approve the current proof or explicitly skip the proof first", b.ID)
+	}
+	confirmationID, err := requiredConfirmationID(confirmationIDs)
+	if err != nil {
+		return nil, err
+	}
+	if _, err := s.Store.UsePaidConfirmation(confirmationID, b, plan, PaidScopeFinal, GenerationKindFinal, time.Now()); err != nil {
+		return nil, err
+	}
 	imageSources, err := s.imageSourcesForBrief(b, false)
 	if err != nil {
 		return nil, err
@@ -147,7 +157,7 @@ func (s *Service) Submit(ctx context.Context, b *Brief) (*Generation, error) {
 	return g, nil
 }
 
-func (s *Service) SubmitPreview(ctx context.Context, b *Brief) (*Generation, error) {
+func (s *Service) SubmitPreview(ctx context.Context, b *Brief, confirmationIDs ...string) (*Generation, error) {
 	if s == nil || s.API == nil || s.Store == nil {
 		return nil, fmt.Errorf("media service is not configured")
 	}
@@ -191,6 +201,13 @@ func (s *Service) SubmitPreview(ctx context.Context, b *Brief) (*Generation, err
 		return nil, fmt.Errorf("brief %s already has preview generation %s; refresh its status, then approve or reject it", stored.ID, previous.ID)
 	}
 	plan := BuildPreviewPlan(stored)
+	confirmationID, err := requiredConfirmationID(confirmationIDs)
+	if err != nil {
+		return nil, err
+	}
+	if _, err := s.Store.UsePaidConfirmation(confirmationID, stored, plan, PaidScopePreview, GenerationKindPreview, time.Now()); err != nil {
+		return nil, err
+	}
 	imageSources, err := s.imageSourcesForBrief(stored, true)
 	if err != nil {
 		return nil, err
@@ -238,6 +255,116 @@ func (s *Service) SubmitPreview(ctx context.Context, b *Brief) (*Generation, err
 	}
 	*requestedBrief = *stored
 	return g, nil
+}
+
+func (s *Service) SubmitProof(ctx context.Context, b *Brief, confirmationIDs ...string) (*Generation, error) {
+	if s == nil || s.API == nil || s.Store == nil {
+		return nil, fmt.Errorf("media service is not configured")
+	}
+	if b == nil {
+		return nil, fmt.Errorf("media brief is required")
+	}
+	requestedBrief := b
+	release, err := s.Store.acquireProofSubmission(b.ID)
+	if err != nil {
+		return nil, err
+	}
+	defer release()
+	stored, err := s.Store.GetBrief(b.ID)
+	if err != nil {
+		return nil, fmt.Errorf("loading brief %s before proof: %w", b.ID, err)
+	}
+	Refresh(stored)
+	if err := s.requireApprovedStoryboardForShot(stored); err != nil {
+		return nil, err
+	}
+	if stored.MediaType != "video" || !VideoPreviewApproved(stored) {
+		return nil, fmt.Errorf("complete-shot proof requires a current approved video preview")
+	}
+	if stored.ProductionMode == ProductionModeStoryboard {
+		return nil, fmt.Errorf("generate proofs for storyboard shot brief ids, not the master brief")
+	}
+	fingerprint := proofBriefFingerprint(stored)
+	if previous, findErr := s.Store.findActiveGenerationByFingerprint(stored.ID, GenerationKindProof, fingerprint); findErr != nil {
+		return nil, findErr
+	} else if previous != nil {
+		return nil, fmt.Errorf("brief %s already has proof generation %s; refresh and review it", stored.ID, previous.ID)
+	}
+	plan, option, err := BuildProofPlan(stored)
+	if err != nil {
+		return nil, err
+	}
+	confirmationID, err := requiredConfirmationID(confirmationIDs)
+	if err != nil {
+		return nil, err
+	}
+	if _, err := s.Store.UsePaidConfirmation(confirmationID, stored, plan, PaidScopeProof, GenerationKindProof, time.Now()); err != nil {
+		return nil, err
+	}
+	imageSources, err := s.imageSourcesForBrief(stored, false)
+	if err != nil {
+		return nil, err
+	}
+	if plan.Model == "bytedance/seedance-2-5" {
+		switch stored.VideoMode {
+		case "multimodal":
+			imageSources = append([]string{stored.PreviewURL}, imageSources...)
+			if err := s.resolvePlanReferences(ctx, stored.ID, plan.Input, "reference_image_urls", imageSources, "image"); err != nil {
+				return nil, err
+			}
+			if err := s.resolvePlanReferences(ctx, stored.ID, plan.Input, "reference_video_urls", stored.ReferenceVideos, "video"); err != nil {
+				return nil, err
+			}
+			if err := s.resolvePlanReferences(ctx, stored.ID, plan.Input, "reference_audio_urls", stored.ReferenceAudio, "audio"); err != nil {
+				return nil, err
+			}
+		default:
+			firstFrame, err := s.resolveReference(ctx, stored.ID, stored.PreviewURL, "image")
+			if err != nil {
+				return nil, err
+			}
+			plan.Input["first_frame_url"] = firstFrame
+		}
+	}
+	if err := validatePaidPlan(plan); err != nil {
+		return nil, err
+	}
+	data, status, err := s.API.PostWithParams(ctx, "/api/v1/jobs/createTask", map[string]string{}, map[string]any{"model": plan.Model, "input": plan.Input})
+	if err != nil {
+		return nil, err
+	}
+	if status < 200 || status >= 300 {
+		return nil, fmt.Errorf("create proof task returned HTTP %d", status)
+	}
+	taskID := firstStringForKeys(data, "taskId", "task_id")
+	if taskID == "" {
+		return nil, fmt.Errorf("create proof task response did not include a task id")
+	}
+	now := time.Now().UTC()
+	g := &Generation{ID: newID("gen"), BriefID: stored.ID, Kind: GenerationKindProof, Fingerprint: fingerprint, TaskID: taskID, Model: plan.Model, Status: "submitted", CreatedAt: now, UpdatedAt: now, Remote: data}
+	if err := s.Store.SaveGeneration(g); err != nil {
+		return nil, err
+	}
+	stored.ProofOption = &option
+	stored.ProofGenerationID = g.ID
+	stored.ProofStatus = g.Status
+	stored.ProofURL = ""
+	stored.ProofBriefHash = fingerprint
+	stored.ProofApprovedAt = nil
+	stored.ProofSkippedAt = nil
+	stored.UpdatedAt = now
+	if err := s.Store.SaveBrief(stored); err != nil {
+		return nil, err
+	}
+	*requestedBrief = *stored
+	return g, nil
+}
+
+func requiredConfirmationID(values []string) (string, error) {
+	if len(values) != 1 || strings.TrimSpace(values[0]) == "" {
+		return "", fmt.Errorf("a fresh scoped paid confirmation is required for this live action")
+	}
+	return strings.TrimSpace(values[0]), nil
 }
 
 func validatePaidPlan(plan *Plan) error {
@@ -324,12 +451,12 @@ func (s *Service) RefreshGeneration(ctx context.Context, id string) (*Generation
 	if err := s.Store.SaveGeneration(g); err != nil {
 		return nil, err
 	}
-	if g.Kind == GenerationKindPreview {
+	if g.Kind == GenerationKindPreview || g.Kind == GenerationKindProof {
 		brief, briefErr := s.Store.GetBrief(g.BriefID)
 		if briefErr != nil {
-			return nil, fmt.Errorf("loading brief %s for preview status: %w", g.BriefID, briefErr)
+			return nil, fmt.Errorf("loading brief %s for generated status: %w", g.BriefID, briefErr)
 		}
-		if brief.PreviewGenerationID == g.ID && brief.PreviewBriefHash == g.Fingerprint {
+		if g.Kind == GenerationKindPreview && brief.PreviewGenerationID == g.ID && brief.PreviewBriefHash == g.Fingerprint {
 			brief.PreviewStatus = g.Status
 			if len(g.ResultURLs) > 0 {
 				brief.PreviewURL = g.ResultURLs[0]
@@ -337,9 +464,16 @@ func (s *Service) RefreshGeneration(ctx context.Context, id string) (*Generation
 			}
 			brief.UpdatedAt = g.UpdatedAt
 			brief.Plan = BuildPlan(brief)
-			if err := s.Store.SaveBrief(brief); err != nil {
-				return nil, err
+		} else if g.Kind == GenerationKindProof && brief.ProofGenerationID == g.ID && brief.ProofBriefHash == g.Fingerprint {
+			brief.ProofStatus = g.Status
+			if len(g.ResultURLs) > 0 {
+				brief.ProofURL = g.ResultURLs[0]
+				brief.ProofApprovedAt = nil
 			}
+			brief.UpdatedAt = g.UpdatedAt
+		}
+		if err := s.Store.SaveBrief(brief); err != nil {
+			return nil, err
 		}
 	}
 	return g, nil

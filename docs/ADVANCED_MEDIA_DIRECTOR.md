@@ -11,19 +11,21 @@ Implemented and verified in the current local command surface:
 - `kie-pp-cli create` for guided image and video briefs.
 - `kie-pp-cli media` for setup, workflows, briefs, references, identities, and
   generation status.
-- Video preview generation, preview approval, preview rejection, and final
-  submission blocking.
+- Prompt inference, concise grilling, visible route rationale/overrides, video
+  still approval, optional complete-shot proof, and final submission blocking.
 - `kie-media-mcp` as a focused local MCP server.
 - Local reference vault and consented identity-reference bundles.
-- Nine routed production workflows delivered through ten Markdown skills.
+- Nine routed production workflows delivered through 17 Markdown skills,
+  including shared grill and capability-level routes.
 - A 16-course, 171-lesson public source map with original Kie-native methods,
   exposed through `/kie-lesson`, terminal commands, and MCP.
 - A dated task-specific model evidence ledger refreshed weekly without combining
   unlike benchmark scores.
 - Seventy current API operations and a 129-model Market snapshot with complete
   embedded request/input schemas and local validation.
-- A compact `media models` catalog view and direct `media video` shortcut backed
-  by that same canonical registry.
+- A fail-closed five-capability classifier over all 129 models, compact
+  `media capability`/`media models` views, and a direct `media video` shortcut
+  backed by the same canonical registry.
 - Local SQLite recall, teach, and playbook state for repeated agent work.
 
 Native storyboard command surface:
@@ -46,7 +48,8 @@ The factory has four layers:
 1. **Direction:** a user or agent qualifies intent one question at a time.
 2. **Durable local production:** briefs, references, identity bundles, scripts,
    storyboards, approvals, and generation records receive opaque handles.
-3. **Explicit live actions:** preview and final jobs are separate Kie.ai calls.
+3. **Explicit live actions:** preview, optional proof, and final jobs are
+   separate Kie.ai calls with fresh scoped paid confirmations.
 4. **Local finishing:** clip order, exact text, captions, audio mix, publishing,
    and deployment remain inspectable local steps.
 
@@ -83,8 +86,9 @@ The media director uses opaque local handles:
   storyboard master.
 
 Local state contains brief answers, selected model, provider input, reference
-handles, provider task IDs, generation status, result URLs, preview approval
-state, script/storyboard hashes, and shot lineage. It must not contain bearer
+handles, provider task IDs, generation status, result URLs, preview/proof
+approval state, paid-confirmation fingerprints, script/storyboard hashes, and
+shot lineage. It must not contain bearer
 tokens, cookies, auth headers, or credential file contents.
 
 Use `--home <directory>` to isolate projects or test runs. Do not point two
@@ -94,7 +98,8 @@ state, not a multi-tenant authorization boundary.
 ## CLI Contract
 
 Use `--agent` for agent and automation calls. It enables JSON, compact output,
-no color, no input prompts, and yes-mode defaults.
+no color, and no input prompts. It does not authorize paid actions;
+`--confirm-paid` is still required for the exact live call.
 
 Core commands:
 
@@ -104,6 +109,7 @@ kie-pp-cli media workflow list --agent
 kie-pp-cli media workflow show <workflow> --agent
 kie-pp-cli lesson recommend "<production outcome>" --agent
 kie-pp-cli media leaderboard character-consistency --agent
+kie-pp-cli grill-me "<request>" --agent
 kie-pp-cli create "<request>" --agent
 kie-pp-cli create --workflow <workflow> "<request>" --agent
 kie-pp-cli create --brief <brief_id> --answer "<answer>" --agent
@@ -124,10 +130,14 @@ kie-pp-cli media identity list --agent
 Generation commands:
 
 ```bash
-kie-pp-cli create --brief <brief_id> --preview --wait --agent
+kie-pp-cli create --brief <brief_id> --preview --confirm-paid --wait --agent
 kie-pp-cli create --brief <brief_id> --approve-preview --agent
 kie-pp-cli create --brief <brief_id> --reject-preview --agent
-kie-pp-cli create --brief <brief_id> --submit --wait --agent
+kie-pp-cli create --brief <brief_id> --proof --confirm-paid --wait --agent
+kie-pp-cli create --brief <brief_id> --approve-proof --agent
+kie-pp-cli create --brief <brief_id> --reject-proof --agent
+kie-pp-cli create --brief <brief_id> --skip-proof --agent
+kie-pp-cli create --brief <brief_id> --submit --confirm-paid --wait --agent
 kie-pp-cli media generation status <generation_id> --wait --agent
 ```
 
@@ -157,6 +167,8 @@ putting whole schemas into an agent prompt:
 
 ```bash
 kie-pp-cli media models --family video --agent
+kie-pp-cli media capability list --capability kie-video --agent
+kie-pp-cli media capability show bytedance/seedance-2-5 --agent
 kie-pp-cli models show wan/2-6-text-to-video --agent
 kie-pp-cli media video --model wan/2-6-text-to-video \
   --input '{"prompt":"<prompt>","duration":"5"}' --agent
@@ -191,9 +203,12 @@ Do not bind HTTP MCP to a wildcard or non-loopback address. The HTTP transport
 implements the finalized MCP `2026-07-28` stateless protocol. Stdio remains the
 recommended local child-process transport.
 
-The implemented focused server exposes thirty media tools:
+The implemented focused server exposes 40 media tools:
 
 - `media_setup_get`
+- `media_grill_start`
+- `media_grill_answer`
+- `media_grill_wrap_up`
 - `media_brief_start`
 - `media_brief_answer`
 - `media_brief_get`
@@ -207,14 +222,21 @@ The implemented focused server exposes thirty media tools:
 - `media_model_get`
 - `media_model_example`
 - `media_model_validate`
+- `media_capability_list`
+- `media_capability_get`
 - `media_reference_add`
 - `media_reference_list`
 - `media_identity_create`
 - `media_identity_get`
 - `media_identity_list`
+- `media_paid_confirm`
 - `media_preview_generate`
 - `media_preview_approve`
 - `media_preview_reject`
+- `media_proof_generate`
+- `media_proof_approve`
+- `media_proof_reject`
+- `media_proof_skip`
 - `media_script_set`
 - `media_script_get`
 - `media_script_decide`
@@ -232,16 +254,20 @@ director.
 
 ## Video Approval Gate
 
-Preview generation and final video generation are separate live actions. Both
-may consume Kie.ai credits.
+Preview generation, optional complete-shot proof, and final video generation are
+separate live actions. Each may consume Kie.ai credits and each requires a new
+paid confirmation.
 
 Required sequence:
 
 ```bash
-kie-pp-cli create --brief <brief_id> --preview --wait --agent
+kie-pp-cli create --brief <brief_id> --preview --confirm-paid --wait --agent
 # Show result_urls[0] to the user.
 kie-pp-cli create --brief <brief_id> --approve-preview --agent
-kie-pp-cli create --brief <brief_id> --submit --wait --agent
+kie-pp-cli create --brief <brief_id> --proof --confirm-paid --wait --agent
+# Show the whole proof. Approve/reject it, or use --skip-proof if declined.
+kie-pp-cli create --brief <brief_id> --approve-proof --agent
+kie-pp-cli create --brief <brief_id> --submit --confirm-paid --wait --agent
 ```
 
 If the preview is wrong:
@@ -249,7 +275,7 @@ If the preview is wrong:
 ```bash
 kie-pp-cli create --brief <brief_id> --reject-preview --agent
 kie-pp-cli create --brief <brief_id> --style "<revised direction>" --agent
-kie-pp-cli create --brief <brief_id> --preview --wait --agent
+kie-pp-cli create --brief <brief_id> --preview --confirm-paid --wait --agent
 ```
 
 The approved still becomes the SeedDance first frame or multimodal visual
@@ -274,9 +300,11 @@ Each storyboard shot carries a `shot_brief_id`. Generate that shot through the
 same video gate:
 
 ```bash
-kie-pp-cli create --brief <shot_brief_id> --preview --wait --agent
+kie-pp-cli create --brief <shot_brief_id> --preview --confirm-paid --wait --agent
 kie-pp-cli create --brief <shot_brief_id> --approve-preview --agent
-kie-pp-cli create --brief <shot_brief_id> --submit --wait --agent
+kie-pp-cli create --brief <shot_brief_id> --proof --confirm-paid --wait --agent
+kie-pp-cli create --brief <shot_brief_id> --approve-proof --agent
+kie-pp-cli create --brief <shot_brief_id> --submit --confirm-paid --wait --agent
 ```
 
 The CLI does not claim to assemble a final edited film by itself. Treat local
@@ -301,13 +329,14 @@ Require explicit user approval:
 
 - storing or changing credentials
 - live preview generation
+- live complete-shot proof generation
 - live final generation
 - approving a preview still
 - approving a script or storyboard
 - publishing or deploying generated media
 
-Do not chain preview generation directly into final video submission. The user
-must see the preview image first.
+Do not chain paid calls. The user must see the preview image and any generated
+proof first, and every subsequent call needs a fresh confirmation.
 
 ## Security
 
@@ -344,6 +373,7 @@ Final video is blocked:
 - Confirm the preview generation has a result URL.
 - Show the image to the user.
 - Run `kie-pp-cli create --brief <brief_id> --approve-preview --agent`.
+- Generate/show/decide the offered proof, or record `--skip-proof`.
 - Re-run submit after approval.
 
 Preview approval is stale:

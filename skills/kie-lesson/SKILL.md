@@ -5,6 +5,10 @@ description: Select a source-linked public media-production lesson, adapt its me
 
 # Kie Lesson Director
 
+Start with `$kie-grilling`, then use the selected lesson as a production pattern,
+not as a replacement for the user's creative decisions. Route multi-shot work to
+`$kie-film` and each child shot to `$kie-video`.
+
 Use the repository's original Kie-native method map. Do not copy a source
 lesson's prose, script, prompt text, video, or downloadable resources. Public
 lesson titles and links are discovery metadata; the `kie_method` returned by the

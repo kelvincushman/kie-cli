@@ -5,6 +5,10 @@ description: Plan and produce narrated explainer videos using Kie.ai speech and 
 
 # Kie Video Explainer
 
+Start with `$kie-grilling`, then hand the approved concept to `$kie-film` for
+script, storyboard, continuity, and independently gated shot briefs. Use
+`$kie-audio` for narration and `$kie-video` for each visual block.
+
 Kie does not document Higgsfield's `explainer_video` assembly endpoint. Generate narration and visual blocks through Kie, then assemble and caption them locally with ffmpeg or the user's editor. Do not imply that Kie performed the final assembly.
 
 Prefer one storyboard master created with `kie-pp-cli create --workflow
@@ -70,7 +74,13 @@ kie-pp-cli media storyboard set <brief_id> --file storyboard.json --agent
 kie-pp-cli media storyboard approve <brief_id> --agent
 ```
 
-Each block is independently gated. Generate its still with `create --brief <brief_id> --preview --wait --agent`, show the image, and record explicit approval with `--approve-preview` before submitting that block's video. Reject and revise a bad composition with `--reject-preview`; do not spend the final video job hoping motion will repair a visibly wrong anchor.
+Each block is independently gated. After a fresh paid confirmation, generate its
+still with `create --brief <brief_id> --preview --confirm-paid --wait --agent`,
+show the image, and record explicit approval with `--approve-preview`. Offer the
+complete-shot proof at the lowest faithful resolution; if accepted, use another
+fresh confirmation, show the full clip, and record its decision. Reject and
+revise a bad composition with `--reject-preview`; do not spend the final video
+job hoping motion will repair a visibly wrong anchor.
 
 Use `omnihuman-1-5` or a Kling avatar route only when the user requests a presenter and supplies an authorized portrait plus narration audio. Do not promise a perfect lip-sync or identity match before inspection.
 
@@ -82,4 +92,10 @@ Keep assembly commands and tool versions in the manifest. Never interpolate shel
 
 ## Gate and deliver
 
-Review all ready Kie plans and preview stills before paid final-video submission. Preview generation is also a live paid step. Retry only failed or explicitly rejected blocks, preserve lineage, and reassemble after replacements. Deliver the final MP4, optional caption file, clean block outputs, approved anchors, style key, voice/model IDs, task IDs, factual sources, local assembly command/version, and known timing or identity caveats.
+Review all ready Kie plans, preview stills, and accepted proofs before paid
+final-video submission. Preview, proof, audio, and final generation are separate
+paid steps and each needs a fresh confirmation. Retry only failed or explicitly
+rejected blocks, preserve lineage, and reassemble after replacements. Deliver
+the final MP4, optional caption file, clean block outputs, approved anchors,
+style key, voice/model IDs, task IDs, factual sources, local assembly
+command/version, and known timing or identity caveats.
