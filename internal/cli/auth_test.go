@@ -11,6 +11,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"sync"
 	"testing"
@@ -87,6 +88,27 @@ func TestFirstRunMachineModesDoNotPrompt(t *testing.T) {
 	}
 	if !strings.Contains(stdout, "interactive terminal") || strings.Contains(stdout, "input hidden") {
 		t.Fatalf("--no-input must not start the wizard: %q", stdout)
+	}
+}
+
+func TestDoctorHumanOutputDisclosesAffiliateLinkImmediately(t *testing.T) {
+	isolateAuthSetup(t)
+	configPath := filepath.Join(t.TempDir(), "config.toml")
+	if err := os.WriteFile(configPath, []byte("base_url = \"\"\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	stdout, stderr, err := executeRoot(t, "--config", configPath, "doctor")
+	if err != nil {
+		t.Fatalf("doctor error = %v, stderr = %s", err, stderr)
+	}
+	urlIndex := strings.Index(stdout, "Get a key at: "+cliutil.KieAPIKeyURL)
+	disclosureIndex := strings.Index(stdout, cliutil.KieAffiliateDisclosure)
+	if urlIndex < 0 || disclosureIndex < 0 || disclosureIndex <= urlIndex {
+		t.Fatalf("doctor must disclose the affiliate relationship immediately after its referral URL: %q", stdout)
+	}
+	if strings.Count(stdout[urlIndex:disclosureIndex], "\n") != 1 {
+		t.Fatalf("doctor disclosure was not immediately after its referral URL: %q", stdout)
 	}
 }
 

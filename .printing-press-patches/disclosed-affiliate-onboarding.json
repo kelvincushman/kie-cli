@@ -25,6 +25,6 @@
     "research/test_patch_generated_cli.py",
     "skills/kie-create/SKILL.md"
   ],
-  "validated_outcome": "go test ./..., go vet ./..., the generated-code patch helper's seven unit tests, make build-all, git diff --check, and isolated first-run/media-setup smoke commands pass. The smoke output includes the exact referral URL, affiliate link type, and 15% commission disclosure without exposing credential material.",
+  "validated_outcome": "go test ./..., go vet ./..., the generated-code patch helper's nine unit tests, make build-all, git diff --check, and isolated first-run/media-setup/doctor smoke commands pass. Human doctor output places the disclosure immediately after the referral URL. The reprint helper independently restores and validates the URL, affiliate link type, error disclosure, metadata disclosure, and rendering order without exposing credential material.",
   "upstream_issue": ""
 }
