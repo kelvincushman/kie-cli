@@ -29,6 +29,30 @@ class CapabilityProofMetadataTests(unittest.TestCase):
     def test_numeric_resolution_without_p_matches_runtime_ranking(self):
         self.assertEqual(generate_capabilities.lowest_tier(["1080", "720"]), "720")
 
+    def test_operations_accept_quoted_paths_and_valid_yaml_indentation(self):
+        operations = generate_capabilities.parse_operations(
+            """
+paths:
+    '/v1/images':
+        post:
+            operationId: image-create-task
+""",
+            {"shared_operations": {"POST /v1/images": {"documentation_pages": 3}}},
+        )
+        self.assertEqual(
+            operations,
+            [{
+                "operation_id": "image-create-task",
+                "method": "POST",
+                "path": "/v1/images",
+                "variant_count": 3,
+                "primary_capability": "kie-image",
+                "creative": True,
+                "plumbing": False,
+                "reason": "creates or transforms media",
+            }],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -245,9 +245,9 @@ type generateInput struct {
 	ConfirmationID string `json:"confirmation_id" jsonschema:"fresh scoped ID returned by media_paid_confirm"`
 }
 
-type previewInput struct {
+type liveGenerateInput struct {
 	BriefID        string `json:"brief_id" jsonschema:"ready video brief ID"`
-	ConfirmationID string `json:"confirmation_id,omitempty" jsonschema:"fresh scoped ID returned by media_paid_confirm; required only for live preview or proof generation"`
+	ConfirmationID string `json:"confirmation_id" jsonschema:"fresh scoped ID returned by media_paid_confirm"`
 }
 
 type paidConfirmInput struct {
@@ -775,7 +775,7 @@ func registerTools(server *mcp.Server, deps Dependencies) {
 
 	mcp.AddTool(server, &mcp.Tool{
 		Name: "media_preview_generate", Description: "Generate the required review image for a ready video brief. This is a separate live action that may consume credits. Poll the returned generation, then display its result URL to the user before requesting approval.", Annotations: liveMutation,
-	}, func(ctx context.Context, _ *mcp.CallToolRequest, input previewInput) (*mcp.CallToolResult, media.Generation, error) {
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input liveGenerateInput) (*mcp.CallToolResult, media.Generation, error) {
 		store, brief, err := loadBrief(deps, input.BriefID)
 		if err != nil {
 			return nil, media.Generation{}, err
@@ -797,8 +797,8 @@ func registerTools(server *mcp.Server, deps Dependencies) {
 	})
 
 	mcp.AddTool(server, &mcp.Tool{
-		Name: "media_proof_generate", Description: "Generate the optional paid complete intended shot at the selected model's lowest documented faithful tier. Requires a fresh proof confirmation.", Annotations: liveMutation,
-	}, func(ctx context.Context, _ *mcp.CallToolRequest, input previewInput) (*mcp.CallToolResult, media.Generation, error) {
+		Name: "media_proof_generate", Description: "Generate the optional paid complete intended shot at the selected model's lowest documented faithful tier. Requires a fresh proof confirmation. Poll the returned generation, then display its result URL before requesting a decision.", Annotations: liveMutation,
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input liveGenerateInput) (*mcp.CallToolResult, media.Generation, error) {
 		store, brief, err := loadBrief(deps, input.BriefID)
 		if err != nil {
 			return nil, media.Generation{}, err
@@ -821,7 +821,7 @@ func registerTools(server *mcp.Server, deps Dependencies) {
 
 	mcp.AddTool(server, &mcp.Tool{
 		Name: "media_preview_approve", Description: "Record explicit user approval of the current preview image. Call only after the host has displayed preview_url and the user has affirmatively approved it.", Annotations: localMutation,
-	}, func(ctx context.Context, _ *mcp.CallToolRequest, input previewInput) (*mcp.CallToolResult, media.Turn, error) {
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input briefGetInput) (*mcp.CallToolResult, media.Turn, error) {
 		store, brief, err := loadBrief(deps, input.BriefID)
 		if err != nil {
 			return nil, media.Turn{}, err
@@ -837,25 +837,25 @@ func registerTools(server *mcp.Server, deps Dependencies) {
 
 	mcp.AddTool(server, &mcp.Tool{
 		Name: "media_proof_approve", Description: "Record the user's approval after the host displays the completed proof URL. This local decision never authorizes final spend.", Annotations: localMutation,
-	}, func(ctx context.Context, _ *mcp.CallToolRequest, input previewInput) (*mcp.CallToolResult, media.Turn, error) {
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input briefGetInput) (*mcp.CallToolResult, media.Turn, error) {
 		return decideProof(deps, input.BriefID, "approve")
 	})
 
 	mcp.AddTool(server, &mcp.Tool{
 		Name: "media_proof_reject", Description: "Reject the current proof and return the brief to proof revision without a live call.", Annotations: localMutation,
-	}, func(ctx context.Context, _ *mcp.CallToolRequest, input previewInput) (*mcp.CallToolResult, media.Turn, error) {
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input briefGetInput) (*mcp.CallToolResult, media.Turn, error) {
 		return decideProof(deps, input.BriefID, "reject")
 	})
 
 	mcp.AddTool(server, &mcp.Tool{
 		Name: "media_proof_skip", Description: "Skip the optional proof. This local decision does not authorize or submit the final generation.", Annotations: localMutation,
-	}, func(ctx context.Context, _ *mcp.CallToolRequest, input previewInput) (*mcp.CallToolResult, media.Turn, error) {
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input briefGetInput) (*mcp.CallToolResult, media.Turn, error) {
 		return decideProof(deps, input.BriefID, "skip")
 	})
 
 	mcp.AddTool(server, &mcp.Tool{
 		Name: "media_preview_reject", Description: "Reject the current video preview and clear its approval state so the brief can be revised and a new preview generated.", Annotations: localMutation,
-	}, func(ctx context.Context, _ *mcp.CallToolRequest, input previewInput) (*mcp.CallToolResult, media.Turn, error) {
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input briefGetInput) (*mcp.CallToolResult, media.Turn, error) {
 		store, brief, err := loadBrief(deps, input.BriefID)
 		if err != nil {
 			return nil, media.Turn{}, err

@@ -19,7 +19,8 @@ const (
 	PaidScopeProof   = "proof"
 	PaidScopeFinal   = "final"
 
-	paidConfirmationTTL = 10 * time.Minute
+	defaultPaidDisclosure = "This live Kie.ai action may consume credits. Exact cost is not known locally."
+	paidConfirmationTTL   = 10 * time.Minute
 )
 
 type PaidConfirmation struct {
@@ -57,11 +58,15 @@ func NewPaidConfirmation(brief *Brief, plan *Plan, request PaidConfirmationReque
 	if !request.Acknowledged {
 		return nil, fmt.Errorf("paid generation disclosure must be explicitly acknowledged")
 	}
-	if !validPaidScope(request.Scope) {
+	expectedKind := generationKindForScope(request.Scope)
+	if expectedKind == "" {
 		return nil, fmt.Errorf("unsupported paid confirmation scope %q", request.Scope)
 	}
 	if strings.TrimSpace(request.GenerationKind) == "" {
 		return nil, fmt.Errorf("paid generation kind is required")
+	}
+	if request.GenerationKind != expectedKind {
+		return nil, fmt.Errorf("paid confirmation scope %q requires generation kind %q, got %q", request.Scope, expectedKind, request.GenerationKind)
 	}
 	if strings.TrimSpace(request.ConfirmedBy) == "" {
 		return nil, fmt.Errorf("paid confirmation source is required")
@@ -72,7 +77,7 @@ func NewPaidConfirmation(brief *Brief, plan *Plan, request PaidConfirmationReque
 	}
 	disclosure := strings.TrimSpace(request.Disclosure)
 	if disclosure == "" {
-		disclosure = "This live Kie.ai action may consume credits. Exact cost is not known locally."
+		disclosure = defaultPaidDisclosure
 	}
 	planHash, err := planFingerprint(plan)
 	if err != nil {
@@ -137,7 +142,7 @@ func paidActionReview(brief *Brief, nextAction string) *PaidActionReview {
 		plan       *Plan
 		scope      string
 		kind       string
-		disclosure = "This live Kie.ai action may consume credits. Exact cost is not known locally."
+		disclosure = defaultPaidDisclosure
 	)
 	switch nextAction {
 	case "generate_preview", "regenerate_preview":
@@ -192,12 +197,16 @@ func PaidPlanForScope(brief *Brief, scope string) (*Plan, string, error) {
 	}
 }
 
-func validPaidScope(scope string) bool {
+func generationKindForScope(scope string) string {
 	switch scope {
-	case PaidScopePreview, PaidScopeProof, PaidScopeFinal:
-		return true
+	case PaidScopePreview:
+		return GenerationKindPreview
+	case PaidScopeProof:
+		return GenerationKindProof
+	case PaidScopeFinal:
+		return GenerationKindFinal
 	default:
-		return false
+		return ""
 	}
 }
 

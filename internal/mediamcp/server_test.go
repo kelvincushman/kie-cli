@@ -106,8 +106,10 @@ func TestHTTPNegotiatesLatestStatelessProtocolAndListsMediaTools(t *testing.T) {
 		t.Fatal(err)
 	}
 	gotNames := make([]string, 0, len(listed.Tools))
+	toolsByName := make(map[string]*mcp.Tool, len(listed.Tools))
 	for _, tool := range listed.Tools {
 		gotNames = append(gotNames, tool.Name)
+		toolsByName[tool.Name] = tool
 		if tool.Name == "media_generate" || tool.Name == "media_preview_generate" {
 			if tool.Annotations == nil || tool.Annotations.ReadOnlyHint || tool.Annotations.OpenWorldHint == nil || !*tool.Annotations.OpenWorldHint {
 				t.Fatalf("media_generate annotations = %#v", tool.Annotations)
@@ -122,6 +124,16 @@ func TestHTTPNegotiatesLatestStatelessProtocolAndListsMediaTools(t *testing.T) {
 	}
 	if len(ToolNames) != 40 || len(listed.Tools) != 40 {
 		t.Fatalf("focused MCP tool count = constants:%d registered:%d, want 40", len(ToolNames), len(listed.Tools))
+	}
+	for _, name := range []string{"media_preview_generate", "media_proof_generate"} {
+		if !toolRequiresField(t, toolsByName[name], "confirmation_id") {
+			t.Fatalf("%s schema does not require confirmation_id", name)
+		}
+	}
+	for _, name := range []string{"media_preview_approve", "media_preview_reject", "media_proof_approve", "media_proof_reject", "media_proof_skip"} {
+		if toolRequiresField(t, toolsByName[name], "confirmation_id") {
+			t.Fatalf("%s schema unexpectedly requires confirmation_id", name)
+		}
 	}
 
 	setupResult, err := session.CallTool(context.Background(), &mcp.CallToolParams{Name: "media_setup_get"})
@@ -215,6 +227,29 @@ func TestHTTPNegotiatesLatestStatelessProtocolAndListsMediaTools(t *testing.T) {
 	if !turn.Ready || turn.Brief == nil || turn.Brief.ID == "" || turn.Brief.Plan == nil {
 		t.Fatalf("ready turn = %#v", turn)
 	}
+}
+
+func toolRequiresField(t *testing.T, tool *mcp.Tool, field string) bool {
+	t.Helper()
+	if tool == nil {
+		t.Fatalf("tool is missing while checking required field %q", field)
+	}
+	data, err := json.Marshal(tool.InputSchema)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var schema struct {
+		Required []string `json:"required"`
+	}
+	if err := json.Unmarshal(data, &schema); err != nil {
+		t.Fatal(err)
+	}
+	for _, required := range schema.Required {
+		if required == field {
+			return true
+		}
+	}
+	return false
 }
 
 func TestGenerateIsExplicitAndCannotResubmitBrief(t *testing.T) {

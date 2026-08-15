@@ -25,4 +25,4 @@ Immediately before a live generation, ask for confirmation for that exact brief/
 kie-pp-cli create --brief <brief_id> --submit --confirm-paid --wait --agent
 ```
 
-For an MCP host, use `media_paid_confirm` followed by `media_generate`. Do not reuse a confirmation. Render the returned image, collect requested revisions, and create a fresh confirmation for every regeneration, edit, removal, or upscale. Report brief/generation/task IDs, model, settings, provenance, result URLs, and the exact resume command.
+For an MCP host, use `media_paid_confirm` followed by `media_generate`. Do not reuse a confirmation. Poll `media_generation_status` until it completes or fails; handle failure before asking for another paid action, and render the image only after completion. Collect requested revisions and create a fresh confirmation for every regeneration, edit, removal, or upscale. Report brief/generation/task IDs, model, settings, provenance, result URLs, and the exact resume command.

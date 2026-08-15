@@ -70,6 +70,17 @@ class SkillSuiteTests(unittest.TestCase):
         for decision in ("--approve-proof", "--reject-proof", "--skip-proof"):
             self.assertIn(decision, text)
 
+    def test_mcp_generation_skills_poll_before_display(self):
+        image = (SKILLS / "kie-image" / "SKILL.md").read_text()
+        image_generate = image.index("media_generate")
+        self.assertGreater(image.index("media_generation_status", image_generate), image_generate)
+
+        create = (SKILLS / "kie-create" / "SKILL.md").read_text()
+        proof_generate = create.index("media_proof_generate")
+        self.assertGreater(create.index("media_generation_status", proof_generate), proof_generate)
+        final_generate = create.rindex("media_generate")
+        self.assertGreater(create.index("media_generation_status", final_generate), final_generate)
+
     def test_capability_skills_use_runtime_schema_introspection(self):
         for name in ("kie-image", "kie-video", "kie-audio", "kie-avatar"):
             text = (SKILLS / name / "SKILL.md").read_text()

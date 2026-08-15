@@ -212,8 +212,9 @@ for each shot_brief_id:
   display preview image to user
   media_preview_approve or media_preview_reject
   offer a complete-shot proof
-  if accepted: media_paid_confirm, media_proof_generate, display full proof,
-    then media_proof_approve or media_proof_reject
+  if accepted: media_paid_confirm, media_proof_generate,
+    media_generation_status, display full proof, then media_proof_approve or
+    media_proof_reject
   otherwise: media_proof_skip
   media_paid_confirm for final
   media_generate only after the current gates

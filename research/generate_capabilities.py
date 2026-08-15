@@ -8,6 +8,8 @@ import json
 import re
 from pathlib import Path
 
+import yaml
+
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG_PATH = ROOT / "internal" / "kiecatalog" / "catalog.json"
@@ -102,36 +104,31 @@ def lowest_tier(values: list[str]) -> str:
 def parse_operations(openapi_text: str, coverage: dict) -> list[dict]:
     shared = coverage.get("shared_operations", {})
     operations: list[dict] = []
-    path = ""
-    method = ""
-    for line in openapi_text.splitlines():
-        path_match = re.match(r"^  (/.+):\s*$", line)
-        if path_match:
-            path = path_match.group(1)
-            method = ""
+    document = yaml.safe_load(openapi_text) or {}
+    verbs = {"get", "post", "put", "patch", "delete", "options", "head"}
+    for path, path_item in (document.get("paths") or {}).items():
+        if not isinstance(path_item, dict):
             continue
-        method_match = re.match(r"^    (get|post|put|patch|delete|options|head):\s*$", line)
-        if method_match:
-            method = method_match.group(1).upper()
-            continue
-        id_match = re.match(r"^      operationId:\s*(.+?)\s*$", line)
-        if not (id_match and path and method):
-            continue
-        operation_id = id_match.group(1).strip("'\"")
-        key = f"{method} {path}"
-        shared_entry = shared.get(key, {})
-        variant_count = int(shared_entry.get("documentation_pages", 1))
-        creative = operation_is_creative(operation_id, path, method)
-        operations.append({
-            "operation_id": operation_id,
-            "method": method,
-            "path": path,
-            "variant_count": variant_count,
-            "primary_capability": operation_capability(operation_id, path) if creative else "plumbing",
-            "creative": creative,
-            "plumbing": not creative,
-            "reason": "creates or transforms media" if creative else "account, upload, status, download, or general language-model plumbing",
-        })
+        for verb, operation in path_item.items():
+            if str(verb).lower() not in verbs or not isinstance(operation, dict):
+                continue
+            operation_id = str(operation.get("operationId", "")).strip()
+            if not operation_id:
+                continue
+            method = str(verb).upper()
+            shared_entry = shared.get(f"{method} {path}", {})
+            variant_count = int(shared_entry.get("documentation_pages", 1))
+            creative = operation_is_creative(operation_id, path, method)
+            operations.append({
+                "operation_id": operation_id,
+                "method": method,
+                "path": path,
+                "variant_count": variant_count,
+                "primary_capability": operation_capability(operation_id, path) if creative else "plumbing",
+                "creative": creative,
+                "plumbing": not creative,
+                "reason": "creates or transforms media" if creative else "account, upload, status, download, or general language-model plumbing",
+            })
     return operations
 
 

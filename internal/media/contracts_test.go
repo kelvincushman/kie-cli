@@ -108,6 +108,19 @@ func TestPaidConfirmationRejectsUnhashablePlan(t *testing.T) {
 	}
 }
 
+func TestPaidConfirmationRejectsScopeKindMismatchAtCreation(t *testing.T) {
+	brief, err := NewBrief(BriefInput{Request: "Product hero", MediaType: "image", Purpose: "site", Platform: "website", AspectRatio: "16:9", Style: "studio", References: []string{"https://example.test/product.png"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = NewPaidConfirmation(brief, brief.Plan, PaidConfirmationRequest{
+		Scope: PaidScopeFinal, GenerationKind: GenerationKindPreview, ConfirmedBy: "test", Acknowledged: true,
+	})
+	if err == nil || !strings.Contains(err.Error(), "requires generation kind") {
+		t.Fatalf("scope-kind mismatch error = %v", err)
+	}
+}
+
 func TestTurnExposesExactPaidActionReviewForEveryDirectorSpend(t *testing.T) {
 	image, err := NewBrief(BriefInput{Request: "Product hero", MediaType: "image", Purpose: "site", Platform: "website", AspectRatio: "16:9", Style: "studio", References: []string{"https://example.test/product.png"}})
 	if err != nil {

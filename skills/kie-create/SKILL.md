@@ -227,10 +227,12 @@ returned image URL, obtain explicit approval, then call
 `media_preview_approve`. Use `media_preview_reject` for another direction. Next
 ask whether the user wants a proof. If declined, call `media_proof_skip` without
 generating. If accepted, obtain a new proof-scoped `media_paid_confirm`, call
-`media_proof_generate`, display the result, and record `media_proof_approve` or
-`media_proof_reject`. Use another fresh confirmation for `media_generate` only
+`media_proof_generate`, poll it with `media_generation_status`, display the
+completed result, and record `media_proof_approve` or `media_proof_reject`. Use
+another fresh confirmation for `media_generate` only
 after the proof is approved or skipped. Each confirmation is scoped, expiring,
-and single-use.
+and single-use. Poll the final generation with `media_generation_status` and
+show its completed result before reporting success.
 
 Register the focused local MCP server with an agent host using stdio:
 
