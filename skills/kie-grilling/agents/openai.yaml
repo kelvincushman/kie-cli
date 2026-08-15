@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kie Grilling"
+  short_description: "Shared one-question media director protocol"
+  default_prompt: "Use $kie-grilling to qualify this request, recommend a route, and preserve every approval gate."

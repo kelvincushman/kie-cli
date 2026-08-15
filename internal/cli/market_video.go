@@ -111,7 +111,7 @@ func newMediaVideoCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "video [prompt]",
 		Short: "Create a direct Kie Market video task; defaults to Wan 2.7 text-to-video",
-		Long: "Create one direct Market video task without a local brief or the director's preview gate. The built-in flags implement only Wan 2.7 text-to-video. " +
+		Long: "Advanced direct generation. This command bypasses the director's local brief, still/proof approval, and scoped paid-confirmation gates. Obtain fresh explicit user confirmation immediately before any live run; use --dry-run to inspect the payload without spending credits. The built-in flags implement only Wan 2.7 text-to-video. " +
 			"Select another captured Kie Market video model with --model and pass its documented input object through --input; the complete embedded contract is validated before any live call.",
 		Example: "  kie-pp-cli media video 'A red kite crosses a dawn sky' --duration 5 --ratio 16:9\n" +
 			"  kie-pp-cli media video --model wan/2-6-text-to-video --input '{\"prompt\":\"A red kite crosses a dawn sky\",\"duration\":\"5\"}'",

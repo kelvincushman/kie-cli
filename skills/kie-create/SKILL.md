@@ -7,6 +7,10 @@ description: Run the local-first Kie agent media factory to qualify, script, sto
 
 Use this skill when the user wants to create, resume, revise, or poll an image/video generation brief through Kie. This is a local Codex, Claude Code, Cursor, or MCP-agent workflow. Do not route this workflow through browser-hosted Claude.ai.
 
+Use `$kie-grilling` as the shared intake protocol. It infers facts already in a
+complete prompt, asks only the next material question, explains its
+recommendation, and lets the user override the route.
+
 When this skill is running from a repository checkout, read
 `../../docs/MEDIA_DIRECTOR.md` for the longer product contract. If the skill was
 installed by itself, continue with the self-contained workflow below.
@@ -29,7 +33,14 @@ kie-pp-cli media generation --help
 kie-pp-cli media script --help
 kie-pp-cli media storyboard --help
 kie-pp-cli media models --help
+kie-pp-cli media capability --help
 ```
+
+If authentication is missing, `media setup --agent` and MCP
+`media_setup_get` return a maintainer referral URL plus
+`affiliate_disclosure`. Tell the user directly that the link supports continued
+project development and show the disclosure beside it. Never present it as a
+neutral Kie.ai link.
 
 Prefer product commands:
 
@@ -37,11 +48,15 @@ Prefer product commands:
 kie-pp-cli create "what the user wants to make" --agent
 kie-pp-cli create --workflow <workflow> "what the user wants to make" --agent
 kie-pp-cli create --brief <brief_id> --answer <value> --agent
-kie-pp-cli create --brief <brief_id> --preview --wait --agent
+kie-pp-cli create --brief <brief_id> --wrap-up --agent
+kie-pp-cli create --brief <brief_id> --preview --confirm-paid --wait --agent
 kie-pp-cli create --brief <brief_id> --approve-preview --agent
 kie-pp-cli create --brief <brief_id> --reject-preview --agent
-kie-pp-cli create --brief <brief_id> --submit --agent
-kie-pp-cli create --brief <brief_id> --submit --wait --agent
+kie-pp-cli create --brief <brief_id> --proof --confirm-paid --wait --agent
+kie-pp-cli create --brief <brief_id> --approve-proof --agent
+kie-pp-cli create --brief <brief_id> --reject-proof --agent
+kie-pp-cli create --brief <brief_id> --skip-proof --agent
+kie-pp-cli create --brief <brief_id> --submit --confirm-paid --wait --agent
 kie-pp-cli media brief show <brief_id> --agent
 kie-pp-cli media brief list --agent
 kie-pp-cli media reference add <path-or-url> --name <name> --agent
@@ -82,27 +97,19 @@ Never print, log, store, summarize, or expose credentials. Do not include bearer
 
 ## Conversation Protocol
 
-Qualify the brief one question at a time. Ask the current `next_question.prompt`, wait for the user's answer, then resume with:
+Start with `grill-me` or MCP `media_grill_start`. The director infers explicit
+facts from the prompt. Qualify the remainder one question at a time. Ask the
+current `next_question.prompt`, briefly show its recommendation and reason,
+wait for the user's answer, then resume with:
 
 ```bash
 kie-pp-cli create --brief <brief_id> --answer <value> --agent
 ```
 
-The implemented v1 question order is exactly:
-
-1. `request`: "What do you want to create? Describe the subject and desired outcome."
-2. `media_type`: "Should this be an image or a video?"
-3. `purpose`: "What will this media be used for?"
-4. `platform`: "Where will it be used?"
-5. `aspect_ratio`: "Which aspect ratio should I use?"
-6. `duration_seconds`: "How many seconds should the video run?" Video only.
-7. `audio_mode`: "Should SeedDance generate synchronized audio?" Video only.
-8. `video_mode`: "How should SeedDance guide the video?" Video only.
-9. `style`: "What visual style or mood should it have?"
-10. `first_frame` and optionally `last_frame`: requested only by the selected frame mode.
-11. `reference`: image by default; in multimodal video, prefix answers with `video:` or `audio:`. Repeat until `skip`, `done`, or `none`.
-
-Stay inside the implemented director fields. If the user volunteers extra creative requirements, fold them into the request or style answer only when that preserves the implemented command shape.
+Follow the returned question and gate state rather than hard-coding a question
+order. The route can add conditional rights, identity, frame, audio, or
+reference questions. If the user says to choose sensible remaining defaults,
+use `--wrap-up` or `media_grill_wrap_up`; do not silently do this yourself.
 
 ## Briefs, References, and Resumption
 
@@ -164,17 +171,22 @@ Do not start live generation until the user approves the ready plan. Video has a
 For a qualified video brief, `next_action` is `generate_preview` and `can_submit` is false. Generate the separate review image:
 
 ```bash
-kie-pp-cli create --brief <brief_id> --preview --wait --agent
+kie-pp-cli create --brief <brief_id> --preview --confirm-paid --wait --agent
 ```
 
-This preview is a paid/live image generation and may consume Kie credits. Read `result_urls[0]` and actually show the image to the user. In Codex, Claude, or another visual host, render the image; in a plain terminal, print the direct URL clearly. Never infer approval from silence, the prompt, metadata, or your own judgment.
+This preview is a paid/live image generation and may consume Kie credits. Ask
+for a fresh explicit confirmation for the exact preview immediately before the
+command; `--confirm-paid` records only that transaction. Read `result_urls[0]`
+and actually show the image to the user. In Codex, Claude, or another visual
+host, render the image; in a plain terminal, print the direct URL clearly.
+Never infer approval from silence, the prompt, metadata, or your own judgment.
 
 If the user rejects it:
 
 ```bash
 kie-pp-cli create --brief <brief_id> --reject-preview --agent
 kie-pp-cli create --brief <brief_id> --style "<revised direction>" --agent
-kie-pp-cli create --brief <brief_id> --preview --wait --agent
+kie-pp-cli create --brief <brief_id> --preview --confirm-paid --wait --agent
 ```
 
 Only after an explicit affirmative response, record approval:
@@ -183,21 +195,44 @@ Only after an explicit affirmative response, record approval:
 kie-pp-cli create --brief <brief_id> --approve-preview --agent
 ```
 
-The returned turn must have `can_submit: true`. The approved still becomes the SeedDance first frame or multimodal visual anchor. Any subsequent creative change makes the fingerprinted approval stale and requires a new preview.
+The approved still becomes the SeedDance first frame or multimodal visual
+anchor. Any subsequent creative change makes the fingerprinted approval stale
+and requires a new preview.
 
-In terminal/agent flow, explicit approval is:
+After still approval, offer the optional complete-shot proof at the returned
+lowest faithful resolution. If the user accepts, obtain a new paid confirmation,
+generate the proof, show the entire clip, and record approval or rejection. If
+the user declines, explicitly record the skip without making a proof call. If
+the user accepts, obtain a fresh proof-scoped confirmation, generate and show
+the complete shot, then record approval or rejection:
 
 ```bash
-kie-pp-cli create --brief <brief_id> --submit --agent
+kie-pp-cli create --brief <brief_id> --skip-proof --agent
+# Or, after an explicit yes:
+kie-pp-cli create --brief <brief_id> --proof --confirm-paid --wait --agent
+kie-pp-cli create --brief <brief_id> --approve-proof --agent
+# Or use --reject-proof, revise, and regenerate.
 ```
 
-Use this when the user has approved the plan. Add `--wait` only when the user wants the command to poll:
+Still/proof approval never authorizes the final paid call. Ask again for that
+exact final render, then submit:
 
 ```bash
-kie-pp-cli create --brief <brief_id> --submit --wait --agent
+kie-pp-cli create --brief <brief_id> --submit --confirm-paid --wait --agent
 ```
 
-For MCP video, call `media_preview_generate`, poll it with `media_generation_status`, display the returned image URL, obtain explicit approval, then call `media_preview_approve`. Use `media_preview_reject` for another direction. Only then call `media_generate`. Preview and final generation are separate live actions; brief/reference/identity and preview approve/reject tools are local state actions.
+For MCP video, use a fresh `media_paid_confirm` before
+`media_preview_generate`, poll it with `media_generation_status`, display the
+returned image URL, obtain explicit approval, then call
+`media_preview_approve`. Use `media_preview_reject` for another direction. Next
+ask whether the user wants a proof. If declined, call `media_proof_skip` without
+generating. If accepted, obtain a new proof-scoped `media_paid_confirm`, call
+`media_proof_generate`, poll it with `media_generation_status`, display the
+completed result, and record `media_proof_approve` or `media_proof_reject`. Use
+another fresh confirmation for `media_generate` only
+after the proof is approved or skipped. Each confirmation is scoped, expiring,
+and single-use. Poll the final generation with `media_generation_status` and
+show its completed result before reporting success.
 
 Register the focused local MCP server with an agent host using stdio:
 
@@ -205,9 +240,9 @@ Register the focused local MCP server with an agent host using stdio:
 claude mcp add kie-media -- kie-media-mcp
 ```
 
-`kie-media-mcp` exposes twenty-nine focused lesson, evidence, workflow,
-model-contract, brief, script, storyboard, reference, identity, preview,
-generation, and status tools. Its optional HTTP
+`kie-media-mcp` exposes focused setup, lesson, evidence, workflow, grilling,
+capability, model-contract, brief, script, storyboard, reference, identity,
+preview, proof, paid-confirmation, generation, and status tools. Its optional HTTP
 mode is local-only, stateless, and negotiates MCP `2026-07-28`:
 
 ```bash
@@ -241,15 +276,18 @@ kie-pp-cli media brief show <brief_id> --agent
 For video, preview and approve:
 
 ```bash
-kie-pp-cli create --brief <brief_id> --preview --wait --agent
+kie-pp-cli create --brief <brief_id> --preview --confirm-paid --wait --agent
 # Show result_urls[0] and wait for an explicit yes.
 kie-pp-cli create --brief <brief_id> --approve-preview --agent
+# Offer the optional proof; if accepted, ask again, then:
+kie-pp-cli create --brief <brief_id> --proof --confirm-paid --wait --agent
+kie-pp-cli create --brief <brief_id> --approve-proof --agent
 ```
 
 Submit:
 
 ```bash
-kie-pp-cli create --brief <brief_id> --submit --agent
+kie-pp-cli create --brief <brief_id> --submit --confirm-paid --agent
 ```
 
 Poll:

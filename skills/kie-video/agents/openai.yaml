@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kie Video"
+  short_description: "Direct gated Kie video shots"
+  default_prompt: "Use $kie-video to create this shot with a still gate and optional low-resolution proof."

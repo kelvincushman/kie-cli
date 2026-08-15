@@ -1,0 +1,3100 @@
+{
+  "catalog_model_count": 129,
+  "catalog_source_sha256": "d72fa28d76c175d5c6a8d12cba6de91e247c393b849458c0626c107fcd23e724",
+  "coverage_source_sha256": "c9d9419f17b66f19168e5188a2aac34354795db9cf904ed0cee321848d57c11f",
+  "documented_operation_variants": 219,
+  "models": [
+    {
+      "creative": true,
+      "model_id": "bytedance/seedance-1.5-pro",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "480p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "bytedance/seedance-2",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "480p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": [
+        "kie-audio"
+      ]
+    },
+    {
+      "creative": true,
+      "model_id": "bytedance/seedance-2-5",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "480p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": [
+        "kie-audio"
+      ]
+    },
+    {
+      "creative": true,
+      "model_id": "bytedance/seedance-2-fast",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "480p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": [
+        "kie-audio"
+      ]
+    },
+    {
+      "creative": true,
+      "model_id": "bytedance/seedance-2-mini",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "480p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": [
+        "kie-audio"
+      ]
+    },
+    {
+      "creative": true,
+      "model_id": "bytedance/seedream",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "image_size"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "bytedance/seedream-v4-edit",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "image_size"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "bytedance/seedream-v4-text-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "image_size"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "bytedance/v1-lite-image-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "480p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "bytedance/v1-lite-text-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "480p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "bytedance/v1-pro-fast-image-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "bytedance/v1-pro-image-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "480p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "bytedance/v1-pro-text-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "480p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "elevenlabs/audio-isolation",
+      "primary_capability": "kie-audio",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-audio route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "elevenlabs/text-to-dialogue-v3",
+      "primary_capability": "kie-audio",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-audio route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "elevenlabs/text-to-speech-multilingual-v2",
+      "primary_capability": "kie-audio",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-audio route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "elevenlabs/text-to-speech-turbo-2-5",
+      "primary_capability": "kie-audio",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-audio route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "flux-2/flex-image-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "flux-2/flex-text-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "flux-2/pro-image-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "flux-2/pro-text-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "gemini-omni-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "google/gemini-2-5-pro-tts",
+      "primary_capability": "kie-audio",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-audio route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "google/gemini-3-1-flash-tts",
+      "primary_capability": "kie-audio",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-audio route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "google/imagen4",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "google/imagen4-fast",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "google/imagen4-ultra",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "google/nano-banana",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "image_size"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "google/nano-banana-edit",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "image_size"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "gpt-image-2-image-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "gpt-image-2-text-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "gpt-image/1.5-image-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "medium",
+        "resolution_fields": [
+          "quality"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "gpt-image/1.5-text-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "medium",
+        "resolution_fields": [
+          "quality"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "grok-imagine-video-1-5-preview",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "480p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "grok-imagine/extend",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "grok-imagine/image-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "grok-imagine/image-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "480p",
+        "resolution_fields": [
+          "resolution",
+          "mode"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "grok-imagine/text-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "grok-imagine/text-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "480p",
+        "resolution_fields": [
+          "resolution",
+          "mode"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "grok-imagine/upscale",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-generate"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "hailuo/02-image-to-video-pro",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "hailuo/02-image-to-video-standard",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "512P",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "hailuo/02-text-to-video-pro",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "hailuo/02-text-to-video-standard",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "hailuo/2-3-image-to-video-pro",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "768P",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "hailuo/2-3-image-to-video-standard",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "768P",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "happyhorse-1-1/image-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "happyhorse-1-1/reference-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": [
+        "kie-identity"
+      ]
+    },
+    {
+      "creative": true,
+      "model_id": "happyhorse-1-1/text-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "happyhorse/image-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "happyhorse/reference-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": [
+        "kie-identity"
+      ]
+    },
+    {
+      "creative": true,
+      "model_id": "happyhorse/text-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "happyhorse/video-edit",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "ideogram/character",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "image_size"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": [
+        "kie-identity"
+      ]
+    },
+    {
+      "creative": true,
+      "model_id": "ideogram/character-edit",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": [
+        "kie-identity"
+      ]
+    },
+    {
+      "creative": true,
+      "model_id": "ideogram/character-remix",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "image_size"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": [
+        "kie-identity"
+      ]
+    },
+    {
+      "creative": true,
+      "model_id": "ideogram/v3-edit",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "ideogram/v3-remix",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "image_size"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "ideogram/v3-text-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "image_size"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "infinitalk/from-audio",
+      "primary_capability": "kie-avatar",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "480p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-avatar route; inspect the model schema before generation",
+      "secondary_capabilities": [
+        "kie-identity",
+        "kie-video"
+      ]
+    },
+    {
+      "creative": true,
+      "model_id": "kling-2.6/image-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "kling-2.6/motion-control",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "mode"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "kling-2.6/text-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "kling-3.0/motion-control",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "mode"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "kling-3.0/video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "std",
+        "resolution_fields": [
+          "mode"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "kling/ai-avatar-pro",
+      "primary_capability": "kie-avatar",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-avatar route; inspect the model schema before generation",
+      "secondary_capabilities": [
+        "kie-identity",
+        "kie-video"
+      ]
+    },
+    {
+      "creative": true,
+      "model_id": "kling/ai-avatar-standard",
+      "primary_capability": "kie-avatar",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-avatar route; inspect the model schema before generation",
+      "secondary_capabilities": [
+        "kie-identity",
+        "kie-video"
+      ]
+    },
+    {
+      "creative": true,
+      "model_id": "kling/v2-1-master-image-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "kling/v2-1-master-text-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "kling/v2-1-pro",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "kling/v2-1-standard",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "kling/v2-5-turbo-image-to-video-pro",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "kling/v2-5-turbo-text-to-video-pro",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "kling/v3-turbo-image-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "kling/v3-turbo-text-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "minimax-h3/image-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "768P",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "minimax-h3/reference-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "768P",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": [
+        "kie-audio",
+        "kie-identity"
+      ]
+    },
+    {
+      "creative": true,
+      "model_id": "minimax-h3/text-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "768P",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "nano-banana-2",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "nano-banana-2-lite",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "nano-banana-pro",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "omnihuman-1-5",
+      "primary_capability": "kie-avatar",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "720",
+        "resolution_fields": [
+          "output_resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-avatar route; inspect the model schema before generation",
+      "secondary_capabilities": [
+        "kie-identity",
+        "kie-video"
+      ]
+    },
+    {
+      "creative": true,
+      "model_id": "omnihuman-1-5/human-identification",
+      "primary_capability": "kie-identity",
+      "production_fit": [
+        "kie-identity"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-identity route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "omnihuman-1-5/subject-detection",
+      "primary_capability": "kie-identity",
+      "production_fit": [
+        "kie-identity"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-identity route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "pixverse-v6/extend",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "pixverse-v6/image-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "360p",
+        "resolution_fields": [
+          "quality"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "pixverse-v6/reference-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "360p",
+        "resolution_fields": [
+          "quality"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": [
+        "kie-identity"
+      ]
+    },
+    {
+      "creative": true,
+      "model_id": "pixverse-v6/text-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "360p",
+        "resolution_fields": [
+          "quality"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "pixverse-v6/transition",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "360p",
+        "resolution_fields": [
+          "quality"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "qwen/image-edit",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "image_size"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "qwen/image-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "qwen/text-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "image_size"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "qwen2/image-edit",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "image_size"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "qwen2/text-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "image_size"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "qwen3/image-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "resolution",
+          "image_size"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "qwen3/pro-image-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "resolution",
+          "image_size"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "qwen3/pro-text-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "resolution",
+          "image_size"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "qwen3/text-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "resolution",
+          "image_size"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "recraft/crisp-upscale",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-generate"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "recraft/remove-background",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-generate"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "seedream/4.5-edit",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "high",
+        "resolution_fields": [
+          "quality"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "seedream/4.5-text-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "high",
+        "resolution_fields": [
+          "quality"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "seedream/5-lite-image-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "high",
+        "resolution_fields": [
+          "quality"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "seedream/5-lite-text-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "high",
+        "resolution_fields": [
+          "quality"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "seedream/5-pro-image-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "high",
+        "resolution_fields": [
+          "quality"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "seedream/5-pro-layer-decomposition",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "size"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "seedream/5-pro-text-to-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "high",
+        "resolution_fields": [
+          "quality"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "topaz/image-upscale",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-generate"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "topaz/video-upscale",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-generate"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "volcengine/video-to-video-lip-sync",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "mode"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": [
+        "kie-audio"
+      ]
+    },
+    {
+      "creative": true,
+      "model_id": "wan/2-2-a14b-image-to-video-turbo",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "480p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "wan/2-2-a14b-speech-to-video-turbo",
+      "primary_capability": "kie-avatar",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "480p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-avatar route; inspect the model schema before generation",
+      "secondary_capabilities": [
+        "kie-identity",
+        "kie-video"
+      ]
+    },
+    {
+      "creative": true,
+      "model_id": "wan/2-2-a14b-text-to-video-turbo",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "480p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "wan/2-2-animate-move",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "480p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "wan/2-2-animate-replace",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "480p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "wan/2-5-image-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "wan/2-5-text-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "wan/2-6-flash-image-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": [
+        "kie-audio"
+      ]
+    },
+    {
+      "creative": true,
+      "model_id": "wan/2-6-flash-video-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": [
+        "kie-audio"
+      ]
+    },
+    {
+      "creative": true,
+      "model_id": "wan/2-6-image-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "wan/2-6-text-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "wan/2-6-video-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "wan/2-7-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "wan/2-7-image-pro",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "wan/2-7-image-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "wan/2-7-r2v",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "wan/2-7-text-to-video",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": [
+        "kie-audio"
+      ]
+    },
+    {
+      "creative": true,
+      "model_id": "wan/2-7-videoedit",
+      "primary_capability": "kie-video",
+      "production_fit": [
+        "kie-film",
+        "kie-video-explainer"
+      ],
+      "proof": {
+        "alternate_allowed": true,
+        "lowest_faithful_tier": "720p",
+        "resolution_fields": [
+          "resolution"
+        ]
+      },
+      "routing_notes": "catalog-derived kie-video route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    },
+    {
+      "creative": true,
+      "model_id": "z-image",
+      "primary_capability": "kie-image",
+      "production_fit": [
+        "kie-brandkit",
+        "kie-marketplace-cards",
+        "kie-product-photoshoot",
+        "kie-youtube-thumbnail"
+      ],
+      "proof": {
+        "alternate_allowed": false,
+        "lowest_faithful_tier": "",
+        "resolution_fields": []
+      },
+      "routing_notes": "catalog-derived kie-image route; inspect the model schema before generation",
+      "secondary_capabilities": []
+    }
+  ],
+  "operations": [
+    {
+      "creative": false,
+      "method": "POST",
+      "operation_id": "upload-file-base64",
+      "path": "/api/file-base64-upload",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "POST",
+      "operation_id": "upload-file-stream",
+      "path": "/api/file-stream-upload",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "POST",
+      "operation_id": "upload-file-url",
+      "path": "/api/file-url-upload",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "generate-aleph-video",
+      "path": "/api/v1/aleph/generate",
+      "plumbing": false,
+      "primary_capability": "kie-video",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "GET",
+      "operation_id": "get-aleph-video-details",
+      "path": "/api/v1/aleph/record-info",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "GET",
+      "operation_id": "get-account-credits",
+      "path": "/api/v1/chat/credit",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "POST",
+      "operation_id": "download-url",
+      "path": "/api/v1/common/download-url",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "generate-or-edit-image",
+      "path": "/api/v1/flux/kontext/generate",
+      "plumbing": false,
+      "primary_capability": "kie-image",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "GET",
+      "operation_id": "get-image-details",
+      "path": "/api/v1/flux/kontext/record-info",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "generate-music",
+      "path": "/api/v1/generate",
+      "plumbing": false,
+      "primary_capability": "kie-audio",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "add-instrumental",
+      "path": "/api/v1/generate/add-instrumental",
+      "plumbing": false,
+      "primary_capability": "kie-audio",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "add-vocals",
+      "path": "/api/v1/generate/add-vocals",
+      "plumbing": false,
+      "primary_capability": "kie-audio",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "extend-music",
+      "path": "/api/v1/generate/extend",
+      "plumbing": false,
+      "primary_capability": "kie-audio",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "generate-persona",
+      "path": "/api/v1/generate/generate-persona",
+      "plumbing": false,
+      "primary_capability": "kie-audio",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "get-timestamped-lyrics",
+      "path": "/api/v1/generate/get-timestamped-lyrics",
+      "plumbing": false,
+      "primary_capability": "kie-audio",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "generate-mashup",
+      "path": "/api/v1/generate/mashup",
+      "plumbing": false,
+      "primary_capability": "kie-audio",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "GET",
+      "operation_id": "get-music-details",
+      "path": "/api/v1/generate/record-info",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "replace-section",
+      "path": "/api/v1/generate/replace-section",
+      "plumbing": false,
+      "primary_capability": "kie-audio",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "generate-sounds",
+      "path": "/api/v1/generate/sounds",
+      "plumbing": false,
+      "primary_capability": "kie-audio",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "upload-and-cover-audio",
+      "path": "/api/v1/generate/upload-cover",
+      "plumbing": false,
+      "primary_capability": "kie-audio",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "upload-and-extend-audio",
+      "path": "/api/v1/generate/upload-extend",
+      "plumbing": false,
+      "primary_capability": "kie-audio",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "POST",
+      "operation_id": "get-4o-image-download-url",
+      "path": "/api/v1/gpt4o-image/download-url",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "generate-4o-image",
+      "path": "/api/v1/gpt4o-image/generate",
+      "plumbing": false,
+      "primary_capability": "kie-image",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "GET",
+      "operation_id": "get-4o-image-details",
+      "path": "/api/v1/gpt4o-image/record-info",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "market-create-task",
+      "path": "/api/v1/jobs/createTask",
+      "plumbing": false,
+      "primary_capability": "creative-router",
+      "reason": "creates or transforms media",
+      "variant_count": 133
+    },
+    {
+      "creative": false,
+      "method": "GET",
+      "operation_id": "market-query-task",
+      "path": "/api/v1/jobs/recordInfo",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "generate-lyrics",
+      "path": "/api/v1/lyrics",
+      "plumbing": false,
+      "primary_capability": "kie-audio",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "GET",
+      "operation_id": "get-lyrics-details",
+      "path": "/api/v1/lyrics/record-info",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "generate-midi",
+      "path": "/api/v1/midi/generate",
+      "plumbing": false,
+      "primary_capability": "kie-audio",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "GET",
+      "operation_id": "get-midi-details",
+      "path": "/api/v1/midi/record-info",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "create-music-video",
+      "path": "/api/v1/mp4/generate",
+      "plumbing": false,
+      "primary_capability": "kie-video",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "GET",
+      "operation_id": "get-music-video-details",
+      "path": "/api/v1/mp4/record-info",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "gemini-omni-audio",
+      "path": "/api/v1/omni/audio/create",
+      "plumbing": false,
+      "primary_capability": "kie-audio",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "gemini-omni-character",
+      "path": "/api/v1/omni/character/create",
+      "plumbing": false,
+      "primary_capability": "kie-avatar",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "POST",
+      "operation_id": "gpt-codex-responses",
+      "path": "/api/v1/responses",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "extend-ai-video",
+      "path": "/api/v1/runway/extend",
+      "plumbing": false,
+      "primary_capability": "kie-video",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "generate-ai-video",
+      "path": "/api/v1/runway/generate",
+      "plumbing": false,
+      "primary_capability": "kie-video",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "GET",
+      "operation_id": "get-ai-video-details",
+      "path": "/api/v1/runway/record-detail",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "boost-music-style",
+      "path": "/api/v1/style/generate",
+      "plumbing": false,
+      "primary_capability": "kie-audio",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "generate-cover",
+      "path": "/api/v1/suno/cover/generate",
+      "plumbing": false,
+      "primary_capability": "kie-audio",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "GET",
+      "operation_id": "get-cover-details",
+      "path": "/api/v1/suno/cover/record-info",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "extend-veo3-1-video",
+      "path": "/api/v1/veo/extend",
+      "plumbing": false,
+      "primary_capability": "kie-video",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "generate-veo3-1-video",
+      "path": "/api/v1/veo/generate",
+      "plumbing": false,
+      "primary_capability": "kie-video",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "GET",
+      "operation_id": "get-veo3-1-1080p-video",
+      "path": "/api/v1/veo/get-1080p-video",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "get-veo3-1-4k-video",
+      "path": "/api/v1/veo/get-4k-video",
+      "plumbing": false,
+      "primary_capability": "kie-video",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "GET",
+      "operation_id": "get-veo3-1-video-details",
+      "path": "/api/v1/veo/record-info",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "separate-vocals",
+      "path": "/api/v1/vocal-removal/generate",
+      "plumbing": false,
+      "primary_capability": "kie-audio",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "GET",
+      "operation_id": "get-vocal-separation-details",
+      "path": "/api/v1/vocal-removal/record-info",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "POST",
+      "operation_id": "suno-voice-check-voice",
+      "path": "/api/v1/voice/check-voice",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "suno-voice-generate",
+      "path": "/api/v1/voice/generate",
+      "plumbing": false,
+      "primary_capability": "kie-audio",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "GET",
+      "operation_id": "suno-voice-record-info",
+      "path": "/api/v1/voice/record-info",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "suno-voice-regenerate",
+      "path": "/api/v1/voice/regenerate",
+      "plumbing": false,
+      "primary_capability": "kie-audio",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "POST",
+      "operation_id": "suno-voice-validate",
+      "path": "/api/v1/voice/validate",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "GET",
+      "operation_id": "suno-voice-validate-info",
+      "path": "/api/v1/voice/validate-info",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": true,
+      "method": "POST",
+      "operation_id": "convert-to-wav",
+      "path": "/api/v1/wav/generate",
+      "plumbing": false,
+      "primary_capability": "kie-audio",
+      "reason": "creates or transforms media",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "GET",
+      "operation_id": "get-wav-details",
+      "path": "/api/v1/wav/record-info",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "POST",
+      "operation_id": "claude-messages",
+      "path": "/claude/v1/messages",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 11
+    },
+    {
+      "creative": false,
+      "method": "POST",
+      "operation_id": "openai-responses",
+      "path": "/codex/v1/responses",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 5
+    },
+    {
+      "creative": false,
+      "method": "POST",
+      "operation_id": "gemini-2-5-flash-chat-completions",
+      "path": "/gemini-2.5-flash/v1/chat/completions",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "POST",
+      "operation_id": "gemini-2-5-pro-chat-completions",
+      "path": "/gemini-2.5-pro/v1/chat/completions",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "POST",
+      "operation_id": "gemini-3-5-flash-chat-completions",
+      "path": "/gemini-3-5-flash-openai/v1/chat/completions",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "POST",
+      "operation_id": "gemini-3-6-flash-chat-completions",
+      "path": "/gemini-3-6-flash-openai/v1/chat/completions",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 2
+    },
+    {
+      "creative": false,
+      "method": "POST",
+      "operation_id": "gemini-3-flash-chat-completions",
+      "path": "/gemini-3-flash/v1/chat/completions",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "POST",
+      "operation_id": "gemini-3-pro-chat-completions",
+      "path": "/gemini-3-pro/v1/chat/completions",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "POST",
+      "operation_id": "gemini-3-1-pro-chat-completions",
+      "path": "/gemini-3.1-pro/v1/chat/completions",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "POST",
+      "operation_id": "gemini_3-5_flash",
+      "path": "/gemini/v1/models/gemini-3-5-flash:streamGenerateContent",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "POST",
+      "operation_id": "gemini_3-6_flash",
+      "path": "/gemini/v1/models/gemini-3-6-flash:streamGenerateContent",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 2
+    },
+    {
+      "creative": false,
+      "method": "POST",
+      "operation_id": "gemini_3_flash_v1betamodels",
+      "path": "/gemini/v1/models/gemini-3-flash-v1betamodels:streamGenerateContent",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "POST",
+      "operation_id": "gpt-5-2-chat-completions",
+      "path": "/gpt-5-2/v1/chat/completions",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 1
+    },
+    {
+      "creative": false,
+      "method": "POST",
+      "operation_id": "grok-responses",
+      "path": "/grok/v1/responses",
+      "plumbing": true,
+      "primary_capability": "plumbing",
+      "reason": "account, upload, status, download, or general language-model plumbing",
+      "variant_count": 2
+    }
+  ],
+  "schema_version": 1
+}

@@ -11,6 +11,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"sync"
 	"testing"
@@ -52,8 +53,11 @@ func TestFirstRunRoutesToSafeSetupHint(t *testing.T) {
 	if err != nil {
 		t.Fatalf("root command error = %v, stderr = %s", err, stderr)
 	}
-	if !strings.Contains(stdout, "Get API key:") || !strings.Contains(stdout, cliutil.KieAPIKeyURL) {
+	if !strings.Contains(stdout, "support continued development") || !strings.Contains(stdout, cliutil.KieAPIKeyURL) {
 		t.Fatalf("first-run output did not route to auth setup: %q", stdout)
+	}
+	if !strings.Contains(stdout, cliutil.KieAffiliateDisclosure) {
+		t.Fatalf("first-run referral was not disclosed: %q", stdout)
 	}
 	if !strings.Contains(stdout, "interactive terminal") {
 		t.Fatalf("redirected first-run output must not prompt: %q", stdout)
@@ -74,6 +78,9 @@ func TestFirstRunMachineModesDoNotPrompt(t *testing.T) {
 	if result["setup_required"] != true || result["next_step"] != "kie-pp-cli auth setup" {
 		t.Fatalf("unexpected first-run JSON: %#v", result)
 	}
+	if result["get_api_key"] != cliutil.KieAPIKeyURL || result["get_api_key_link_type"] != "affiliate" || result["affiliate_disclosure"] != cliutil.KieAffiliateDisclosure {
+		t.Fatalf("first-run JSON referral metadata = %#v", result)
+	}
 
 	stdout, stderr, err = executeRoot(t, "--no-input")
 	if err != nil {
@@ -81,6 +88,27 @@ func TestFirstRunMachineModesDoNotPrompt(t *testing.T) {
 	}
 	if !strings.Contains(stdout, "interactive terminal") || strings.Contains(stdout, "input hidden") {
 		t.Fatalf("--no-input must not start the wizard: %q", stdout)
+	}
+}
+
+func TestDoctorHumanOutputDisclosesAffiliateLinkImmediately(t *testing.T) {
+	isolateAuthSetup(t)
+	configPath := filepath.Join(t.TempDir(), "config.toml")
+	if err := os.WriteFile(configPath, []byte("base_url = \"\"\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	stdout, stderr, err := executeRoot(t, "--config", configPath, "doctor")
+	if err != nil {
+		t.Fatalf("doctor error = %v, stderr = %s", err, stderr)
+	}
+	urlIndex := strings.Index(stdout, "Get a key at: "+cliutil.KieAPIKeyURL)
+	disclosureIndex := strings.Index(stdout, cliutil.KieAffiliateDisclosure)
+	if urlIndex < 0 || disclosureIndex < 0 || disclosureIndex <= urlIndex {
+		t.Fatalf("doctor must disclose the affiliate relationship immediately after its referral URL: %q", stdout)
+	}
+	if strings.Count(stdout[urlIndex:disclosureIndex], "\n") != 1 {
+		t.Fatalf("doctor disclosure was not immediately after its referral URL: %q", stdout)
 	}
 }
 
@@ -99,8 +127,31 @@ func TestFirstRunAgentModeAndExplicitSetupDoNotPrompt(t *testing.T) {
 	if err != nil {
 		t.Fatalf("explicit non-interactive setup error = %v, stderr = %s", err, stderr)
 	}
-	if !strings.Contains(stdout, "Get API key:") || strings.Contains(stdout, "input hidden") {
+	if !strings.Contains(stdout, "support continued development") || !strings.Contains(stdout, cliutil.KieAffiliateDisclosure) || strings.Contains(stdout, "input hidden") {
 		t.Fatalf("explicit non-interactive setup must return directions, not prompt: %q", stdout)
+	}
+}
+
+func TestMediaSetupReturnsDisclosedAffiliateOnboarding(t *testing.T) {
+	isolateAuthSetup(t)
+
+	stdout, stderr, err := executeRoot(t, "media", "setup", "--agent")
+	if err != nil {
+		t.Fatalf("media setup error = %v, stderr = %s", err, stderr)
+	}
+	var result map[string]any
+	if err := json.Unmarshal([]byte(stdout), &result); err != nil {
+		t.Fatalf("media setup output is invalid: %v; output=%q", err, stdout)
+	}
+	setup, ok := result["results"].(map[string]any)
+	if !ok {
+		t.Fatalf("media setup agent envelope = %#v", result)
+	}
+	if setup["auth_configured"] != false || setup["get_api_key"] != cliutil.KieAPIKeyURL {
+		t.Fatalf("media setup referral metadata = %#v", setup)
+	}
+	if setup["get_api_key_link_type"] != "affiliate" || setup["affiliate_disclosure"] != cliutil.KieAffiliateDisclosure {
+		t.Fatalf("media setup referral was not explicitly disclosed: %#v", setup)
 	}
 }
 
@@ -154,6 +205,9 @@ func TestGuidedAuthSetupSavesWithoutWritingKeyToOutput(t *testing.T) {
 	}
 	if strings.Contains(stdout.String(), fakeKey) || strings.Contains(stderr.String(), fakeKey) {
 		t.Fatal("guided setup wrote the API key to command output")
+	}
+	if !strings.Contains(stdout.String(), cliutil.KieAPIKeyURL) || !strings.Contains(stdout.String(), cliutil.KieAffiliateDisclosure) {
+		t.Fatalf("guided setup omitted disclosed referral: %q", stdout.String())
 	}
 	cfg, err := config.Load("")
 	if err != nil {

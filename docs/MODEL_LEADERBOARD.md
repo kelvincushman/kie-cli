@@ -62,4 +62,6 @@ Sources: [Artificial Analysis Text-to-Video Arena](https://artificialanalysis.ai
 - New still: `gpt-image-2-text-to-image` because its current direct text-to-image evidence is strongest among the compared Kie routes.
 - Reference/identity still: `gpt-image-2-image-to-image`; use `nano-banana-pro` or `nano-banana-2` when controlled editing, batching, or a user preference makes them a better fit.
 - Final video: `bytedance/seedance-2-5` for its Kie multimodal contract. The current independent score shown for Seedance 2.0 is family context only, not a Seedance 2.5 score.
-- Every video shot: approved still first, then motion generation, then continuity review.
+- Every video shot: approved still first, optional complete-shot proof at the
+  selected model's lowest faithful tier, then a separately confirmed final and
+  continuity review. Rankings do not authorize spend.

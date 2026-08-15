@@ -3,6 +3,12 @@
 Complete field reference for **129 models**, generated from [Kie.ai's official documentation index](https://docs.kie.ai/llms.txt).
 The embedded machine-readable source is `internal/kiecatalog/catalog.json`; use `kie-pp-cli models show` or the MCP `media_model_get` tool to avoid loading this whole document into an agent context.
 
+Route compactly before loading a schema with `kie-pp-cli media capability list`
+and `media capability show <model-id>`, or MCP `media_capability_list/get`. The
+capability record includes the primary Kie skill route, production fit, and any
+documented lowest faithful proof tier. This document remains the authoritative
+per-field/settings reference; skills do not duplicate it.
+
 Top-level task settings are `model`, `input`, and the optional `callBackUrl`. Tables below describe each model's `input` object.
 
 ## `bytedance/seedance-1.5-pro`

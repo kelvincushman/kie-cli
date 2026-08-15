@@ -4,12 +4,33 @@ This reproducible snapshot contains **129 unique Market model contracts** discov
 Every model shares the create/query task API, but its full input schema and settings are preserved separately.
 
 - List models: `kie-pp-cli models list`
+- List token-light routes: `kie-pp-cli media capability list --capability kie-video --agent`
+- Inspect route/proof metadata: `kie-pp-cli media capability show <model-id> --agent`
 - Inspect exact settings: `kie-pp-cli models show <model-id>`
 - Create a starter payload: `kie-pp-cli models example <model-id>`
 - Validate before spending credits: `kie-pp-cli models validate <model-id> --input '{...}'`
 - Read all field tables: [MODEL_INPUTS.md](MODEL_INPUTS.md)
 
 Generation: `kie-pp-cli kie-ai-jobs market-create-task --model <model-id> --input '{...}'`
+
+## Capability classifier
+
+Every one of the 129 models is classified locally as `kie-image`, `kie-video`,
+`kie-audio`, `kie-avatar`, or `kie-identity`, with secondary capabilities,
+production-fit tags, routing notes, and proof-resolution metadata where
+documented. The focused MCP exposes the same compact data through
+`media_capability_list` and `media_capability_get`.
+
+The embedded classifier is generated from `internal/kiecatalog/catalog.json`
+and `research/kie-api-coverage.json`. Source hashes, model count, and all 70
+documented operations/219 variants are validated so a refreshed catalog cannot
+silently leave an unclassified model. Load the chosen model's full schema only
+after capability routing.
+
+The classifier is a technical route map, not a quality leaderboard. Use
+[MODEL_LEADERBOARD.md](MODEL_LEADERBOARD.md) for dated external evidence and
+[PROOF_AND_PAID_CONFIRMATION.md](PROOF_AND_PAID_CONFIRMATION.md) for the
+lowest-faithful-proof contract.
 
 ## Bytedance
 

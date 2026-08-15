@@ -5,6 +5,9 @@ description: Build or extend a reusable brand identity with staged approvals, lo
 
 # Kie Brand Kit
 
+Start with `$kie-grilling`, then keep this skill responsible for the brand-system
+stages. Route each still through `$kie-image` and any motion through `$kie-video`.
+
 Keep the brand source of truth local. Use Kie for concepts, imagery, mockups, removal, and upscale; use deterministic local tooling for exact SVG logos, typography, copy, measurements, PDF, and presentation output.
 
 Prefer `kie-pp-cli media workflow show brandkit --agent` and `kie-pp-cli create --workflow brandkit ... --agent` for compact, resumable execution. MCP hosts call `media_workflow_get` and pass `workflow: "brandkit"` to `media_brief_start`.
@@ -55,4 +58,8 @@ Prefer GPT Image 2 for broad concepts, Seedream 5 Pro image-to-image for referen
 - Export monochrome, reversed, small-size, and clear-space logo variants.
 - Distinguish generated mockups from production-ready artwork.
 
-Review each Kie plan before `--submit`. Deliver the locked source file, asset manifest, editable vector/logo files, color/type tokens, application templates, and brand book. State which items are approved, generated, deterministic, stale, or awaiting review.
+Review each Kie plan before `--submit`. Obtain a fresh paid confirmation for
+every concept, edit, removal, upscale, or motion call. Deliver the locked source
+file, asset manifest, editable vector/logo files, color/type tokens, application
+templates, and brand book. State which items are approved, generated,
+deterministic, stale, or awaiting review.

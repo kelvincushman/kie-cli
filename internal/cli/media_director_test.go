@@ -126,9 +126,112 @@ func TestMediaCreateVideoReturnsPreviewGateAndDryRunPlan(t *testing.T) {
 	}
 }
 
+func TestGrillMeInfersCompletePromptAndKeepsOneMaterialQuestion(t *testing.T) {
+	home := filepath.Join(t.TempDir(), "kie-home")
+	complete := executeMediaCommand(t, home,
+		"--agent", "grill-me", "Create a 5 second vertical silent text-to-video TikTok video ad in a cinematic documentary style",
+	)
+	var ready struct {
+		Results struct {
+			Ready        bool `json:"ready"`
+			NextQuestion any  `json:"next_question"`
+			Brief        struct {
+				Plan struct {
+					ProductionSkill string `json:"production_skill"`
+					CapabilitySkill string `json:"capability_skill"`
+					CostStatus      string `json:"cost_status"`
+				} `json:"plan"`
+			} `json:"brief"`
+		} `json:"results"`
+	}
+	if err := json.Unmarshal(complete, &ready); err != nil {
+		t.Fatal(err)
+	}
+	if !ready.Results.Ready || ready.Results.NextQuestion != nil || ready.Results.Brief.Plan.ProductionSkill != "kie-video" || ready.Results.Brief.Plan.CapabilitySkill != "kie-video" || ready.Results.Brief.Plan.CostStatus == "" {
+		t.Fatalf("complete grill output = %s", complete)
+	}
+
+	incomplete := executeMediaCommand(t, home, "--agent", "grill-me", "A new product launch visual")
+	var question struct {
+		Results struct {
+			NextQuestion struct {
+				Key                  string `json:"key"`
+				Recommendation       string `json:"recommendation"`
+				RecommendationReason string `json:"recommendation_reason"`
+			} `json:"next_question"`
+			Brief struct {
+				ID string `json:"id"`
+			} `json:"brief"`
+		} `json:"results"`
+	}
+	if err := json.Unmarshal(incomplete, &question); err != nil {
+		t.Fatal(err)
+	}
+	if question.Results.NextQuestion.Key == "" || question.Results.NextQuestion.Recommendation == "" || question.Results.NextQuestion.RecommendationReason == "" {
+		t.Fatalf("incomplete grill output = %s", incomplete)
+	}
+	wrapped := executeMediaCommand(t, home, "--agent", "create", "--brief", question.Results.Brief.ID, "--wrap-up")
+	var wrappedTurn struct {
+		Results struct {
+			Ready bool `json:"ready"`
+		} `json:"results"`
+	}
+	if err := json.Unmarshal(wrapped, &wrappedTurn); err != nil || !wrappedTurn.Results.Ready {
+		t.Fatalf("wrapped grill output = %s err=%v", wrapped, err)
+	}
+}
+
+func TestAgentPaidActionRequiresConfirmBeforeClientCreation(t *testing.T) {
+	home := filepath.Join(t.TempDir(), "kie-home")
+	created := executeMediaCommand(t, home,
+		"--agent", "create", "A website hero image", "--type", "image", "--purpose", "hero",
+		"--platform", "website", "--aspect-ratio", "16:9", "--style", "clean", "--reference", "https://example.test/product.png",
+	)
+	var envelope struct {
+		Results struct {
+			Brief struct {
+				ID string `json:"id"`
+			} `json:"brief"`
+		} `json:"results"`
+	}
+	if err := json.Unmarshal(created, &envelope); err != nil {
+		t.Fatal(err)
+	}
+	var flags rootFlags
+	cmd := newRootCmd(&flags)
+	cmd.SetArgs([]string{"--home", home, "--agent", "create", "--brief", envelope.Results.Brief.ID, "--submit"})
+	cmd.SetOut(&bytes.Buffer{})
+	cmd.SetErr(&bytes.Buffer{})
+	_, err := cmd.ExecuteC()
+	if err == nil || !strings.Contains(err.Error(), "--confirm-paid") {
+		t.Fatalf("unconfirmed paid action error = %v", err)
+	}
+}
+
 func TestMediaGenerationTerminalIncludesKieFail(t *testing.T) {
 	if !mediaGenerationTerminal("fail") {
 		t.Fatal("Kie fail status must stop polling")
+	}
+}
+
+func TestMediaCapabilityShowIsCompactAndLocal(t *testing.T) {
+	output := executeMediaCommand(t, filepath.Join(t.TempDir(), "kie-home"),
+		"--agent", "media", "capability", "show", "bytedance/seedance-2-5",
+	)
+	var envelope struct {
+		Results struct {
+			ModelID           string `json:"model_id"`
+			PrimaryCapability string `json:"primary_capability"`
+			Proof             struct {
+				LowestFaithfulTier string `json:"lowest_faithful_tier"`
+			} `json:"proof"`
+		} `json:"results"`
+	}
+	if err := json.Unmarshal(output, &envelope); err != nil {
+		t.Fatalf("capability output is not JSON: %v\n%s", err, output)
+	}
+	if envelope.Results.ModelID != "bytedance/seedance-2-5" || envelope.Results.PrimaryCapability != "kie-video" || envelope.Results.Proof.LowestFaithfulTier != "480p" {
+		t.Fatalf("capability output = %s", output)
 	}
 }
 

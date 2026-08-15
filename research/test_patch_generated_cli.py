@@ -53,24 +53,74 @@ fmt.Println(statusCode)
         source = '''
 report["auth_hint"] = "Set it with: kie-pp-cli auth set-token <token> or export KIE_BEARER_AUTH=\\"your-token-here\\""
 report["auth_key_url"] = "https://kie.ai/api-key"
+if keyURL, ok := report["auth_key_url"]; ok {
+\tfmt.Fprintf(w, "  Get a key at: %v\\n", keyURL)
+}
 warning = "; run auth set-token or auth logout to consolidate and remove legacy secrets"
 warning = "; run auth set-token or auth logout to consolidate"
 '''
         patched = patch_first_run_doctor(source)
         self.assertIn("kie-pp-cli auth setup in an interactive terminal", patched)
         self.assertIn("cliutil.KieAPIKeyURL", patched)
+        self.assertIn('report["auth_key_url_type"] = "affiliate"', patched)
+        self.assertIn('report["auth_affiliate_disclosure"] = cliutil.KieAffiliateDisclosure', patched)
+        url_renderer = 'fmt.Fprintf(w, "  Get a key at: %v\\n", keyURL)'
+        disclosure_renderer = 'if disclosure, ok := report["auth_affiliate_disclosure"]; ok {'
+        self.assertEqual(patched.count(disclosure_renderer), 1)
+        self.assertLess(patched.index(url_renderer), patched.index(disclosure_renderer))
         self.assertNotIn("auth set-token", patched)
+
+    def test_doctor_repairs_each_partial_affiliate_field_independently(self):
+        source = '''
+report["auth_hint"] = "Run kie-pp-cli auth setup in an interactive terminal"
+report["auth_key_url"] = cliutil.KieAPIKeyURL
+report["auth_affiliate_disclosure"] = cliutil.KieAffiliateDisclosure
+if keyURL, ok := report["auth_key_url"]; ok {
+\tfmt.Fprintf(w, "  Get a key at: %v\\n", keyURL)
+}
+warning = "; run auth setup or auth logout to consolidate"
+'''
+        patched = patch_first_run_doctor(source)
+        self.assertIn('report["auth_key_url_type"] = "affiliate"', patched)
+        self.assertEqual(patched.count('report["auth_affiliate_disclosure"] = cliutil.KieAffiliateDisclosure'), 1)
+        self.assertIn('if disclosure, ok := report["auth_affiliate_disclosure"]; ok {', patched)
 
     def test_mcp_restores_guided_auth_setup(self):
         source = '''
 hint := "\\n      Set it with: kie-pp-cli auth set-token <token> or export KIE_BEARER_AUTH=\\\"your-token-here\\\"" +
-    "\\n      Get a key at: https://kie.ai/api-key"
-context := map[string]any{"key_url": "https://kie.ai/api-key"}
+    "\\n      Get a key at: https://kie.ai/api-key" +
+    "\\n      Run doctor"
+context := map[string]any{
+    "key_url": "https://kie.ai/api-key",
+}
 '''
         patched = patch_first_run_mcp(source)
         self.assertIn("kie-pp-cli auth setup", patched)
         self.assertIn("cliutil.KieAPIKeyURL", patched)
+        self.assertIn('"key_url_type": "affiliate"', patched)
+        self.assertIn('"affiliate_disclosure": cliutil.KieAffiliateDisclosure,', patched)
+        self.assertIn('"\\n      " + cliutil.KieAffiliateDisclosure +', patched)
         self.assertNotIn("auth set-token", patched)
+
+    def test_mcp_repairs_partial_error_and_metadata_disclosures(self):
+        source = '''
+hintA := "\\n      Run 'kie-pp-cli auth setup'" +
+    "\\n      Get a key at: " + cliutil.KieAPIKeyURL +
+    "\\n      " + cliutil.KieAffiliateDisclosure +
+    "\\n      Run doctor"
+hintB := "\\n      Run 'kie-pp-cli auth setup'" +
+    "\\n      Get a key at: " + cliutil.KieAPIKeyURL +
+    "\\n      Run doctor"
+context := map[string]any{
+    "key_url": cliutil.KieAPIKeyURL,
+    "affiliate_disclosure": cliutil.KieAffiliateDisclosure,
+}
+'''
+        patched = patch_first_run_mcp(source)
+        self.assertEqual(patched.count('"\\n      Get a key at: " + cliutil.KieAPIKeyURL +'), 2)
+        self.assertEqual(patched.count('"\\n      " + cliutil.KieAffiliateDisclosure +'), 2)
+        self.assertIn('"key_url_type": "affiliate",', patched)
+        self.assertEqual(patched.count('"affiliate_disclosure": cliutil.KieAffiliateDisclosure,'), 1)
 
 
 if __name__ == "__main__":

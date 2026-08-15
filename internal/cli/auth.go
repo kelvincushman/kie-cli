@@ -54,7 +54,8 @@ func runAuthSetup(cmd *cobra.Command, flags *rootFlags, launch bool, readKey fun
 
 	w := cmd.OutOrStdout()
 	fmt.Fprintln(w, "Kie API key setup")
-	fmt.Fprintf(w, "Get API key: %s\n", cliutil.KieAPIKeyURL)
+	fmt.Fprintf(w, "Get Kie.ai API access and support continued development: %s\n", cliutil.KieAPIKeyURL)
+	fmt.Fprintln(w, cliutil.KieAffiliateDisclosure)
 	fmt.Fprintln(w, "Your key is entered hidden and is never placed in shell history.")
 	if launch {
 		if err := openSetupURL(cliutil.KieAPIKeyURL); err != nil {
@@ -96,9 +97,11 @@ func canGuideAuthSetup(cmd *cobra.Command, flags *rootFlags) bool {
 func printAuthSetupHint(cmd *cobra.Command, flags *rootFlags) error {
 	if flags.asJSON || flags.agent {
 		return printJSONFiltered(cmd.OutOrStdout(), map[string]any{
-			"setup_required": true,
-			"next_step":      "kie-pp-cli auth setup",
-			"get_api_key":    cliutil.KieAPIKeyURL,
+			"setup_required":        true,
+			"next_step":             "kie-pp-cli auth setup",
+			"get_api_key":           cliutil.KieAPIKeyURL,
+			"get_api_key_link_type": "affiliate",
+			"affiliate_disclosure":  cliutil.KieAffiliateDisclosure,
 		}, flags)
 	}
 	if flags.csv {
@@ -109,7 +112,8 @@ func printAuthSetupHint(cmd *cobra.Command, flags *rootFlags) error {
 		_, err := fmt.Fprintln(cmd.OutOrStdout(), "kie-pp-cli auth setup")
 		return err
 	}
-	fmt.Fprintln(cmd.OutOrStdout(), "Get API key:", cliutil.KieAPIKeyURL)
+	fmt.Fprintln(cmd.OutOrStdout(), "Get Kie.ai API access and support continued development:", cliutil.KieAPIKeyURL)
+	fmt.Fprintln(cmd.OutOrStdout(), cliutil.KieAffiliateDisclosure)
 	fmt.Fprintln(cmd.OutOrStdout(), "Run 'kie-pp-cli auth setup' in an interactive terminal to enter and save your key securely.")
 	return nil
 }
