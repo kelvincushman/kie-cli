@@ -56,10 +56,16 @@ func ResolveProofOption(modelID string) ProofOption {
 	if field != "" {
 		option.ResolutionField = field
 		option.ResolutionValue = value
-		option.LowestTier = option.ResolutionValue
+		option.LowestTier = strings.TrimSpace(capability.Proof.LowestFaithfulTier)
+		if option.LowestTier == "" {
+			option.LowestTier = option.ResolutionValue
+		}
 		option.SourceSchemaFields = fields
 		option.Supported = true
-		if proofPixels(option.ResolutionValue) >= 720 {
+		if capability.Proof.AlternateAllowed {
+			option.AlternateLabel = "Alternative-model proof (guidance only): explicitly choose another catalog video model and repeat the still gate; its output may differ from the selected final model."
+		}
+		if proofPixels(option.LowestTier) >= 720 {
 			option.Disclosure += " No cheaper faithful same-model tier is documented; this proof uses the model's lowest supported tier."
 		}
 		return option

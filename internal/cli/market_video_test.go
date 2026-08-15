@@ -75,6 +75,16 @@ func TestMediaModelsFiltersWithoutLoadingASecondCatalog(t *testing.T) {
 	}
 }
 
+func TestMediaVideoHelpLabelsAdvancedGateBypassAndFreshConfirmation(t *testing.T) {
+	home := filepath.Join(t.TempDir(), "kie-home")
+	output := strings.ToLower(string(executeMediaCommand(t, home, "media", "video", "--help")))
+	for _, phrase := range []string{"advanced direct generation", "bypasses", "still/proof approval", "scoped paid-confirmation", "fresh explicit user confirmation", "--dry-run"} {
+		if !strings.Contains(output, phrase) {
+			t.Fatalf("video help does not contain %q:\n%s", phrase, output)
+		}
+	}
+}
+
 func TestMediaVideoBuildsExactWan27RequestInDryRun(t *testing.T) {
 	home := filepath.Join(t.TempDir(), "kie-home")
 	output := executeMediaCommand(t, home,

@@ -3,8 +3,11 @@
 package mediamcp
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"io"
+	"net/http"
 	"net/http/httptest"
 	"path/filepath"
 	"sort"
@@ -15,6 +18,69 @@ import (
 	"kie-pp-cli/internal/config"
 	"kie-pp-cli/internal/media"
 )
+
+func TestHTTPStatelessRequestsNeedNoSessionIDAcrossProtocolEras(t *testing.T) {
+	store := media.NewStore(filepath.Join(t.TempDir(), "media"))
+	server := NewServer("test", &Dependencies{
+		Store:      func() (*media.Store, error) { return store, nil },
+		LoadConfig: func() (*config.Config, error) { return &config.Config{}, nil },
+	})
+	httpServer := httptest.NewServer(NewHTTPHandler(server))
+	defer httpServer.Close()
+
+	tests := []struct {
+		name, version string
+		params        map[string]any
+	}{
+		{
+			name: "latest stateless", version: "2026-07-28",
+			params: map[string]any{"_meta": map[string]any{
+				mcp.MetaKeyProtocolVersion:    "2026-07-28",
+				mcp.MetaKeyClientInfo:         map[string]any{"name": "contract-client", "version": "test"},
+				mcp.MetaKeyClientCapabilities: map[string]any{},
+			}},
+		},
+		{name: "legacy client", version: "2025-11-25", params: map[string]any{}},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			payload, err := json.Marshal(map[string]any{
+				"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": test.params,
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			request, err := http.NewRequest(http.MethodPost, httpServer.URL, bytes.NewReader(payload))
+			if err != nil {
+				t.Fatal(err)
+			}
+			request.Header.Set("Content-Type", "application/json")
+			request.Header.Set("Accept", "application/json, text/event-stream")
+			request.Header.Set("MCP-Protocol-Version", test.version)
+			if test.version == "2026-07-28" {
+				request.Header.Set("Mcp-Method", "tools/list")
+			}
+			response, err := http.DefaultClient.Do(request)
+			if err != nil {
+				t.Fatal(err)
+			}
+			body, readErr := io.ReadAll(response.Body)
+			response.Body.Close()
+			if readErr != nil {
+				t.Fatal(readErr)
+			}
+			if response.StatusCode != http.StatusOK {
+				t.Fatalf("status = %d, body = %s", response.StatusCode, body)
+			}
+			if sessionID := response.Header.Get("Mcp-Session-Id"); sessionID != "" {
+				t.Fatalf("stateless response emitted Mcp-Session-Id %q", sessionID)
+			}
+			if !bytes.Contains(body, []byte(`"media_grill_start"`)) {
+				t.Fatalf("tools/list response does not contain focused media tools: %s", body)
+			}
+		})
+	}
+}
 
 func TestHTTPNegotiatesLatestStatelessProtocolAndListsMediaTools(t *testing.T) {
 	store := media.NewStore(filepath.Join(t.TempDir(), "media"))

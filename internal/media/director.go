@@ -781,35 +781,36 @@ func creativeBriefFingerprint(b *Brief) string {
 		return ""
 	}
 	creativeState := struct {
-		Workflow        string   `json:"workflow"`
-		Lesson          string   `json:"lesson"`
-		Request         string   `json:"request"`
-		MediaType       string   `json:"media_type"`
-		Purpose         string   `json:"purpose"`
-		Platform        string   `json:"platform"`
-		AspectRatio     string   `json:"aspect_ratio"`
-		DurationSeconds int      `json:"duration_seconds"`
-		Resolution      string   `json:"resolution"`
-		AudioMode       string   `json:"audio_mode"`
-		VideoMode       string   `json:"video_mode"`
-		OutputFormat    string   `json:"output_format"`
-		ReturnLastFrame bool     `json:"return_last_frame"`
-		WebSearch       bool     `json:"web_search"`
-		Style           string   `json:"style"`
-		References      []string `json:"references"`
-		ReferenceVideos []string `json:"reference_videos"`
-		ReferenceAudio  []string `json:"reference_audio"`
-		FirstFrame      string   `json:"first_frame"`
-		LastFrame       string   `json:"last_frame"`
-		IdentityIDs     []string `json:"identity_ids"`
-		Model           string   `json:"model"`
-		PreviewModel    string   `json:"preview_model"`
-		ProductionMode  string   `json:"production_mode"`
+		Workflow           string   `json:"workflow"`
+		Lesson             string   `json:"lesson"`
+		Request            string   `json:"request"`
+		MediaType          string   `json:"media_type"`
+		Purpose            string   `json:"purpose"`
+		Platform           string   `json:"platform"`
+		AspectRatio        string   `json:"aspect_ratio"`
+		DurationSeconds    int      `json:"duration_seconds"`
+		Resolution         string   `json:"resolution"`
+		AudioMode          string   `json:"audio_mode"`
+		VideoMode          string   `json:"video_mode"`
+		OutputFormat       string   `json:"output_format"`
+		ReturnLastFrame    bool     `json:"return_last_frame"`
+		WebSearch          bool     `json:"web_search"`
+		Style              string   `json:"style"`
+		References         []string `json:"references"`
+		ReferenceVideos    []string `json:"reference_videos"`
+		ReferenceAudio     []string `json:"reference_audio"`
+		FirstFrame         string   `json:"first_frame"`
+		LastFrame          string   `json:"last_frame"`
+		IdentityIDs        []string `json:"identity_ids"`
+		RightsAcknowledged bool     `json:"rights_acknowledged,omitempty"`
+		Model              string   `json:"model"`
+		PreviewModel       string   `json:"preview_model"`
+		ProductionMode     string   `json:"production_mode"`
 	}{
 		b.Workflow, b.Lesson, b.Request, b.MediaType, b.Purpose, b.Platform, b.AspectRatio,
 		b.DurationSeconds, b.Resolution, b.AudioMode, b.VideoMode, b.OutputFormat,
 		b.ReturnLastFrame, b.WebSearch, b.Style, cleanStrings(b.References), cleanStrings(b.ReferenceVideos),
-		cleanStrings(b.ReferenceAudio), b.FirstFrame, b.LastFrame, cleanStrings(b.IdentityIDs), b.Model, b.PreviewModel, b.ProductionMode,
+		cleanStrings(b.ReferenceAudio), b.FirstFrame, b.LastFrame, cleanStrings(b.IdentityIDs), b.RightsAcknowledged, b.Model, b.PreviewModel, b.ProductionMode,
 	}
 	data, err := json.Marshal(creativeState)
 	if err != nil {

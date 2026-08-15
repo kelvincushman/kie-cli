@@ -28,6 +28,7 @@
     "go.sum",
     "internal/cli/media_director.go",
     "internal/cli/media_director_test.go",
+    "internal/cli/media_parity_external_test.go",
     "internal/kiecatalog/capabilities.go",
     "internal/kiecatalog/capabilities.json",
     "internal/kiecatalog/capabilities_test.go",

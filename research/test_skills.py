@@ -70,6 +70,27 @@ class SkillSuiteTests(unittest.TestCase):
         for decision in ("--approve-proof", "--reject-proof", "--skip-proof"):
             self.assertIn(decision, text)
 
+    def test_capability_skills_use_runtime_schema_introspection(self):
+        for name in ("kie-image", "kie-video", "kie-audio", "kie-avatar"):
+            text = (SKILLS / name / "SKILL.md").read_text()
+            with self.subTest(skill=name):
+                self.assertIn("media capability", text)
+                self.assertIn("models show", text)
+        self.assertIn("$kie-video", (SKILLS / "kie-film" / "SKILL.md").read_text())
+
+    def test_skills_do_not_copy_generated_model_schemas(self):
+        for skill_file in sorted(SKILLS.glob("*/SKILL.md")):
+            text = skill_file.read_text()
+            with self.subTest(skill=skill_file.parent.name):
+                self.assertNotIn("input_schema", text)
+                self.assertNotRegex(text, r'(?m)^\s*"(?:properties|required)"\s*:')
+
+    def test_kie_generate_is_only_the_advanced_manual_escape_hatch(self):
+        text = (SKILLS / "kie-generate" / "SKILL.md").read_text().lower()
+        self.assertIn("advanced/manual", text)
+        for preferred in ("$kie-image", "$kie-video", "$kie-audio", "$kie-avatar", "$kie-film"):
+            self.assertIn(preferred, text)
+
 
 if __name__ == "__main__":
     unittest.main()
