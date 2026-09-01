@@ -5,6 +5,10 @@ description: Concept, generate, edit, and validate truthful YouTube thumbnail va
 
 # Kie YouTube Thumbnail
 
+Start with `$kie-grilling`, then route each selected visual concept through
+`$kie-image`. Keep final title text and exact layout deterministic outside the
+image generator.
+
 Read [references/thumbnail-frameworks.md](references/thumbnail-frameworks.md) before choosing a concept.
 
 Prefer `kie-pp-cli media workflow show youtube-thumbnail --agent` and one `kie-pp-cli create --workflow youtube-thumbnail ... --agent` per variant. MCP hosts use the same workflow name through `media_workflow_get` and `media_brief_start`.
@@ -41,6 +45,10 @@ Use Seedream 5 Pro image-to-image for reference-heavy concepts. Use a fresh edit
 Add exact headline and logo locally with a licensed font and deterministic canvas/image tool when requested. Keep a clean image-only version. Never rely on model-rendered small text as the final deliverable.
 
 ## Inspect at delivery size
+
+Obtain a fresh paid confirmation for every generated variant, revision, edit,
+or upscale. Creative approval of a concept does not authorize the next paid
+call.
 
 Review each thumbnail at full size and around 120 pixels wide. Reject variants with weak silhouette, unreadable expression/object, false promise, clutter, accidental text, identity drift, distorted products, unsafe crop, or insufficient contrast.
 

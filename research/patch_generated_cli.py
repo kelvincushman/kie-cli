@@ -89,9 +89,44 @@ def patch_first_run_doctor(text: str) -> str:
     }
     for old, new in replacements.items():
         text = text.replace(old, new)
+    if 'report["auth_key_url_type"] = "affiliate"' not in text:
+        text, type_replacements = re.subn(
+            r'(?m)^(?P<indent>\s*)report\["auth_key_url"\] = cliutil\.KieAPIKeyURL$',
+            r'\g<0>\n\g<indent>report["auth_key_url_type"] = "affiliate"',
+            text,
+            count=1,
+        )
+        if type_replacements != 1:
+            raise PatchError("internal/cli/doctor.go: could not add affiliate link type")
+    if 'report["auth_affiliate_disclosure"] = cliutil.KieAffiliateDisclosure' not in text:
+        text, disclosure_replacements = re.subn(
+            r'(?m)^(?P<indent>\s*)report\["auth_key_url_type"\] = "affiliate"$',
+            r'\g<0>\n\g<indent>report["auth_affiliate_disclosure"] = cliutil.KieAffiliateDisclosure',
+            text,
+            count=1,
+        )
+        if disclosure_replacements != 1:
+            raise PatchError("internal/cli/doctor.go: could not add affiliate disclosure metadata")
+    disclosure_renderer = 'if disclosure, ok := report["auth_affiliate_disclosure"]; ok {'
+    if disclosure_renderer not in text:
+        text, renderer_replacements = re.subn(
+            r'(?m)^(?P<indent>\s*)if keyURL, ok := report\["auth_key_url"\]; ok \{\n'
+            r'(?P=indent)\tfmt\.Fprintf\(w, "  Get a key at: %v\\n", keyURL\)\n'
+            r'(?P=indent)\}$',
+            r'\g<0>\n\g<indent>if disclosure, ok := report["auth_affiliate_disclosure"]; ok {'
+            r'\n\g<indent>\tfmt.Fprintf(w, "  %v\n", disclosure)'
+            r'\n\g<indent>}',
+            text,
+            count=1,
+        )
+        if renderer_replacements != 1:
+            raise PatchError("internal/cli/doctor.go: could not add affiliate disclosure renderer")
     required = (
         "Run kie-pp-cli auth setup in an interactive terminal",
-        "cliutil.KieAPIKeyURL",
+        'report["auth_key_url"] = cliutil.KieAPIKeyURL',
+        'report["auth_key_url_type"] = "affiliate"',
+        'report["auth_affiliate_disclosure"] = cliutil.KieAffiliateDisclosure',
+        disclosure_renderer,
         "run auth setup or auth logout to consolidate",
     )
     missing = [marker for marker in required if marker not in text]
@@ -107,10 +142,58 @@ def patch_first_run_mcp(text: str) -> str:
     )
     text = text.replace('"\\n      Get a key at: https://kie.ai/api-key"', '"\\n      Get a key at: " + cliutil.KieAPIKeyURL')
     text = text.replace('"key_url": "https://kie.ai/api-key"', '"key_url": cliutil.KieAPIKeyURL')
+    error_url = re.compile(r'^(?P<indent>\s*)"\\n      Get a key at: " \+ cliutil\.KieAPIKeyURL \+$')
+    lines = text.splitlines()
+    patched_lines = []
+    error_links = 0
+    for index, line in enumerate(lines):
+        patched_lines.append(line)
+        match = error_url.fullmatch(line)
+        if not match:
+            continue
+        error_links += 1
+        expected = match.group("indent") + '"\\n      " + cliutil.KieAffiliateDisclosure +'
+        if index + 1 >= len(lines) or lines[index + 1] != expected:
+            patched_lines.append(expected)
+    if error_links == 0:
+        raise PatchError("internal/mcp/tools.go: could not locate affiliate error links")
+    text = "\n".join(patched_lines) + ("\n" if text.endswith("\n") else "")
+    key_url_type = re.compile(r'(?m)^\s*"key_url_type"\s*:\s*"affiliate",$')
+    if not key_url_type.search(text):
+        text, type_replacements = re.subn(
+            r'(?m)^(?P<indent>\s*)"key_url"\s*:\s*cliutil\.KieAPIKeyURL,$',
+            r'\g<0>\n\g<indent>"key_url_type": "affiliate",',
+            text,
+            count=1,
+        )
+        if type_replacements != 1:
+            raise PatchError("internal/mcp/tools.go: could not add affiliate link type")
+    affiliate_disclosure = re.compile(
+        r'(?m)^\s*"affiliate_disclosure"\s*:\s*cliutil\.KieAffiliateDisclosure,$'
+    )
+    if not affiliate_disclosure.search(text):
+        text, disclosure_replacements = re.subn(
+            r'(?m)^(?P<indent>\s*)"key_url_type"\s*:\s*"affiliate",$',
+            r'\g<0>\n\g<indent>"affiliate_disclosure": cliutil.KieAffiliateDisclosure,',
+            text,
+            count=1,
+        )
+        if disclosure_replacements != 1:
+            raise PatchError("internal/mcp/tools.go: could not add affiliate disclosure metadata")
     if "auth set-token" in text:
         raise PatchError("internal/mcp/tools.go: stale direct-token guidance survived")
-    required = ("kie-pp-cli auth setup", "cliutil.KieAPIKeyURL")
+    required = (
+        "kie-pp-cli auth setup",
+        '"\\n      Get a key at: " + cliutil.KieAPIKeyURL +',
+        '"\\n      " + cliutil.KieAffiliateDisclosure +',
+    )
     missing = [marker for marker in required if marker not in text]
+    if not re.search(r'(?m)^\s*"key_url"\s*:\s*cliutil\.KieAPIKeyURL,$', text):
+        missing.append("key_url metadata")
+    if not key_url_type.search(text):
+        missing.append("key_url_type metadata")
+    if not affiliate_disclosure.search(text):
+        missing.append("affiliate_disclosure metadata")
     if missing:
         raise PatchError("internal/mcp/tools.go: first-run guidance patch no longer matches: " + ", ".join(missing))
     return text

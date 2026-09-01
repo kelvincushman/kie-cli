@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kie Audio"
+  short_description: "Create validated Kie audio assets"
+  default_prompt: "Use $kie-audio to qualify and safely create this narration, dialogue, music, or sound."

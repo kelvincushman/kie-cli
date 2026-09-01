@@ -4,6 +4,17 @@ package main
 
 import "testing"
 
+func TestDefaultTransportPreservesStdioAndAllowsExplicitHTTP(t *testing.T) {
+	t.Setenv("KIE_MEDIA_MCP_TRANSPORT", "")
+	if got := defaultTransport(); got != "stdio" {
+		t.Fatalf("default transport = %q, want stdio", got)
+	}
+	t.Setenv("KIE_MEDIA_MCP_TRANSPORT", " http ")
+	if got := defaultTransport(); got != "http" {
+		t.Fatalf("environment transport = %q, want http", got)
+	}
+}
+
 func TestRequireLoopbackAddress(t *testing.T) {
 	for _, addr := range []string{"127.0.0.1:7780", "localhost:7780", "[::1]:7780"} {
 		if err := requireLoopbackAddress(addr); err != nil {

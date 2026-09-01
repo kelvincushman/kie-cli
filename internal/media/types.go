@@ -19,80 +19,108 @@ const (
 
 	GenerationKindFinal   = "final"
 	GenerationKindPreview = "preview"
+	GenerationKindProof   = "proof"
 )
 
 type Brief struct {
-	ID                   string     `json:"id"`
-	Workflow             string     `json:"workflow,omitempty"`
-	Lesson               string     `json:"lesson,omitempty"`
-	Request              string     `json:"request,omitempty"`
-	MediaType            string     `json:"media_type,omitempty"`
-	Purpose              string     `json:"purpose,omitempty"`
-	Platform             string     `json:"platform,omitempty"`
-	AspectRatio          string     `json:"aspect_ratio,omitempty"`
-	DurationSeconds      int        `json:"duration_seconds,omitempty"`
-	Resolution           string     `json:"resolution,omitempty"`
-	AudioMode            string     `json:"audio_mode,omitempty"`
-	VideoMode            string     `json:"video_mode,omitempty"`
-	OutputFormat         string     `json:"output_format,omitempty"`
-	ReturnLastFrame      bool       `json:"return_last_frame,omitempty"`
-	WebSearch            bool       `json:"web_search,omitempty"`
-	Style                string     `json:"style,omitempty"`
-	References           []string   `json:"references,omitempty"`
-	ReferenceVideos      []string   `json:"reference_videos,omitempty"`
-	ReferenceAudio       []string   `json:"reference_audio,omitempty"`
-	FirstFrame           string     `json:"first_frame,omitempty"`
-	LastFrame            string     `json:"last_frame,omitempty"`
-	ReferencesComplete   bool       `json:"references_complete"`
-	IdentityIDs          []string   `json:"identity_ids,omitempty"`
-	IdentityComplete     bool       `json:"identity_complete"`
-	Model                string     `json:"model,omitempty"`
-	PreviewModel         string     `json:"preview_model,omitempty"`
-	Status               string     `json:"status"`
-	CreatedAt            time.Time  `json:"created_at"`
-	UpdatedAt            time.Time  `json:"updated_at"`
-	Plan                 *Plan      `json:"plan,omitempty"`
-	GenerationID         string     `json:"generation_id,omitempty"`
-	PreviewGenerationID  string     `json:"preview_generation_id,omitempty"`
-	PreviewStatus        string     `json:"preview_status,omitempty"`
-	PreviewURL           string     `json:"preview_url,omitempty"`
-	PreviewBriefHash     string     `json:"preview_brief_hash,omitempty"`
-	PreviewApprovedAt    *time.Time `json:"preview_approved_at,omitempty"`
-	PreviewRevision      int        `json:"preview_revision,omitempty"`
-	ProductionMode       string     `json:"production_mode,omitempty"`
-	MasterBriefID        string     `json:"master_brief_id,omitempty"`
-	StoryboardID         string     `json:"storyboard_id,omitempty"`
-	ShotID               string     `json:"shot_id,omitempty"`
-	ScriptID             string     `json:"script_id,omitempty"`
-	ScriptHash           string     `json:"script_hash,omitempty"`
-	ScriptBriefHash      string     `json:"script_brief_hash,omitempty"`
-	ScriptStatus         string     `json:"script_status,omitempty"`
-	StoryboardScriptHash string     `json:"storyboard_script_hash,omitempty"`
-	StoryboardBriefHash  string     `json:"storyboard_brief_hash,omitempty"`
-	StoryboardStatus     string     `json:"storyboard_status,omitempty"`
-	StoryboardShotsTotal int        `json:"storyboard_shots_total,omitempty"`
+	ID                   string       `json:"id"`
+	Workflow             string       `json:"workflow,omitempty"`
+	Lesson               string       `json:"lesson,omitempty"`
+	Request              string       `json:"request,omitempty"`
+	MediaType            string       `json:"media_type,omitempty"`
+	Purpose              string       `json:"purpose,omitempty"`
+	Platform             string       `json:"platform,omitempty"`
+	AspectRatio          string       `json:"aspect_ratio,omitempty"`
+	DurationSeconds      int          `json:"duration_seconds,omitempty"`
+	Resolution           string       `json:"resolution,omitempty"`
+	AudioMode            string       `json:"audio_mode,omitempty"`
+	VideoMode            string       `json:"video_mode,omitempty"`
+	OutputFormat         string       `json:"output_format,omitempty"`
+	ReturnLastFrame      bool         `json:"return_last_frame,omitempty"`
+	WebSearch            bool         `json:"web_search,omitempty"`
+	Style                string       `json:"style,omitempty"`
+	References           []string     `json:"references,omitempty"`
+	ReferenceVideos      []string     `json:"reference_videos,omitempty"`
+	ReferenceAudio       []string     `json:"reference_audio,omitempty"`
+	FirstFrame           string       `json:"first_frame,omitempty"`
+	LastFrame            string       `json:"last_frame,omitempty"`
+	ReferencesComplete   bool         `json:"references_complete"`
+	IdentityIDs          []string     `json:"identity_ids,omitempty"`
+	IdentityComplete     bool         `json:"identity_complete"`
+	Model                string       `json:"model,omitempty"`
+	PreviewModel         string       `json:"preview_model,omitempty"`
+	Status               string       `json:"status"`
+	CreatedAt            time.Time    `json:"created_at"`
+	UpdatedAt            time.Time    `json:"updated_at"`
+	Plan                 *Plan        `json:"plan,omitempty"`
+	GenerationID         string       `json:"generation_id,omitempty"`
+	PreviewGenerationID  string       `json:"preview_generation_id,omitempty"`
+	PreviewStatus        string       `json:"preview_status,omitempty"`
+	PreviewURL           string       `json:"preview_url,omitempty"`
+	PreviewBriefHash     string       `json:"preview_brief_hash,omitempty"`
+	PreviewApprovedAt    *time.Time   `json:"preview_approved_at,omitempty"`
+	PreviewRevision      int          `json:"preview_revision,omitempty"`
+	ProofOption          *ProofOption `json:"proof_option,omitempty"`
+	ProofGenerationID    string       `json:"proof_generation_id,omitempty"`
+	ProofStatus          string       `json:"proof_status,omitempty"`
+	ProofURL             string       `json:"proof_url,omitempty"`
+	ProofBriefHash       string       `json:"proof_brief_hash,omitempty"`
+	ProofApprovedAt      *time.Time   `json:"proof_approved_at,omitempty"`
+	ProofSkippedAt       *time.Time   `json:"proof_skipped_at,omitempty"`
+	ProofRevision        int          `json:"proof_revision,omitempty"`
+	RightsAcknowledged   bool         `json:"rights_acknowledged,omitempty"`
+	ProductionMode       string       `json:"production_mode,omitempty"`
+	MasterBriefID        string       `json:"master_brief_id,omitempty"`
+	StoryboardID         string       `json:"storyboard_id,omitempty"`
+	ShotID               string       `json:"shot_id,omitempty"`
+	ScriptID             string       `json:"script_id,omitempty"`
+	ScriptHash           string       `json:"script_hash,omitempty"`
+	ScriptBriefHash      string       `json:"script_brief_hash,omitempty"`
+	ScriptStatus         string       `json:"script_status,omitempty"`
+	StoryboardScriptHash string       `json:"storyboard_script_hash,omitempty"`
+	StoryboardBriefHash  string       `json:"storyboard_brief_hash,omitempty"`
+	StoryboardStatus     string       `json:"storyboard_status,omitempty"`
+	StoryboardShotsTotal int          `json:"storyboard_shots_total,omitempty"`
 }
 
 type Question struct {
-	Key            string   `json:"key"`
-	Prompt         string   `json:"prompt"`
-	Recommendation string   `json:"recommendation,omitempty"`
-	Options        []string `json:"options,omitempty"`
-	AllowSkip      bool     `json:"allow_skip,omitempty"`
+	Key                  string   `json:"key"`
+	Prompt               string   `json:"prompt"`
+	Recommendation       string   `json:"recommendation,omitempty"`
+	RecommendationReason string   `json:"recommendation_reason,omitempty"`
+	Options              []string `json:"options,omitempty"`
+	AllowSkip            bool     `json:"allow_skip,omitempty"`
 }
 
 type Turn struct {
-	Brief        *Brief    `json:"brief"`
-	NextQuestion *Question `json:"next_question,omitempty"`
-	Ready        bool      `json:"ready"`
-	CanSubmit    bool      `json:"can_submit"`
-	NextAction   string    `json:"next_action"`
+	Brief         *Brief            `json:"brief"`
+	NextQuestion  *Question         `json:"next_question,omitempty"`
+	PaidAction    *PaidActionReview `json:"paid_action,omitempty"`
+	Ready         bool              `json:"ready"`
+	CanSubmit     bool              `json:"can_submit"`
+	NextAction    string            `json:"next_action"`
+	GateState     string            `json:"gate_state"`
+	ResumeCommand string            `json:"resume_command,omitempty"`
+}
+
+type PaidActionReview struct {
+	Scope          string `json:"scope"`
+	GenerationKind string `json:"generation_kind"`
+	Model          string `json:"model"`
+	PlanHash       string `json:"plan_hash,omitempty"`
+	CostStatus     string `json:"cost_status"`
+	Disclosure     string `json:"disclosure"`
+	BlockedReason  string `json:"blocked_reason,omitempty"`
 }
 
 type Plan struct {
 	Model           string         `json:"model"`
 	Input           map[string]any `json:"input"`
 	Rationale       string         `json:"rationale"`
+	ProductionSkill string         `json:"production_skill"`
+	CapabilitySkill string         `json:"capability_skill"`
+	CostStatus      string         `json:"cost_status"`
+	OverrideOptions []string       `json:"override_options,omitempty"`
 	Lesson          string         `json:"lesson,omitempty"`
 	ProductionStage string         `json:"production_stage,omitempty"`
 	Method          string         `json:"method,omitempty"`

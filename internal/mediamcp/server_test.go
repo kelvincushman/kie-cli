@@ -3,20 +3,91 @@
 package mediamcp
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"io"
+	"net/http"
 	"net/http/httptest"
 	"path/filepath"
 	"sort"
 	"testing"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
+	"kie-pp-cli/internal/cliutil"
+	"kie-pp-cli/internal/config"
 	"kie-pp-cli/internal/media"
 )
 
+func TestHTTPStatelessRequestsNeedNoSessionIDAcrossProtocolEras(t *testing.T) {
+	store := media.NewStore(filepath.Join(t.TempDir(), "media"))
+	server := NewServer("test", &Dependencies{
+		Store:      func() (*media.Store, error) { return store, nil },
+		LoadConfig: func() (*config.Config, error) { return &config.Config{}, nil },
+	})
+	httpServer := httptest.NewServer(NewHTTPHandler(server))
+	defer httpServer.Close()
+
+	tests := []struct {
+		name, version string
+		params        map[string]any
+	}{
+		{
+			name: "latest stateless", version: "2026-07-28",
+			params: map[string]any{"_meta": map[string]any{
+				mcp.MetaKeyProtocolVersion:    "2026-07-28",
+				mcp.MetaKeyClientInfo:         map[string]any{"name": "contract-client", "version": "test"},
+				mcp.MetaKeyClientCapabilities: map[string]any{},
+			}},
+		},
+		{name: "legacy client", version: "2025-11-25", params: map[string]any{}},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			payload, err := json.Marshal(map[string]any{
+				"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": test.params,
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			request, err := http.NewRequest(http.MethodPost, httpServer.URL, bytes.NewReader(payload))
+			if err != nil {
+				t.Fatal(err)
+			}
+			request.Header.Set("Content-Type", "application/json")
+			request.Header.Set("Accept", "application/json, text/event-stream")
+			request.Header.Set("MCP-Protocol-Version", test.version)
+			if test.version == "2026-07-28" {
+				request.Header.Set("Mcp-Method", "tools/list")
+			}
+			response, err := http.DefaultClient.Do(request)
+			if err != nil {
+				t.Fatal(err)
+			}
+			body, readErr := io.ReadAll(response.Body)
+			response.Body.Close()
+			if readErr != nil {
+				t.Fatal(readErr)
+			}
+			if response.StatusCode != http.StatusOK {
+				t.Fatalf("status = %d, body = %s", response.StatusCode, body)
+			}
+			if sessionID := response.Header.Get("Mcp-Session-Id"); sessionID != "" {
+				t.Fatalf("stateless response emitted Mcp-Session-Id %q", sessionID)
+			}
+			if !bytes.Contains(body, []byte(`"media_grill_start"`)) {
+				t.Fatalf("tools/list response does not contain focused media tools: %s", body)
+			}
+		})
+	}
+}
+
 func TestHTTPNegotiatesLatestStatelessProtocolAndListsMediaTools(t *testing.T) {
 	store := media.NewStore(filepath.Join(t.TempDir(), "media"))
-	server := NewServer("test", &Dependencies{Store: func() (*media.Store, error) { return store, nil }})
+	server := NewServer("test", &Dependencies{
+		Store:      func() (*media.Store, error) { return store, nil },
+		LoadConfig: func() (*config.Config, error) { return &config.Config{}, nil },
+	})
 	httpServer := httptest.NewServer(NewHTTPHandler(server))
 	defer httpServer.Close()
 
@@ -35,8 +106,10 @@ func TestHTTPNegotiatesLatestStatelessProtocolAndListsMediaTools(t *testing.T) {
 		t.Fatal(err)
 	}
 	gotNames := make([]string, 0, len(listed.Tools))
+	toolsByName := make(map[string]*mcp.Tool, len(listed.Tools))
 	for _, tool := range listed.Tools {
 		gotNames = append(gotNames, tool.Name)
+		toolsByName[tool.Name] = tool
 		if tool.Name == "media_generate" || tool.Name == "media_preview_generate" {
 			if tool.Annotations == nil || tool.Annotations.ReadOnlyHint || tool.Annotations.OpenWorldHint == nil || !*tool.Annotations.OpenWorldHint {
 				t.Fatalf("media_generate annotations = %#v", tool.Annotations)
@@ -48,6 +121,29 @@ func TestHTTPNegotiatesLatestStatelessProtocolAndListsMediaTools(t *testing.T) {
 	sort.Strings(wantNames)
 	if stringSliceJSON(gotNames) != stringSliceJSON(wantNames) {
 		t.Fatalf("tools = %v, want %v", gotNames, wantNames)
+	}
+	if len(ToolNames) != 40 || len(listed.Tools) != 40 {
+		t.Fatalf("focused MCP tool count = constants:%d registered:%d, want 40", len(ToolNames), len(listed.Tools))
+	}
+	for _, name := range []string{"media_preview_generate", "media_proof_generate"} {
+		if !toolRequiresField(t, toolsByName[name], "confirmation_id") {
+			t.Fatalf("%s schema does not require confirmation_id", name)
+		}
+	}
+	for _, name := range []string{"media_preview_approve", "media_preview_reject", "media_proof_approve", "media_proof_reject", "media_proof_skip"} {
+		if toolRequiresField(t, toolsByName[name], "confirmation_id") {
+			t.Fatalf("%s schema unexpectedly requires confirmation_id", name)
+		}
+	}
+
+	setupResult, err := session.CallTool(context.Background(), &mcp.CallToolParams{Name: "media_setup_get"})
+	if err != nil || setupResult.IsError {
+		t.Fatalf("media_setup_get error=%v result=%#v", err, setupResult)
+	}
+	var setup setupOutput
+	decodeStructured(t, setupResult.StructuredContent, &setup)
+	if setup.AuthConfigured || setup.GetAPIKey != cliutil.KieAPIKeyURL || setup.GetAPIKeyLinkType != "affiliate" || setup.AffiliateDisclosure != cliutil.KieAffiliateDisclosure {
+		t.Fatalf("media setup output = %#v", setup)
 	}
 
 	workflowResult, err := session.CallTool(context.Background(), &mcp.CallToolParams{
@@ -100,6 +196,17 @@ func TestHTTPNegotiatesLatestStatelessProtocolAndListsMediaTools(t *testing.T) {
 	if _, ok := modelView.Model.InputSchema["properties"].(map[string]any)["reference_video_urls"]; !ok {
 		t.Fatalf("Seedance settings missing from MCP model output: %#v", modelView.Model.InputSchema)
 	}
+	capabilityResult, err := session.CallTool(context.Background(), &mcp.CallToolParams{
+		Name: "media_capability_list", Arguments: map[string]any{"model": "  ", "capability": "\t"},
+	})
+	if err != nil || capabilityResult.IsError {
+		t.Fatalf("media_capability_list whitespace filter error=%v result=%#v", err, capabilityResult)
+	}
+	var capabilityView capabilityListOutput
+	decodeStructured(t, capabilityResult.StructuredContent, &capabilityView)
+	if len(capabilityView.Models) != 129 {
+		t.Fatalf("whitespace capability filters returned %d models, want 129", len(capabilityView.Models))
+	}
 
 	result, err := session.CallTool(context.Background(), &mcp.CallToolParams{
 		Name: "media_brief_start",
@@ -120,6 +227,29 @@ func TestHTTPNegotiatesLatestStatelessProtocolAndListsMediaTools(t *testing.T) {
 	if !turn.Ready || turn.Brief == nil || turn.Brief.ID == "" || turn.Brief.Plan == nil {
 		t.Fatalf("ready turn = %#v", turn)
 	}
+}
+
+func toolRequiresField(t *testing.T, tool *mcp.Tool, field string) bool {
+	t.Helper()
+	if tool == nil {
+		t.Fatalf("tool is missing while checking required field %q", field)
+	}
+	data, err := json.Marshal(tool.InputSchema)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var schema struct {
+		Required []string `json:"required"`
+	}
+	if err := json.Unmarshal(data, &schema); err != nil {
+		t.Fatal(err)
+	}
+	for _, required := range schema.Required {
+		if required == field {
+			return true
+		}
+	}
+	return false
 }
 
 func TestGenerateIsExplicitAndCannotResubmitBrief(t *testing.T) {
@@ -150,18 +280,18 @@ func TestGenerateIsExplicitAndCannotResubmitBrief(t *testing.T) {
 	if err := store.SaveBrief(brief); err != nil {
 		t.Fatal(err)
 	}
-	call := func() *mcp.CallToolResult {
-		result, err := session.CallTool(context.Background(), &mcp.CallToolParams{Name: "media_generate", Arguments: map[string]any{"brief_id": brief.ID}})
+	call := func(confirmationID string) *mcp.CallToolResult {
+		result, err := session.CallTool(context.Background(), &mcp.CallToolParams{Name: "media_generate", Arguments: map[string]any{"brief_id": brief.ID, "confirmation_id": confirmationID}})
 		if err != nil {
 			t.Fatal(err)
 		}
 		return result
 	}
-	first := call()
+	first := call(saveMCPPaidConfirmation(t, store, brief, media.PaidScopeFinal))
 	if first.IsError || api.submissions != 1 {
 		t.Fatalf("first generation result=%#v submissions=%d", first.Content, api.submissions)
 	}
-	second := call()
+	second := call(saveMCPPaidConfirmation(t, store, brief, media.PaidScopeFinal))
 	if !second.IsError || api.submissions != 1 {
 		t.Fatalf("resubmit result=%#v submissions=%d", second.Content, api.submissions)
 	}
@@ -206,7 +336,7 @@ func TestMCPVideoGenerationRequiresDisplayedPreviewApproval(t *testing.T) {
 	if result := call("media_generate", map[string]any{"brief_id": brief.ID}); !result.IsError || api.submissions != 0 {
 		t.Fatalf("video generation bypassed preview: result=%#v submissions=%d", result.Content, api.submissions)
 	}
-	previewResult := call("media_preview_generate", map[string]any{"brief_id": brief.ID})
+	previewResult := call("media_preview_generate", map[string]any{"brief_id": brief.ID, "confirmation_id": saveMCPPaidConfirmation(t, store, brief, media.PaidScopePreview)})
 	if previewResult.IsError || api.submissions != 1 {
 		t.Fatalf("preview result=%#v submissions=%d", previewResult.Content, api.submissions)
 	}
@@ -229,10 +359,37 @@ func TestMCPVideoGenerationRequiresDisplayedPreviewApproval(t *testing.T) {
 	}
 	var approved media.Turn
 	decodeStructured(t, approveResult.StructuredContent, &approved)
-	if !approved.CanSubmit || approved.NextAction != "review_then_submit" {
+	if approved.CanSubmit || approved.NextAction != "offer_proof" {
 		t.Fatalf("approved turn = %#v", approved)
 	}
-	finalResult := call("media_generate", map[string]any{"brief_id": brief.ID})
+	brief, err = store.GetBrief(brief.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	finalPlan := media.BuildPlan(brief)
+	finalPlanHash, err := media.PlanFingerprint(finalPlan)
+	if err != nil {
+		t.Fatal(err)
+	}
+	blockedConfirmation := call("media_paid_confirm", map[string]any{
+		"brief_id": brief.ID, "scope": "final", "generation_kind": "final",
+		"expected_model": finalPlan.Model, "expected_plan_hash": finalPlanHash, "disclosure_acknowledged": true,
+	})
+	if !blockedConfirmation.IsError || api.submissions != 1 {
+		t.Fatalf("final confirmation bypassed proof decision: result=%#v submissions=%d", blockedConfirmation.Content, api.submissions)
+	}
+	blockedGeneration := call("media_generate", map[string]any{"brief_id": brief.ID, "confirmation_id": saveMCPPaidConfirmation(t, store, brief, media.PaidScopeFinal)})
+	if !blockedGeneration.IsError || api.submissions != 1 {
+		t.Fatalf("final generation bypassed proof decision: result=%#v submissions=%d", blockedGeneration.Content, api.submissions)
+	}
+	if skipped := call("media_proof_skip", map[string]any{"brief_id": brief.ID}); skipped.IsError {
+		t.Fatalf("proof skip = %#v", skipped.Content)
+	}
+	brief, err = store.GetBrief(brief.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	finalResult := call("media_generate", map[string]any{"brief_id": brief.ID, "confirmation_id": saveMCPPaidConfirmation(t, store, brief, media.PaidScopeFinal)})
 	if finalResult.IsError || api.submissions != 2 {
 		t.Fatalf("final result=%#v submissions=%d", finalResult.Content, api.submissions)
 	}
@@ -310,7 +467,92 @@ func TestMCPStoryboardCreatesLocalGatedShotBriefs(t *testing.T) {
 	}
 }
 
+func TestMCPGrillCapabilityAndScopedPaidConfirmation(t *testing.T) {
+	store := media.NewStore(filepath.Join(t.TempDir(), "media"))
+	api := &fakeAPI{}
+	liveServices := 0
+	server := NewServer("test", &Dependencies{
+		Store: func() (*media.Store, error) { return store, nil },
+		LiveService: func(context.Context, *media.Store) (*media.Service, func(), error) {
+			liveServices++
+			return &media.Service{API: api, Store: store}, func() {}, nil
+		},
+	})
+	httpServer := httptest.NewServer(NewHTTPHandler(server))
+	defer httpServer.Close()
+	client := mcp.NewClient(&mcp.Implementation{Name: "test-client", Version: "test"}, nil)
+	session, err := client.Connect(context.Background(), &mcp.StreamableClientTransport{Endpoint: httpServer.URL}, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer session.Close()
+	call := func(name string, arguments map[string]any) *mcp.CallToolResult {
+		result, callErr := session.CallTool(context.Background(), &mcp.CallToolParams{Name: name, Arguments: arguments})
+		if callErr != nil {
+			t.Fatal(callErr)
+		}
+		return result
+	}
+	grilled := call("media_grill_start", map[string]any{
+		"request": "Create a clean 16:9 website hero image for a product launch", "media_type": "image",
+		"purpose": "website hero", "platform": "website", "aspect_ratio": "16:9", "style": "clean studio",
+		"references": []string{"https://example.test/product.png"},
+	})
+	if grilled.IsError {
+		t.Fatalf("grill = %#v", grilled.Content)
+	}
+	var turn media.Turn
+	decodeStructured(t, grilled.StructuredContent, &turn)
+	if !turn.Ready || turn.Brief.Plan.CapabilitySkill != "kie-image" || turn.ResumeCommand == "" {
+		t.Fatalf("grill turn = %#v", turn)
+	}
+	capability := call("media_capability_get", map[string]any{"model": "bytedance/seedance-2-5"})
+	if capability.IsError {
+		t.Fatalf("capability = %#v", capability.Content)
+	}
+	if unconfirmed := call("media_generate", map[string]any{"brief_id": turn.Brief.ID}); !unconfirmed.IsError || api.submissions != 0 || liveServices != 0 {
+		t.Fatalf("unconfirmed=%#v submissions=%d services=%d", unconfirmed.Content, api.submissions, liveServices)
+	}
+	if turn.PaidAction == nil || turn.PaidAction.PlanHash == "" || turn.PaidAction.Scope != media.PaidScopeFinal {
+		t.Fatalf("paid action review = %#v", turn.PaidAction)
+	}
+	confirmed := call("media_paid_confirm", map[string]any{
+		"brief_id": turn.Brief.ID, "scope": "final", "generation_kind": "final",
+		"expected_model": turn.PaidAction.Model, "expected_plan_hash": turn.PaidAction.PlanHash, "disclosure_acknowledged": true,
+	})
+	if confirmed.IsError {
+		t.Fatalf("confirm = %#v", confirmed.Content)
+	}
+	var confirmation paidConfirmOutput
+	decodeStructured(t, confirmed.StructuredContent, &confirmation)
+	if confirmation.ConfirmationID == "" || confirmation.ExpiresAt.IsZero() {
+		t.Fatalf("confirmation = %#v", confirmation)
+	}
+	generated := call("media_generate", map[string]any{"brief_id": turn.Brief.ID, "confirmation_id": confirmation.ConfirmationID})
+	if generated.IsError || api.submissions != 1 || liveServices != 1 {
+		t.Fatalf("generated=%#v submissions=%d services=%d", generated.Content, api.submissions, liveServices)
+	}
+}
+
 type fakeAPI struct{ submissions int }
+
+func saveMCPPaidConfirmation(t *testing.T, store *media.Store, brief *media.Brief, scope string) string {
+	t.Helper()
+	plan, kind, err := media.PaidPlanForScope(brief, scope)
+	if err != nil {
+		t.Fatal(err)
+	}
+	confirmation, err := media.NewPaidConfirmation(brief, plan, media.PaidConfirmationRequest{
+		Scope: scope, GenerationKind: kind, ConfirmedBy: "test-user", Acknowledged: true,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := store.SavePaidConfirmation(confirmation); err != nil {
+		t.Fatal(err)
+	}
+	return confirmation.ID
+}
 
 func (*fakeAPI) Get(context.Context, string, map[string]string) (json.RawMessage, error) {
 	return json.RawMessage(`{"data":{"status":"success","resultUrls":["https://cdn.example.test/preview.png"]}}`), nil

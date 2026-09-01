@@ -14,7 +14,9 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	"kie-pp-cli/internal/cliutil"
 	"kie-pp-cli/internal/config"
+	"kie-pp-cli/internal/kiecatalog"
 	"kie-pp-cli/internal/media"
 )
 
@@ -51,10 +53,18 @@ type mediaCreateOptions struct {
 	model           string
 	previewModel    string
 	productionMode  string
+	rightsConfirmed bool
+	infer           bool
+	wrapUp          bool
 	planOnly        bool
 	preview         bool
 	approvePreview  bool
 	rejectPreview   bool
+	proof           bool
+	approveProof    bool
+	rejectProof     bool
+	skipProof       bool
+	confirmPaid     bool
 	submit          bool
 	wait            bool
 	waitInterval    time.Duration
@@ -65,12 +75,16 @@ type mediaCreateOptions struct {
 func newMediaCreateCmd(flags *rootFlags) *cobra.Command {
 	var options mediaCreateOptions
 	cmd := &cobra.Command{
-		Use:   "create [what you want to make]",
-		Short: "Create an image or video through a guided, resumable media brief",
+		Use:     "create [what you want to make]",
+		Aliases: []string{"grill-me"},
+		Short:   "Create an image or video through a guided, resumable media brief",
 		Long: "Qualify a media request one question at a time, preserve the brief locally, and submit it to Kie.ai only after review. Video requires a generated still preview and explicit approval before final submission. " +
 			"Agents should use --agent and resume with --brief <id> --answer <value>.",
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if cmd.CalledAs() == "grill-me" {
+				options.infer = true
+			}
 			request := ""
 			if len(args) == 1 {
 				request = args[0]
@@ -103,10 +117,18 @@ func newMediaCreateCmd(flags *rootFlags) *cobra.Command {
 	cmd.Flags().StringVar(&options.model, "model", "", "Override the recommended Kie.ai model")
 	cmd.Flags().StringVar(&options.previewModel, "preview-model", "", "Still gate model: GPT Image 2 or a supported Nano Banana route")
 	cmd.Flags().StringVar(&options.productionMode, "production-mode", "", "Video production: single-shot or storyboard")
+	cmd.Flags().BoolVar(&options.rightsConfirmed, "rights-confirmed", false, "Confirm you have the rights and consent required for likeness or voice media")
+	cmd.Flags().BoolVar(&options.infer, "infer", false, "Infer only facts explicitly present in the request before asking one material question")
+	cmd.Flags().BoolVar(&options.wrapUp, "wrap-up", false, "Use visible sensible defaults for remaining questions and return an inspectable plan")
 	cmd.Flags().BoolVar(&options.planOnly, "plan-only", false, "Build and save the brief without submitting a live generation")
 	cmd.Flags().BoolVar(&options.preview, "preview", false, "Generate the review image required before a video can be submitted")
 	cmd.Flags().BoolVar(&options.approvePreview, "approve-preview", false, "Explicitly approve the current video preview after viewing it")
 	cmd.Flags().BoolVar(&options.rejectPreview, "reject-preview", false, "Reject the current video preview so it can be revised and regenerated")
+	cmd.Flags().BoolVar(&options.proof, "proof", false, "Generate an optional paid complete-shot proof at the model's lowest documented faithful tier")
+	cmd.Flags().BoolVar(&options.approveProof, "approve-proof", false, "Approve the current complete-shot proof after viewing it")
+	cmd.Flags().BoolVar(&options.rejectProof, "reject-proof", false, "Reject the current complete-shot proof so it can be revised")
+	cmd.Flags().BoolVar(&options.skipProof, "skip-proof", false, "Skip the optional proof; final generation still needs separate paid confirmation")
+	cmd.Flags().BoolVar(&options.confirmPaid, "confirm-paid", false, "Explicitly confirm this one live action may consume Kie.ai credits")
 	cmd.Flags().BoolVar(&options.submit, "submit", false, "Submit a ready brief to Kie.ai")
 	cmd.Flags().BoolVar(&options.wait, "wait", false, "Wait for a submitted generation to finish")
 	cmd.Flags().DurationVar(&options.waitInterval, "wait-interval", 3*time.Second, "Polling interval used with --wait")
@@ -116,19 +138,19 @@ func newMediaCreateCmd(flags *rootFlags) *cobra.Command {
 
 func runMediaCreate(cmd *cobra.Command, flags *rootFlags, options mediaCreateOptions, request string) error {
 	actionCount := 0
-	for _, active := range []bool{options.preview, options.approvePreview, options.rejectPreview, options.submit} {
+	for _, active := range []bool{options.preview, options.approvePreview, options.rejectPreview, options.proof, options.approveProof, options.rejectProof, options.skipProof, options.submit} {
 		if active {
 			actionCount++
 		}
 	}
 	if actionCount > 1 {
-		return usageErr(fmt.Errorf("--preview, --approve-preview, --reject-preview, and --submit are separate actions"))
+		return usageErr(fmt.Errorf("preview, proof, and submit flags are separate actions"))
 	}
-	if options.wait && !options.submit && !options.preview {
-		return usageErr(fmt.Errorf("--wait requires --preview or --submit; use 'media generation status <id> --wait' for an existing generation"))
+	if options.wait && !options.submit && !options.preview && !options.proof {
+		return usageErr(fmt.Errorf("--wait requires --preview, --proof, or --submit; use 'media generation status <id> --wait' for an existing generation"))
 	}
-	if (options.preview || options.approvePreview || options.rejectPreview) && strings.TrimSpace(options.briefID) == "" {
-		return usageErr(fmt.Errorf("video preview actions require --brief <id>"))
+	if (options.preview || options.approvePreview || options.rejectPreview || options.proof || options.approveProof || options.rejectProof || options.skipProof) && strings.TrimSpace(options.briefID) == "" {
+		return usageErr(fmt.Errorf("video preview and proof actions require --brief <id>"))
 	}
 	store, err := media.DefaultStore()
 	if err != nil {
@@ -149,6 +171,16 @@ func runMediaCreate(cmd *cobra.Command, flags *rootFlags, options mediaCreateOpt
 			}
 		}
 		applyMediaOverrides(brief, options, request)
+		if options.infer {
+			if err := media.InferBrief(brief); err != nil {
+				return err
+			}
+		}
+		if options.wrapUp {
+			if err := media.WrapUpBrief(brief); err != nil {
+				return err
+			}
+		}
 		if err := media.ValidateBrief(brief); err != nil {
 			return err
 		}
@@ -167,9 +199,20 @@ func runMediaCreate(cmd *cobra.Command, flags *rootFlags, options mediaCreateOpt
 			ReferenceAudio: options.referenceAudio, FirstFrame: options.firstFrame,
 			LastFrame: options.lastFrame, IdentityIDs: options.identityIDs, Model: options.model,
 			PreviewModel: options.previewModel, ProductionMode: options.productionMode,
+			RightsAcknowledged: options.rightsConfirmed,
 		})
 		if err != nil {
 			return err
+		}
+		if options.infer {
+			if err := media.InferBrief(brief); err != nil {
+				return err
+			}
+		}
+		if options.wrapUp {
+			if err := media.WrapUpBrief(brief); err != nil {
+				return err
+			}
 		}
 	}
 	if err := store.VaultBriefReferences(brief); err != nil {
@@ -182,6 +225,21 @@ func runMediaCreate(cmd *cobra.Command, flags *rootFlags, options mediaCreateOpt
 	}
 	if options.approvePreview {
 		if err := media.ApproveVideoPreview(brief); err != nil {
+			return err
+		}
+	}
+	if options.rejectProof {
+		if err := media.RejectVideoProof(brief); err != nil {
+			return err
+		}
+	}
+	if options.approveProof {
+		if err := media.ApproveVideoProof(brief); err != nil {
+			return err
+		}
+	}
+	if options.skipProof {
+		if err := media.SkipVideoProof(brief); err != nil {
 			return err
 		}
 	}
@@ -203,7 +261,7 @@ func runMediaCreate(cmd *cobra.Command, flags *rootFlags, options mediaCreateOpt
 		}
 		return printMediaValue(cmd, flags, turn)
 	}
-	if options.approvePreview || options.rejectPreview {
+	if options.approvePreview || options.rejectPreview || options.approveProof || options.rejectProof || options.skipProof {
 		return printMediaValue(cmd, flags, turn)
 	}
 
@@ -217,6 +275,9 @@ func runMediaCreate(cmd *cobra.Command, flags *rootFlags, options mediaCreateOpt
 			return err
 		}
 		preview = confirmed
+		if confirmed {
+			options.confirmPaid = true
+		}
 	}
 	if preview {
 		if flags.dryRun {
@@ -225,12 +286,26 @@ func runMediaCreate(cmd *cobra.Command, flags *rootFlags, options mediaCreateOpt
 				"dry_run": true, "submitted": false,
 			})
 		}
+		if interactive && !options.confirmPaid {
+			confirmed, err := confirmMediaPreview(cmd)
+			if err != nil {
+				return err
+			}
+			if !confirmed {
+				return printMediaValue(cmd, flags, turn)
+			}
+			options.confirmPaid = true
+		}
+		confirmationID, err := saveCLIPaidConfirmation(store, brief, media.BuildPreviewPlan(brief), media.PaidScopePreview, media.GenerationKindPreview, options.confirmPaid, interactive)
+		if err != nil {
+			return err
+		}
 		client, err := flags.newClient()
 		if err != nil {
 			return err
 		}
 		service := &media.Service{API: client, Store: store}
-		generation, err := service.SubmitPreview(cmd.Context(), brief)
+		generation, err := service.SubmitPreview(cmd.Context(), brief, confirmationID)
 		if err != nil {
 			return classifyAPIError(err, flags)
 		}
@@ -266,6 +341,67 @@ func runMediaCreate(cmd *cobra.Command, flags *rootFlags, options mediaCreateOpt
 		}
 		turn = media.TurnFor(brief)
 	}
+
+	proof := options.proof
+	if interactive && turn.NextAction == "offer_proof" && !proof {
+		option := media.ResolveProofOption(media.BuildPlan(brief).Model)
+		fmt.Fprintf(cmd.OutOrStdout(), "\nOptional complete-shot proof: %s %s. %s\n", option.ProofModel, option.ResolutionValue, option.Disclosure)
+		confirmed, err := confirmMediaProof(cmd)
+		if err != nil {
+			return err
+		}
+		if confirmed {
+			proof = true
+			options.confirmPaid = true
+		} else {
+			if err := media.SkipVideoProof(brief); err != nil {
+				return err
+			}
+			if err := store.SaveBrief(brief); err != nil {
+				return err
+			}
+			turn = media.TurnFor(brief)
+		}
+	}
+	if proof {
+		plan, option, err := media.BuildProofPlan(brief)
+		if err != nil {
+			return err
+		}
+		if flags.dryRun {
+			return printMediaValue(cmd, flags, map[string]any{"brief": brief, "plan": plan, "proof_option": option, "kind": media.GenerationKindProof, "dry_run": true, "submitted": false})
+		}
+		if interactive && !options.confirmPaid {
+			confirmed, err := confirmMediaProof(cmd)
+			if err != nil {
+				return err
+			}
+			if !confirmed {
+				return printMediaValue(cmd, flags, turn)
+			}
+			options.confirmPaid = true
+		}
+		confirmationID, err := saveCLIPaidConfirmation(store, brief, plan, media.PaidScopeProof, media.GenerationKindProof, options.confirmPaid, interactive)
+		if err != nil {
+			return err
+		}
+		client, err := flags.newClient()
+		if err != nil {
+			return err
+		}
+		service := &media.Service{API: client, Store: store}
+		generation, err := service.SubmitProof(cmd.Context(), brief, confirmationID)
+		if err != nil {
+			return classifyAPIError(err, flags)
+		}
+		if options.wait || interactive {
+			generation, err = waitForMediaGeneration(cmd, service, generation.ID, options.waitInterval, options.waitTimeout)
+			if err != nil {
+				return err
+			}
+		}
+		return printMediaValue(cmd, flags, generation)
+	}
 	if brief.MediaType == "video" && !turn.CanSubmit {
 		if options.submit {
 			return fmt.Errorf("video brief %s cannot be submitted yet; next action is %s", brief.ID, turn.NextAction)
@@ -283,6 +419,9 @@ func runMediaCreate(cmd *cobra.Command, flags *rootFlags, options mediaCreateOpt
 			return err
 		}
 		submit = confirmed
+		if confirmed {
+			options.confirmPaid = true
+		}
 	}
 	if !submit {
 		return printMediaValue(cmd, flags, turn)
@@ -292,12 +431,26 @@ func runMediaCreate(cmd *cobra.Command, flags *rootFlags, options mediaCreateOpt
 			"brief": brief, "plan": brief.Plan, "dry_run": true, "submitted": false,
 		})
 	}
+	if interactive && !options.confirmPaid {
+		confirmed, err := confirmMediaSubmit(cmd)
+		if err != nil {
+			return err
+		}
+		if !confirmed {
+			return printMediaValue(cmd, flags, turn)
+		}
+		options.confirmPaid = true
+	}
+	confirmationID, err := saveCLIPaidConfirmation(store, brief, media.BuildPlan(brief), media.PaidScopeFinal, media.GenerationKindFinal, options.confirmPaid, interactive)
+	if err != nil {
+		return err
+	}
 	client, err := flags.newClient()
 	if err != nil {
 		return err
 	}
 	service := &media.Service{API: client, Store: store}
-	generation, err := service.Submit(cmd.Context(), brief)
+	generation, err := service.Submit(cmd.Context(), brief, confirmationID)
 	if err != nil {
 		return classifyAPIError(err, flags)
 	}
@@ -320,7 +473,7 @@ func mediaCreateHasOverrides(options mediaCreateOptions, request string) bool {
 		len(options.references)+len(options.referenceVideos)+len(options.referenceAudio)+len(options.identityIDs) > 0 ||
 		strings.TrimSpace(options.firstFrame) != "" || strings.TrimSpace(options.lastFrame) != "" || strings.TrimSpace(options.model) != "" ||
 		strings.TrimSpace(options.previewModel) != "" ||
-		strings.TrimSpace(options.productionMode) != ""
+		strings.TrimSpace(options.productionMode) != "" || options.rightsConfirmed
 }
 
 func applyMediaOverrides(brief *media.Brief, options mediaCreateOptions, request string) {
@@ -404,6 +557,9 @@ func applyMediaOverrides(brief *media.Brief, options mediaCreateOptions, request
 	if value := strings.TrimSpace(options.productionMode); value != "" {
 		brief.ProductionMode = strings.ToLower(value)
 	}
+	if options.rightsConfirmed {
+		brief.RightsAcknowledged = true
+	}
 }
 
 func runMediaInterview(cmd *cobra.Command, store *media.Store, brief *media.Brief) error {
@@ -467,6 +623,39 @@ func confirmMediaPreviewApproval(cmd *cobra.Command) (bool, error) {
 	}
 	answer = strings.ToLower(strings.TrimSpace(answer))
 	return answer == "y" || answer == "yes", nil
+}
+
+func confirmMediaProof(cmd *cobra.Command) (bool, error) {
+	fmt.Fprint(cmd.OutOrStdout(), "Run the optional paid complete-shot proof before the final generation? [y/N] ")
+	answer, err := bufio.NewReader(cmd.InOrStdin()).ReadString('\n')
+	if err != nil && !errors.Is(err, io.EOF) {
+		return false, err
+	}
+	answer = strings.ToLower(strings.TrimSpace(answer))
+	return answer == "y" || answer == "yes", nil
+}
+
+func saveCLIPaidConfirmation(store *media.Store, brief *media.Brief, plan *media.Plan, scope, kind string, confirmed, interactive bool) (string, error) {
+	confirmedBy := "cli-flag"
+	if !confirmed && interactive {
+		return "", fmt.Errorf("interactive paid action was not affirmatively confirmed")
+	}
+	if !confirmed {
+		return "", fmt.Errorf("--confirm-paid is required for this non-interactive live action; use --dry-run to inspect it without spending credits")
+	}
+	if interactive {
+		confirmedBy = "cli-interactive"
+	}
+	confirmation, err := media.NewPaidConfirmation(brief, plan, media.PaidConfirmationRequest{
+		Scope: scope, GenerationKind: kind, ConfirmedBy: confirmedBy, Acknowledged: true,
+	})
+	if err != nil {
+		return "", err
+	}
+	if err := store.SavePaidConfirmation(confirmation); err != nil {
+		return "", err
+	}
+	return confirmation.ID, nil
 }
 
 func printMediaPlan(w io.Writer, brief *media.Brief) error {
@@ -549,9 +738,61 @@ func newMediaCmd(flags *rootFlags) *cobra.Command {
 	cmd.AddCommand(newMediaScriptCmd(flags))
 	cmd.AddCommand(newMediaStoryboardCmd(flags))
 	cmd.AddCommand(newMediaGenerationCmd(flags))
+	cmd.AddCommand(newMediaCapabilityCmd(flags))
 	cmd.AddCommand(newMediaModelsCmd(flags))
 	cmd.AddCommand(newMediaVideoCmd(flags))
 	return cmd
+}
+
+// pp:data-source computed
+func newMediaCapabilityCmd(flags *rootFlags) *cobra.Command {
+	parent := &cobra.Command{
+		Use:         "capability",
+		Short:       "Inspect compact model routes without loading full schemas",
+		Annotations: map[string]string{"mcp:read-only": "true"},
+		RunE:        parentNoSubcommandRunE(flags),
+	}
+	var capability, model string
+	list := &cobra.Command{
+		Use:         "list",
+		Short:       "List locally classified Kie model capabilities",
+		Args:        cobra.NoArgs,
+		Annotations: map[string]string{"mcp:read-only": "true"},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			registry, err := kiecatalog.LoadCapabilities()
+			if err != nil {
+				return err
+			}
+			items := make([]kiecatalog.ModelCapability, 0, len(registry.Models))
+			for _, item := range registry.Models {
+				if strings.TrimSpace(model) != "" && item.ModelID != strings.TrimSpace(model) {
+					continue
+				}
+				if strings.TrimSpace(capability) != "" && item.PrimaryCapability != strings.TrimSpace(capability) {
+					continue
+				}
+				items = append(items, item)
+			}
+			return printMediaValue(cmd, flags, items)
+		},
+	}
+	list.Flags().StringVar(&capability, "capability", "", "Filter by kie-image, kie-video, kie-audio, kie-avatar, or kie-identity")
+	list.Flags().StringVar(&model, "model", "", "Filter by exact Kie model ID")
+	parent.AddCommand(list)
+	parent.AddCommand(&cobra.Command{
+		Use:         "show <model-id>",
+		Short:       "Show one model's route, production fit, and lowest faithful proof settings",
+		Args:        cobra.ExactArgs(1),
+		Annotations: map[string]string{"mcp:read-only": "true"},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			item, err := kiecatalog.GetCapability(args[0])
+			if err != nil {
+				return err
+			}
+			return printMediaValue(cmd, flags, item)
+		},
+	})
+	return parent
 }
 
 // pp:data-source local
@@ -740,6 +981,9 @@ func newMediaSetupCmd(flags *rootFlags) *cobra.Command {
 			}
 			if !configured {
 				result["next_step"] = "Run kie-pp-cli auth setup in an interactive terminal"
+				result["get_api_key"] = cliutil.KieAPIKeyURL
+				result["get_api_key_link_type"] = "affiliate"
+				result["affiliate_disclosure"] = cliutil.KieAffiliateDisclosure
 			}
 			return printMediaValue(cmd, flags, result)
 		},

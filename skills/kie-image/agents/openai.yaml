@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kie Image"
+  short_description: "Direct approved Kie image generations"
+  default_prompt: "Use $kie-image to qualify, route, and safely create this image with Kie.ai."

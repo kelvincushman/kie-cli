@@ -7,8 +7,8 @@
 | . \ | || |___
 |_|\_\___|_____|
 
-AGENT MEDIA FACTORY
-[ BRIEF ] -> [ PREVIEW ] -> [ APPROVE ] -> [ CREATE ]
+LOCAL AGENT MEDIA FACTORY
+[ GRILL ] -> [ STILL ] -> [ 480p PROOF? ] -> [ FINAL ]
 </pre>
 
 <p align="center">
@@ -16,7 +16,7 @@ AGENT MEDIA FACTORY
 </p>
 
 <p align="center">
-  Seedance 2.5 · 171 source-linked methods · CLI · Stateless MCP · 10 agent skills · 129 typed models · Human approval gates
+  Seedance 2.5 · CLI · Stateless MCP · 17 agent skills · 129 typed models · 70 API operations · Human approval gates
 </p>
 
 <p align="center">
@@ -24,8 +24,18 @@ AGENT MEDIA FACTORY
   <a href="docs/ACADEMY_METHODS.md">Production lessons</a> ·
   <a href="docs/MEDIA_DIRECTOR.md">CLI and MCP reference</a> ·
   <a href="docs/SCRIPT_AND_STORYBOARD.md">Script and storyboard</a> ·
+  <a href="docs/SKILLS.md">Agent skills</a> ·
+  <a href="docs/PROOF_AND_PAID_CONFIRMATION.md">Proof and credit safety</a> ·
   <a href="docs/ADVANCED_MEDIA_DIRECTOR.md">Advanced operation</a> ·
   <a href="docs/MODELS.md">Model catalog</a>
+</p>
+
+<p align="center">
+  <a href="https://kie.ai?ref=39dfbcbc0a8244b61bec6e5dd056e35d"><strong>Get Kie.ai API access and support continued kie-cli development</strong></a>
+</p>
+
+<p align="center">
+  <sub>Affiliate disclosure: the project maintainer may earn a 15% commission on purchases made after you use this link.</sub>
 </p>
 
 `kie-cli` combines Kie.ai's broad generation API with a local creative director
@@ -34,9 +44,12 @@ request one question at a time, keeps briefs and reusable references on the
 user's machine, plans the production, and asks before spending credits.
 
 For video, the factory enforces a human-in-the-middle review: each shot gets a
-generated still, the user sees it, and the CLI requires explicit approval before
-submitting the final motion job. Longer productions add durable scripts,
-storyboards, one child brief per shot, and a transparent local assembly step.
+generated still, the user sees it, and the CLI requires explicit approval. It
+then offers a complete-shot proof at the model's lowest faithful resolution
+(480p for Seedance 2.5) before the final render. Preview, proof, and final are
+separate paid actions, each requiring a fresh scoped confirmation. Longer
+productions add durable scripts, storyboards, one child brief per shot, and a
+transparent local assembly step.
 
 This is an open-source, bring-your-own-Kie-key alternative to closed agent media
 suites such as [Higgsfield's CLI and MCP workflow](https://higgsfield.ai/cli).
@@ -50,16 +63,16 @@ Higgsfield clone and does not claim unsupported provider features.
 
 | Surface | Current capability |
 | --- | --- |
-| Local media director | Guided, resumable image and video briefs with one question per turn |
+| Local media director | Prompt inference plus one material question per turn, recommendations, rationale, and user overrides |
 | Production planning | Single-shot or multi-shot script/storyboard workflows with durable IDs |
 | Lesson director | 16 public Academy courses mapped to 171 source-linked, original Kie-native methods |
-| Video safety gate | Preview still → display to user → explicit approval → final video |
+| Video safety gate | Preview still → display/approve → optional lowest-tier complete-shot proof → fresh-confirmed final |
 | Creative memory | Private image/video/audio reference vault and consented likeness bundles |
 | Agent access | Compact `--agent` JSON, durable handles, focused MCP, and reusable skills |
-| Focused MCP | 29 media tools over stdio or loopback stateless HTTP using MCP `2026-07-28` |
-| Skills | 1 core director skill plus 9 production skills for common media jobs |
+| Focused MCP | 40 media tools over stdio or loopback stateless HTTP using MCP `2026-07-28` |
+| Skills | 17 routed skills: grill, shared director, five capabilities, film, identity, lessons, and outcome workflows |
 | Model evidence | Dated, task-specific rankings with live Kie route availability and explicit proxy warnings |
-| Kie coverage | 70 current API operations plus 129 Market models with complete embedded input/settings schemas |
+| Kie coverage | 70 current API operations plus 129 classified Market models with complete embedded input/settings schemas |
 | Local learning | SQLite-backed recall, teach, playbooks, and command discovery for repeat work |
 | Broad generated CLI | Image, video, music, speech, chat, upload, account, and task endpoints |
 
@@ -67,16 +80,20 @@ Higgsfield clone and does not claim unsupported provider features.
 
 ```mermaid
 flowchart LR
-    A["User or coding agent"] --> B["Local director<br/>CLI · MCP · skills"]
-    B --> C["Brief · references · identity"]
+    A["User or coding agent"] --> B["Grill once<br/>infer · recommend · override"]
+    B --> C["Local brief · references · identity"]
     C --> D{"Single shot or storyboard?"}
     D -->|Single shot| E["Preview still"]
     D -->|Storyboard| F["Script approval<br/>Storyboard approval<br/>One child brief per shot"]
     F --> E
     E --> G{"User approves the image?"}
     G -->|No| C
-    G -->|Yes| H["Kie.ai final generation"]
-    H --> I["Local assembly · delivery · reuse"]
+    G -->|Yes| H{"Optional lowest-tier<br/>complete-shot proof?"}
+    H -->|Generate| I["Show full proof<br/>approve or revise"]
+    H -->|Skip| J["Fresh paid confirmation"]
+    I --> J
+    J --> K["Kie.ai final generation"]
+    K --> L["Local assembly · delivery · reuse"]
 ```
 
 The local state is durable but the protocol is stateless: agents pass opaque
@@ -104,25 +121,31 @@ export PATH="$PWD/bin:$PATH"
 ## First run
 
 Run `kie-pp-cli` with no arguments in an interactive terminal. If no credential
-is saved, it starts the setup wizard. The wizard shows the **Get API key** link,
-masks your entry, and saves it in the existing private credential store. You can
-also start it at any time with `kie-pp-cli auth setup`.
+is saved, it starts the setup wizard. The wizard offers the maintainer's
+**[support-development Kie.ai signup link](https://kie.ai?ref=39dfbcbc0a8244b61bec6e5dd056e35d)**,
+masks your key entry, and saves it in the existing private credential store. You
+can also start it at any time with `kie-pp-cli auth setup`.
 
-![A genuine local terminal session runs the first-time Kie API key wizard. The key entry is hidden and a fake key was used for this capture.](docs/images/first-run-setup.png)
+> **Affiliate disclosure:** the project maintainer may earn a 15% commission on
+> purchases made after you use that link. Using it is a direct way to fund
+> continued development of this open-source CLI and MCP server when you make an
+> eligible Kie.ai purchase.
 
 For scripts, agents, and CI, set `KIE_BEARER_AUTH` through that environment's
 secret store. `--agent`, `--json`, `--no-input`, `--help`, and `--version` never
 start the wizard. Never paste a key into a media brief, agent prompt, issue,
 log, or storyboard.
 
-Start creating:
+Start the concise media grill:
 
 ```bash
-kie-pp-cli create "a cinematic website hero for my coffee brand"
+kie-pp-cli grill-me "a cinematic website hero for my coffee brand"
 ```
 
-The command creates a local brief and asks the next useful question. Resume the
-same brief until it returns a ready plan, then explicitly submit it.
+The command infers explicit prompt facts, creates a local brief, and asks only
+the next material question. It shows a recommendation and reason while allowing
+the user to change the route. Resume until it returns a ready plan; every live
+paid action still needs a fresh confirmation.
 
 ## Give the factory to a coding agent
 
@@ -221,19 +244,26 @@ Resume by durable brief ID and answer only the returned next question:
 kie-pp-cli create --brief brief_ab12cd34 --answer "Instagram launch" --agent
 ```
 
-For video, preview and final generation are deliberately separate live actions:
+For video, preview, optional complete-shot proof, and final generation are
+deliberately separate live actions:
 
 ```bash
 kie-pp-cli create "a vertical launch video" --type video --agent
 kie-pp-cli create --brief brief_ab12cd34 \
-  --preview-model nano-banana-pro --preview --wait --agent
+  --preview-model nano-banana-pro --preview --confirm-paid --wait --agent
 # Display result_urls[0] to the user and wait for an explicit yes.
 kie-pp-cli create --brief brief_ab12cd34 --approve-preview --agent
-kie-pp-cli create --brief brief_ab12cd34 --submit --wait --agent
+# Offer a full low-resolution proof. If accepted, ask again, then:
+kie-pp-cli create --brief brief_ab12cd34 --proof --confirm-paid --wait --agent
+# Display the whole clip; then use --approve-proof or --reject-proof.
+kie-pp-cli create --brief brief_ab12cd34 --approve-proof --agent
+# Ask again for this exact final render.
+kie-pp-cli create --brief brief_ab12cd34 --submit --confirm-paid --wait --agent
 ```
 
 If the image is wrong, use `--reject-preview`, revise the brief, and generate a
-new still. Changing a creative field invalidates the prior approval.
+new still. If the user declines the proof, record `--skip-proof`. Changing a
+creative field invalidates stale approvals and confirmations.
 
 ## Reuse references and likenesses
 
@@ -284,17 +314,25 @@ display, approval, and final-generation sequence separately for every shot,
 then assemble the approved clips locally with ffmpeg, Remotion, or an editor.
 See [Script and Storyboard Workflow](docs/SCRIPT_AND_STORYBOARD.md).
 
-## Ten production skills
+## Seventeen routed agent skills
 
-The `skills/` directory contains a core director and nine Kie-native production
-workflows. They keep domain guidance out of repeated agent prompts while handing
-compact workflow names and durable handles back to the CLI/MCP layer.
+The `skills/` directory contains a thin `/kie-grill-me` entry, one shared
+grilling protocol, capability skills, a film-production skill, and outcome
+workflows. They keep model schemas in CLI/MCP introspection and hand compact
+workflow names and durable handles back to the runtime.
 
 | Skill | Production job |
 | --- | --- |
+| `kie-grill-me` | User-invoked concise media interview |
+| `kie-grilling` | Shared one-question routing, reference intake, gates, and paid-call protocol |
 | `kie-create` | Guided intake, references, scripts, storyboards, approvals, and polling |
+| `kie-image` | Still generation, editing, references, and exact-model validation |
+| `kie-video` | Single-shot video with still and optional complete-shot proof gates |
+| `kie-audio` | Narration, dialogue, music, and sound routing |
+| `kie-avatar` | Consented presenters, lip-sync, face, and voice handling |
+| `kie-film` | Script, storyboard, continuity bible, and per-shot production |
 | `kie-lesson` | Source-linked lesson selection, original Kie methods, and storyboard-first direction |
-| `kie-generate` | General image/video routing plus audio and music handoff |
+| `kie-generate` | Advanced/manual cross-capability model routing |
 | `kie-brandkit` | Approval-led brand concepts and reusable visual direction |
 | `kie-marketplace-cards` | Truthful marketplace assets with local exact-copy composition |
 | `kie-product-photoshoot` | Reference-led product campaign imagery |
@@ -310,6 +348,8 @@ command remains available for direct or advanced use.
 
 ```bash
 # Find the right model without loading the full catalog into an agent prompt
+kie-pp-cli media capability list --capability kie-video --agent
+kie-pp-cli media capability show bytedance/seedance-2-5 --agent
 kie-pp-cli models list --search video --agent
 
 # Inspect and validate exact settings before spending credits
@@ -365,7 +405,9 @@ against the embedded contract before submitting, then optionally polls the
 shared Market task endpoint and returns result URLs. It is an advanced direct
 route: it deliberately bypasses the director's still-preview confirmation gate.
 Use the guided `create` workflow whenever a human should inspect and approve the
-image that anchors a video.
+image and optional low-resolution proof that precede a final video. Direct
+commands are advanced surfaces and do not inherit the director's durable paid
+confirmation transaction.
 
 ## Agent memory and token savings
 
@@ -387,7 +429,7 @@ turn. Use `--no-learn` when a deterministic run should not update local memory.
 
 Two MCP binaries serve different jobs:
 
-- `kie-media-mcp` is the recommended creative surface. It exposes 29 focused
+- `kie-media-mcp` is the recommended creative surface. It exposes 40 focused
   director tools, uses the official MCP Go SDK, supports stdio, and serves
   loopback-only stateless HTTP for MCP `2026-07-28`.
 - `kie-pp-mcp` exposes the broad generated Printing Press tool surface for
@@ -397,6 +439,9 @@ The focused server is stateless at the protocol layer but stateful at the
 application layer: durable IDs carry the workflow between calls. See the
 [advanced guide](docs/ADVANCED_MEDIA_DIRECTOR.md) for the complete tool list,
 transport details, automation boundaries, and local state contract.
+`media_setup_get` lets MCP agents check authentication without reading a secret;
+when setup is missing it returns the same referral URL and disclosure shown by
+the CLI.
 
 ## Model catalog
 
@@ -409,6 +454,11 @@ show`, `models example`, and `models validate` locally; agents can use the
 matching `media_model_*` MCP tools. See [docs/MODELS.md](docs/MODELS.md) for the
 compact catalog and [docs/MODEL_INPUTS.md](docs/MODEL_INPUTS.md) for all field
 tables.
+
+The fail-closed capability classifier maps every catalog model to `kie-image`,
+`kie-video`, `kie-audio`, `kie-avatar`, or `kie-identity`, with production-fit
+and lowest-faithful-proof metadata. Its source hashes make catalog drift a test
+failure instead of silently routing an unknown model.
 
 `media models [query] --family <term>` is a compact alias over that same
 canonical 129-model registry, not a second catalog. This keeps terminal and
@@ -438,6 +488,8 @@ labels Seedance 2.0 data only as family context. See
 | [Vibe Coder Quickstart](docs/VIBE_CODER_QUICKSTART.md) | Copy-paste agent setup prompt and first safe generation |
 | [Media Director](docs/MEDIA_DIRECTOR.md) | Complete CLI/MCP workflow, qualification protocol, references, and tools |
 | [Script and Storyboard](docs/SCRIPT_AND_STORYBOARD.md) | Multi-shot schemas, approvals, shot generation, and assembly boundary |
+| [Agent Skill Suite](docs/SKILLS.md) | All 17 skills, routing rules, invocation, and shared runtime contract |
+| [Proof and Paid Confirmation](docs/PROOF_AND_PAID_CONFIRMATION.md) | Still/proof/final gates and single-use credit authorization |
 | [Academy-Inspired Production Methods](docs/ACADEMY_METHODS.md) | All 16 courses and 171 source-linked original Kie workflow adaptations |
 | [Model Evidence Leaderboard](docs/MODEL_LEADERBOARD.md) | Dated image/edit/video evidence, Kie availability, and proxy disclosures |
 | [Advanced Media Director](docs/ADVANCED_MEDIA_DIRECTOR.md) | Architecture, state, transports, automation, security, and troubleshooting |
@@ -487,9 +539,9 @@ scripts/weekly-refresh.sh
 - Known Market inputs are validated locally against their captured formal JSON
   Schema before submission. Cross-field rules expressed only as prose remain
   visible in `models show` but cannot all be enforced mechanically.
-- Live Kie generation was not run during the current validation because the
-  isolated test environment had no API key. Structural tests, dry runs, builds,
-  and local workflow dogfood passed.
+- Live Kie generation was not run during the current validation because no paid
+  call was authorized. Structural tests, dry runs, builds, and local workflow
+  dogfood do not prove provider output quality.
 
 The generated CLI currently scores grade A / 87% in CLI Printing Press. The
 unscored dimensions are `path_validity`, `auth_protocol`, and

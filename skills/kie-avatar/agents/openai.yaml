@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kie Avatar"
+  short_description: "Direct consented presenter and lip-sync media"
+  default_prompt: "Use $kie-avatar to create this consented presenter or lip-sync media safely."

@@ -209,6 +209,8 @@ func newDoctorCmd(flags *rootFlags) *cobra.Command {
 					report["auth"] = "not configured"
 					report["auth_hint"] = "Run kie-pp-cli auth setup in an interactive terminal, or set KIE_BEARER_AUTH through your environment's secret store"
 					report["auth_key_url"] = cliutil.KieAPIKeyURL
+					report["auth_key_url_type"] = "affiliate"
+					report["auth_affiliate_disclosure"] = cliutil.KieAffiliateDisclosure
 				} else {
 					authConfigured = true
 					report["auth"] = "configured"
@@ -399,6 +401,9 @@ func newDoctorCmd(flags *rootFlags) *cobra.Command {
 			}
 			if keyURL, ok := report["auth_key_url"]; ok {
 				fmt.Fprintf(w, "  Get a key at: %v\n", keyURL)
+			}
+			if disclosure, ok := report["auth_affiliate_disclosure"]; ok {
+				fmt.Fprintf(w, "  %v\n", disclosure)
 			}
 			// Cache section: render after the primary health block so it
 			// sits next to version info, mirroring the JSON report layout.

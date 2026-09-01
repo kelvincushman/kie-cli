@@ -6,18 +6,19 @@ Codex, Claude Code, Cursor, and compatible hosts. The media director is the
 control plane for an open-source agent media factory; it is not a browser-hosted
 editor or a drop-in clone of Higgsfield's cloud product.
 
-The product entry point is:
+The concise product entry point is:
 
 ```bash
-kie-pp-cli create "what you want to make"
+kie-pp-cli grill-me "what you want to make"
 ```
 
-The director qualifies a brief one question at a time, saves durable local
-handles, stores reusable references in a private vault, and returns generation
-state plus output URLs. Video has a hard human-in-the-middle gate: generate a
-still preview, show it to the user, record explicit approval, and only then
-submit the final video. Storyboard mode applies this contract independently to
-every shot.
+The director infers explicit prompt facts, qualifies the remainder one material
+question at a time, shows its recommendation/rationale/overrides, saves durable
+local handles, and stores reusable references in a private vault. Video has a
+hard human-in-the-middle still gate and an optional complete-shot proof at the
+model's lowest faithful resolution. Every live preview, proof, and final call
+requires a separate fresh paid confirmation. Storyboard mode applies this
+contract independently to every shot.
 
 ## Product Commands
 
@@ -29,14 +30,19 @@ kie-pp-cli media workflow list --agent
 kie-pp-cli media workflow show <workflow> --agent
 kie-pp-cli lesson recommend "<what you want to create>" --agent
 kie-pp-cli media leaderboard <task> --agent
+kie-pp-cli grill-me "a polished product image for a website hero" --agent
 kie-pp-cli create "a polished product image for a website hero" --agent
 kie-pp-cli create --workflow product-photoshoot "a polished product image" --agent
 kie-pp-cli create --brief <brief_id> --answer <value> --agent
-kie-pp-cli create --brief <brief_id> --preview --wait --agent
+kie-pp-cli create --brief <brief_id> --wrap-up --agent
+kie-pp-cli create --brief <brief_id> --preview --confirm-paid --wait --agent
 kie-pp-cli create --brief <brief_id> --approve-preview --agent
 kie-pp-cli create --brief <brief_id> --reject-preview --agent
-kie-pp-cli create --brief <brief_id> --submit --agent
-kie-pp-cli create --brief <brief_id> --submit --wait --agent
+kie-pp-cli create --brief <brief_id> --proof --confirm-paid --wait --agent
+kie-pp-cli create --brief <brief_id> --approve-proof --agent
+kie-pp-cli create --brief <brief_id> --reject-proof --agent
+kie-pp-cli create --brief <brief_id> --skip-proof --agent
+kie-pp-cli create --brief <brief_id> --submit --confirm-paid --wait --agent
 kie-pp-cli media brief show <brief_id> --agent
 kie-pp-cli media brief list --agent
 kie-pp-cli media reference add <path-or-url> --name <name> --agent
@@ -46,6 +52,8 @@ kie-pp-cli media identity show <identity-id> --agent
 kie-pp-cli media identity list --agent
 kie-pp-cli media generation status <generation_id> --agent
 kie-pp-cli media generation status <generation_id> --wait --agent
+kie-pp-cli media capability list --capability kie-video --agent
+kie-pp-cli media capability show <model-id> --agent
 kie-pp-cli media models --family video --agent
 ```
 
@@ -73,18 +81,30 @@ director workflow when human confirmation is required.
 ## Design Goals
 
 - Keep creative direction and reference selection local until the user approves live generation.
-- Ask exactly one media-qualification question at a time, inspired by Matt Pocock's Grill With Docs workflow but adapted from software-domain alignment to media-brief alignment.
+- Infer explicit facts, then ask exactly one material media question at a time,
+  inspired by Matt Pocock's grilling structure but adapted to avoid an
+  over-the-top creative intake. Include a recommended answer and reason.
 - Use durable local IDs for briefs, references, identities, scripts,
   storyboards, and generations so agents pass handles instead of full context.
 - Accept typed image, video, and audio paths, URLs, or `ref:<id>` handles from the local reference vault. Images support JPEG, PNG, GIF, WebP, BMP, and TIFF; video supports MP4, MOV, and MKV; audio supports MP3, WAV, AAC, M4A, and OGG. Local safety limits are 30 MiB for images, 200 MiB for video, and 15 MiB for audio.
 - Keep reusable likenesses as consented local identity-reference bundles; do not claim biometric training or a cross-model Soul equivalent.
 - Upload local reference files only during explicit live preview or final generation.
 - Use existing Kie.ai authentication only: `kie-pp-cli auth setup` in an interactive terminal, or `KIE_BEARER_AUTH` through an environment secret store.
+- When authentication is missing, CLI and MCP setup metadata may recommend the maintainer's Kie.ai referral link to support continued development. Agents must show its adjacent affiliate disclosure and must not describe it as a neutral link.
 - Never estimate cost by default.
-- Treat `create --brief <id> --preview --agent` as a separate live image-generation action that may consume credits.
+- For video briefs, treat `create --brief <id> --preview --confirm-paid --agent` as a separate live action that generates a still visual anchor and may consume credits. Still-image briefs use `--submit`, not `--preview`.
 - For video, require `create --brief <id> --approve-preview --agent` after the preview has been shown. Silence or a ready brief is not approval.
-- Treat `create --brief <id> --submit --agent` as the explicit final-generation action. `--wait` only changes whether the command polls after submitting.
-- Apply the same separation to MCP: `media_preview_generate`, display/poll, `media_preview_approve`, then `media_generate`.
+- Offer a complete-shot proof at the selected model's lowest documented
+  faithful tier after still approval. Proof generation is optional but the
+  user must approve, reject, or skip it before the final gate.
+- Require a fresh explicit user confirmation immediately before every live
+  generation. The director additionally enforces a scoped, expiring, single-use
+  record for preview, proof, and final calls. Broad generated endpoint tools are
+  advanced manual surfaces and must not be described as protected by that
+  director record.
+- Apply the same separation to MCP: `media_paid_confirm`,
+  `media_preview_generate`, display/approve, optional `media_proof_generate`,
+  display/approve or skip, then a new confirmation and `media_generate`.
 - Return machine-readable brief, reference, generation, task state, and result URL data.
 - Keep `media models` backed by the canonical complete model registry; never
   maintain a second summary catalog that can drift from captured inputs and
@@ -124,9 +144,11 @@ The workflow catalog keeps repeated routing metadata in Go instead of agent prom
 | `websites` | Image, video | Site/app media assets with a separate local build/deploy step |
 | `youtube-thumbnail` | Image | 16:9 concepts with local exact-text composition |
 
-The ten installable skills are the core `kie-create` director plus one skill
-for each workflow above. Workflow metadata is intentionally compact for token
-savings; load a specialized skill only when its domain guidance is needed.
+The 17 installable skills add a thin `kie-grill-me` entry, shared
+`kie-grilling` primitive, capability skills for image/video/audio/avatar,
+`kie-film`, the core `kie-create` director, identity and lesson skills, and the
+outcome workflows above. Workflow metadata is intentionally compact for token
+savings; model schemas stay in runtime introspection. See [SKILLS.md](SKILLS.md).
 
 ## Lesson Director
 
@@ -152,21 +174,13 @@ course scripts, prompts, prose, videos, or downloads. See
 
 ## Qualification Protocol
 
-Ask one question, wait for the answer, update the brief, then ask the next question. Do not batch an intake form.
-
-The implemented v1 question order is exactly:
-
-1. `request`: "What do you want to create? Describe the subject and desired outcome."
-2. `media_type`: "Should this be an image or a video?"
-3. `purpose`: "What will this media be used for?"
-4. `platform`: "Where will it be used?"
-5. `aspect_ratio`: "Which aspect ratio should I use?"
-6. `duration_seconds`: "How many seconds should the video run?" This appears only for video briefs.
-7. `audio_mode`: "Should SeedDance generate synchronized audio?" Video only.
-8. `video_mode`: "How should SeedDance guide the video?" Video only.
-9. `style`: "What visual style or mood should it have?"
-10. `first_frame`, then optionally `last_frame`, when a frame-controlled mode is selected.
-11. `reference`: image by default; multimodal video accepts `video:` and `audio:` prefixes. This repeats until `skip`, `done`, or `none`.
+Start with `grill-me` or MCP `media_grill_start`. The runtime fills facts stated
+explicitly in the initial request. Ask the returned `next_question.prompt`, show
+its recommendation and reason briefly, wait for the answer, update the brief,
+then ask the next question. Do not batch an intake form or hard-code a question
+order: conditional route, rights, identity, frame, audio, and reference
+questions can appear. Use `--wrap-up`/`media_grill_wrap_up` only when the user
+asks the agent to choose sensible remaining defaults.
 
 Agent resume flow:
 
@@ -174,7 +188,11 @@ Agent resume flow:
 kie-pp-cli create --brief <brief_id> --answer <value> --agent
 ```
 
-The command returns either the next single `next_question` or a qualified plan. Images return `can_submit: true` and `next_action: "review_then_submit"`. Videos first return `can_submit: false` and `next_action: "generate_preview"`.
+The command returns either the next single `next_question` or a qualified plan.
+Plans include production/capability skills, route rationale, cost status, and
+override options. Images next require plan review and paid confirmation. Videos
+first return `generate_preview`; later state offers `generate_proof` or records
+proof skip before allowing final submission.
 
 ## References
 
@@ -218,7 +236,7 @@ When the brief is ready, review the returned plan. The plan includes the selecte
 For a video, generate and wait for the separate review image:
 
 ```bash
-kie-pp-cli create --brief <brief_id> --preview --wait --agent
+kie-pp-cli create --brief <brief_id> --preview --confirm-paid --wait --agent
 ```
 
 The completed preview generation returns `kind: "preview"` and a `result_urls` image. The terminal prints the URL; an agent or chat host with image rendering must display the image itself to the user. Do not approve from prompt text, metadata, silence, or an agent's private judgment.
@@ -228,7 +246,7 @@ If the image is wrong, reject it, revise the brief, and regenerate:
 ```bash
 kie-pp-cli create --brief <brief_id> --reject-preview --agent
 kie-pp-cli create --brief <brief_id> --style "revised direction" --agent
-kie-pp-cli create --brief <brief_id> --preview --wait --agent
+kie-pp-cli create --brief <brief_id> --preview --confirm-paid --wait --agent
 ```
 
 If the user explicitly approves the displayed image:
@@ -237,18 +255,32 @@ If the user explicitly approves the displayed image:
 kie-pp-cli create --brief <brief_id> --approve-preview --agent
 ```
 
-The approved still becomes the final video's visual anchor. SeedDance text/first-frame routes use it as `first_frame_url`; multimodal routes include it in `reference_image_urls`. Editing a creative brief field invalidates the approval and requires a new preview.
+The approved still becomes the final video's visual anchor. SeedDance
+text/first-frame routes use it as `first_frame_url`; multimodal routes include
+it in `reference_image_urls`. Editing a creative brief field invalidates the
+approval and requires a new preview.
 
-After user approval, submit:
+Offer the optional complete-shot proof at `proof_option.lowest_faithful_tier`.
+For Seedance 2.5 this resolves to 480p. Decline the optional proof without
+making a live proof call:
 
 ```bash
-kie-pp-cli create --brief <brief_id> --submit --agent
+kie-pp-cli create --brief <brief_id> --skip-proof --agent
 ```
 
-Submit and wait:
+Accept the optional proof only after a fresh paid confirmation. Generate it,
+show the whole clip, and then record approval or rejection:
 
 ```bash
-kie-pp-cli create --brief <brief_id> --submit --wait --agent
+kie-pp-cli create --brief <brief_id> --proof --confirm-paid --wait --agent
+kie-pp-cli create --brief <brief_id> --approve-proof --agent
+# or --reject-proof
+```
+
+Then ask for a new confirmation for the exact final render:
+
+```bash
+kie-pp-cli create --brief <brief_id> --submit --confirm-paid --wait --agent
 ```
 
 Poll an existing generation:
@@ -314,20 +346,47 @@ evidence and input requirements support a better route.
 
 ## Approval and MCP
 
-Image generation approval is explicit `--submit`. Video requires separate preview and final actions:
+Image generation needs plan approval plus a fresh paid confirmation. Video
+requires separate still, optional proof, and final actions. First create and
+approve the preview:
 
 ```bash
-kie-pp-cli create --brief <brief_id> --preview --wait --agent
+kie-pp-cli create --brief <brief_id> --preview --confirm-paid --wait --agent
 # Show result_urls[0] and obtain explicit user approval.
 kie-pp-cli create --brief <brief_id> --approve-preview --agent
-kie-pp-cli create --brief <brief_id> --submit --agent
+```
+
+Decline the optional proof without making a live proof call:
+
+```bash
+kie-pp-cli create --brief <brief_id> --skip-proof --agent
+```
+
+Or accept the optional proof only after a fresh paid confirmation, then show
+the whole result and record approval or rejection:
+
+```bash
+kie-pp-cli create --brief <brief_id> --proof --confirm-paid --wait --agent
+# Show the whole proof and approve or reject it.
+kie-pp-cli create --brief <brief_id> --approve-proof --agent
+```
+
+Finally, obtain another fresh confirmation for the exact final render:
+
+```bash
+kie-pp-cli create --brief <brief_id> --submit --confirm-paid --agent
 ```
 
 Do not submit merely because a brief is qualified. The final service rejects every video brief whose current preview has not been returned and explicitly approved. Preview approval is fingerprinted to the current brief, so later creative changes make it stale.
 
 A brief can be submitted only once. After submission it returns `next_action: "check_generation_status"`; create a new brief for another paid generation.
 
-For MCP, brief, reference, identity, and preview approve/reject tools are local state actions. `media_preview_generate` and `media_generate` are distinct live actions and may each consume credits. Poll previews with `media_generation_status`, render the returned image URL in the host, ask for explicit approval, and only then call `media_preview_approve`. Use `media_preview_reject` when the user wants another direction.
+For MCP, brief, reference, identity, and approval/skip tools are local state
+actions. `media_preview_generate`, `media_proof_generate`, and `media_generate`
+are distinct live actions and may each consume credits. Precede every one with
+a fresh `media_paid_confirm`, poll it with `media_generation_status`, render the
+artifact in the host, then record the user's decision. Confirmation validation
+occurs before a live API request.
 
 The focused MCP binary is `kie-media-mcp`. It uses the official MCP Go SDK and
 supports the finalized `2026-07-28` stateless protocol over loopback Streamable
@@ -342,8 +401,12 @@ kie-media-mcp --transport http --addr 127.0.0.1:7780
 ```
 
 The HTTP listener intentionally rejects wildcard and non-loopback addresses.
-The twenty-nine stable tools are:
+The 40 stable focused tools are:
 
+- `media_setup_get`
+- `media_grill_start`
+- `media_grill_answer`
+- `media_grill_wrap_up`
 - `media_brief_start`
 - `media_brief_answer`
 - `media_brief_get`
@@ -357,14 +420,21 @@ The twenty-nine stable tools are:
 - `media_model_get`
 - `media_model_example`
 - `media_model_validate`
+- `media_capability_list`
+- `media_capability_get`
 - `media_reference_add`
 - `media_reference_list`
 - `media_identity_create`
 - `media_identity_get`
 - `media_identity_list`
+- `media_paid_confirm`
 - `media_preview_generate`
 - `media_preview_approve`
 - `media_preview_reject`
+- `media_proof_generate`
+- `media_proof_approve`
+- `media_proof_reject`
+- `media_proof_skip`
 - `media_script_set`
 - `media_script_get`
 - `media_script_decide`
@@ -373,6 +443,9 @@ The twenty-nine stable tools are:
 - `media_storyboard_decide`
 - `media_generate`
 - `media_generation_status`
+
+See [Proof, Approval, and Paid Confirmation](PROOF_AND_PAID_CONFIRMATION.md)
+for transaction and invalidation details.
 
 ## Sources
 

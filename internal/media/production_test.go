@@ -118,6 +118,81 @@ func TestStoryboardProductionCreatesGatedShotBriefs(t *testing.T) {
 	}
 }
 
+func TestStoryboardArtifactsResumeAcrossStoreInstancesWithShotLineageAndGates(t *testing.T) {
+	root := filepath.Join(t.TempDir(), "media")
+	store := NewStore(root)
+	master, err := NewBrief(BriefInput{
+		Request: "A two-part product story", MediaType: "video", Purpose: "launch film", Platform: "youtube",
+		AspectRatio: "16:9", DurationSeconds: 10, Resolution: "720p", AudioMode: "off", VideoMode: "text",
+		Style: "studio", ProductionMode: ProductionModeStoryboard,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := store.SaveBrief(master); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := store.SetScript(master.ID, ScriptInput{Title: "Resume", Content: "Open on the product, then reveal the result."}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := store.DecideScript(master.ID, "approve"); err != nil {
+		t.Fatal(err)
+	}
+	storyboard, err := store.SetStoryboard(master.ID, StoryboardInput{Title: "Two shots", Shots: []StoryboardShotInput{
+		{ID: "shot-open", DurationSeconds: 5, Visual: "Product rests on a clean table"},
+		{ID: "shot-reveal", DurationSeconds: 5, Visual: "The finished result rotates into view"},
+	}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := store.DecideStoryboard(master.ID, "approve"); err != nil {
+		t.Fatal(err)
+	}
+
+	resumed := NewStore(root)
+	loadedMaster, err := resumed.GetBrief(master.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	loadedScript, err := resumed.GetScript(master.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	loadedStoryboard, err := resumed.GetStoryboard(master.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	Refresh(loadedMaster)
+	if loadedScript.Status != StatusApproved || loadedStoryboard.Status != StatusApproved || loadedStoryboard.ScriptID != loadedScript.ID || loadedMaster.StoryboardID != loadedStoryboard.ID {
+		t.Fatalf("resumed production lineage master=%#v script=%#v storyboard=%#v", loadedMaster, loadedScript, loadedStoryboard)
+	}
+	if len(loadedStoryboard.Shots) != 2 || loadedStoryboard.Shots[0].BriefID != storyboard.Shots[0].BriefID {
+		t.Fatalf("resumed shots = %#v", loadedStoryboard.Shots)
+	}
+	child, err := resumed.GetBrief(loadedStoryboard.Shots[0].BriefID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	Refresh(child)
+	if child.MasterBriefID != loadedMaster.ID || child.StoryboardID != loadedStoryboard.ID || child.ShotID != "shot-open" || TurnFor(child).NextAction != "generate_preview" {
+		t.Fatalf("resumed child gate = %#v", TurnFor(child))
+	}
+	view, err := resumed.StoryboardView(loadedMaster.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if view.NextAction != "generate_shot_previews" || len(view.Shots) != 2 {
+		t.Fatalf("resumed storyboard view = %#v", view)
+	}
+	api := &fakeAPI{}
+	if _, err := (&Service{API: api, Store: resumed}).Submit(context.Background(), child); err == nil {
+		t.Fatal("resumed shot bypassed its current preview/proof/final gates")
+	}
+	if api.posts != 0 {
+		t.Fatalf("resumed gated shot made %d API calls", api.posts)
+	}
+}
+
 func TestScriptAndCreativeEditsInvalidateDownstreamApproval(t *testing.T) {
 	store := NewStore(filepath.Join(t.TempDir(), "media"))
 	brief, err := NewBrief(BriefInput{

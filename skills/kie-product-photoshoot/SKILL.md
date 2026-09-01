@@ -5,6 +5,10 @@ description: Direct consistent Kie.ai product photography and campaign imagery f
 
 # Kie Product Photoshoot
 
+Start with `$kie-grilling`, then route each still through `$kie-image` and any
+motion shot through `$kie-video`. Reuse the approved product references and
+continuity lock; do not repeat the questionnaire for every asset.
+
 Read [references/shoot-modes.md](references/shoot-modes.md), then ask one question at a time until the product, mode, audience, placement, references, visual direction, and number of variants are clear.
 
 Prefer `kie-pp-cli media workflow show product-photoshoot --agent` and `kie-pp-cli create --workflow product-photoshoot ... --agent` for token-efficient, durable runs. MCP hosts use `workflow: "product-photoshoot"`.
@@ -39,4 +43,7 @@ Keep a shot ledger with shot ID, mode, prompt, references, model, task ID, outpu
 - Obtain consent before using a saved human identity; use `$kie-identity` for reusable likeness bundles.
 - For virtual try-on, state that fit, drape, scale, and material remain illustrative unless verified.
 
-Review the plan before each paid submission. Inspect results at full size and target placement size. Deliver only passing variants with semantic names, task/result provenance, and any fidelity caveat.
+Review the plan and obtain a fresh paid confirmation before each submission,
+regeneration, edit, or upscale. Inspect results at full size and target placement
+size. Deliver only passing variants with semantic names, task/result provenance,
+and any fidelity caveat.

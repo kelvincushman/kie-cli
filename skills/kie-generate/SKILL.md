@@ -5,6 +5,10 @@ description: Create, edit, or direct images, video, narration, dialogue, sound, 
 
 # Kie Generate
 
+Start with `$kie-grilling`; use this skill only for the advanced/manual route it
+selects. Prefer `$kie-image`, `$kie-video`, `$kie-audio`, `$kie-avatar`, or
+`$kie-film` when one capability clearly owns the request.
+
 For any multi-shot or narrative video, hand off to the `kie-create` storyboard
 protocol: one local master script, one local storyboard, and one independently
 previewed/approved child brief per shot. Do not flatten a multi-shot request
@@ -89,7 +93,7 @@ Treat virality scoring as a qualitative local critique only. Do not present a he
 Review the ready plan with the user. For video, generate the mandatory review still, show `result_urls[0]`, and wait for an explicit yes:
 
 ```bash
-kie-pp-cli create --brief <brief_id> --preview --wait --agent
+kie-pp-cli create --brief <brief_id> --preview --confirm-paid --wait --agent
 # Render or clearly display result_urls[0].
 kie-pp-cli create --brief <brief_id> --approve-preview --agent
 ```
@@ -99,7 +103,7 @@ If rejected, use `--reject-preview`, revise the direction, and generate another 
 Submit only after the relevant approval:
 
 ```bash
-kie-pp-cli create --brief <brief_id> --submit --agent
+kie-pp-cli create --brief <brief_id> --submit --confirm-paid --agent
 kie-pp-cli media generation status <generation_id> --wait --agent
 ```
 

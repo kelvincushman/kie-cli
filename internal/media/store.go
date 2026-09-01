@@ -459,6 +459,10 @@ func (s *Store) acquirePreviewSubmission(briefID string) (func(), error) {
 	return s.acquireBriefLock(briefID, "preview")
 }
 
+func (s *Store) acquireProofSubmission(briefID string) (func(), error) {
+	return s.acquireBriefLock(briefID, "proof")
+}
+
 func (s *Store) acquireBriefLock(briefID, operation string) (func(), error) {
 	lockDir := filepath.Join(s.root, "locks")
 	if err := os.MkdirAll(lockDir, 0o700); err != nil {

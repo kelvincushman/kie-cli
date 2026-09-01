@@ -17,6 +17,7 @@ import (
 	"kie-pp-cli/internal/academy"
 	"kie-pp-cli/internal/cli"
 	"kie-pp-cli/internal/client"
+	"kie-pp-cli/internal/cliutil"
 	"kie-pp-cli/internal/config"
 	"kie-pp-cli/internal/kiecatalog"
 	"kie-pp-cli/internal/leaderboard"
@@ -26,6 +27,10 @@ import (
 const defaultRateLimit = 2
 
 var ToolNames = []string{
+	"media_setup_get",
+	"media_grill_start",
+	"media_grill_answer",
+	"media_grill_wrap_up",
 	"media_brief_start",
 	"media_brief_answer",
 	"media_brief_get",
@@ -39,14 +44,21 @@ var ToolNames = []string{
 	"media_model_get",
 	"media_model_example",
 	"media_model_validate",
+	"media_capability_list",
+	"media_capability_get",
 	"media_reference_add",
 	"media_reference_list",
 	"media_identity_create",
 	"media_identity_get",
 	"media_identity_list",
+	"media_paid_confirm",
 	"media_preview_generate",
 	"media_preview_approve",
 	"media_preview_reject",
+	"media_proof_generate",
+	"media_proof_approve",
+	"media_proof_reject",
+	"media_proof_skip",
 	"media_script_set",
 	"media_script_get",
 	"media_script_decide",
@@ -59,7 +71,16 @@ var ToolNames = []string{
 
 type Dependencies struct {
 	Store       func() (*media.Store, error)
+	LoadConfig  func() (*config.Config, error)
 	LiveService func(context.Context, *media.Store) (*media.Service, func(), error)
+}
+
+type setupOutput struct {
+	AuthConfigured      bool   `json:"auth_configured"`
+	NextStep            string `json:"next_step"`
+	GetAPIKey           string `json:"get_api_key,omitempty"`
+	GetAPIKeyLinkType   string `json:"get_api_key_link_type,omitempty"`
+	AffiliateDisclosure string `json:"affiliate_disclosure,omitempty"`
 }
 
 type briefStartInput struct {
@@ -87,6 +108,7 @@ type briefStartInput struct {
 	Model           string   `json:"model,omitempty" jsonschema:"optional explicit Kie.ai model override"`
 	PreviewModel    string   `json:"preview_model,omitempty" jsonschema:"optional still gate model: gpt-image-2-text-to-image, gpt-image-2-image-to-image, nano-banana-2, nano-banana-2-lite, or nano-banana-pro"`
 	ProductionMode  string   `json:"production_mode,omitempty" jsonschema:"optional single-shot or storyboard video production"`
+	RightsConfirmed bool     `json:"rights_confirmed,omitempty" jsonschema:"confirm rights and consent for likeness or voice generation"`
 }
 
 type briefAnswerInput struct {
@@ -183,6 +205,19 @@ type modelValidationOutput struct {
 	Issues []kiecatalog.ValidationIssue `json:"issues"`
 }
 
+type capabilityListInput struct {
+	Capability string `json:"capability,omitempty" jsonschema:"optional kie-image, kie-video, kie-audio, kie-avatar, or kie-identity filter"`
+	Model      string `json:"model,omitempty" jsonschema:"optional exact model ID filter"`
+}
+
+type capabilityListOutput struct {
+	Models []kiecatalog.ModelCapability `json:"models"`
+}
+
+type capabilityOutput struct {
+	Model kiecatalog.ModelCapability `json:"model"`
+}
+
 type referenceListOutput struct {
 	References []media.PublicReference `json:"references"`
 }
@@ -206,11 +241,28 @@ type identityListOutput struct {
 }
 
 type generateInput struct {
-	BriefID string `json:"brief_id" jsonschema:"ready media brief ID approved by the user"`
+	BriefID        string `json:"brief_id" jsonschema:"ready media brief ID approved by the user"`
+	ConfirmationID string `json:"confirmation_id" jsonschema:"fresh scoped ID returned by media_paid_confirm"`
 }
 
-type previewInput struct {
-	BriefID string `json:"brief_id" jsonschema:"ready video brief ID"`
+type liveGenerateInput struct {
+	BriefID        string `json:"brief_id" jsonschema:"ready video brief ID"`
+	ConfirmationID string `json:"confirmation_id" jsonschema:"fresh scoped ID returned by media_paid_confirm"`
+}
+
+type paidConfirmInput struct {
+	BriefID                string `json:"brief_id" jsonschema:"durable ready brief ID"`
+	Scope                  string `json:"scope" jsonschema:"preview, proof, or final"`
+	GenerationKind         string `json:"generation_kind" jsonschema:"preview, proof, or final"`
+	ExpectedModel          string `json:"expected_model" jsonschema:"model the user reviewed"`
+	ExpectedPlanHash       string `json:"expected_plan_hash" jsonschema:"plan hash the user reviewed"`
+	DisclosureAcknowledged bool   `json:"disclosure_acknowledged" jsonschema:"must be true after the user accepts that this live action may consume credits"`
+}
+
+type paidConfirmOutput struct {
+	ConfirmationID string    `json:"confirmation_id"`
+	ExpiresAt      time.Time `json:"expires_at"`
+	NextAction     string    `json:"next_action"`
 }
 
 type generationStatusInput struct {
@@ -257,7 +309,7 @@ func NewServer(version string, dependencies *Dependencies) *mcp.Server {
 	server := mcp.NewServer(
 		&mcp.Implementation{Name: "kie-media-mcp", Version: version},
 		&mcp.ServerOptions{
-			Instructions: "Qualify image and video requests one question at a time. When a production method would help, use media_lesson_recommend, explain the source-linked original Kie adaptation, and pass its key to media_brief_start with workflow academy. Use media_leaderboard_get as dated task evidence, then media_model_get and media_model_validate for the exact live input contract before a paid generation. For storyboard video, save and explicitly approve a local script and storyboard, then use each returned shot_brief_id. For every video shot, call media_preview_generate, poll with media_generation_status, display the returned preview image URL, and call media_preview_approve only after explicit approval. media_generate rejects video briefs without that approval and rejects storyboard master briefs. Preview and final generation are separate live actions that may consume Kie.ai credits.",
+			Instructions: "Start with media_grill_start so the shared director infers explicit prompt facts and asks only one material question at a time. Show its recommendation reason, selected production/capability skills, model rationale, settings, cost status, and overrides. Use media_grill_wrap_up when the user asks for sensible defaults. If authentication is missing, call media_setup_get and show its get_api_key URL with its affiliate disclosure. For video, generate and display the mandatory still preview, then record the user's decision. Offer the optional paid complete-shot proof at the selected model's lowest documented tier; approval or skip never authorizes final generation. Every live director preview, proof, or final needs a fresh scoped media_paid_confirm result and confirmation_id. Never infer approval or paid confirmation from earlier text. All state is local and addressed by explicit IDs; the server is stateless MCP 2026-07-28.",
 			Capabilities: &mcp.ServerCapabilities{},
 		},
 	)
@@ -285,6 +337,9 @@ func dependenciesWithDefaults(input *Dependencies) Dependencies {
 	if deps.Store == nil {
 		deps.Store = media.DefaultStore
 	}
+	if deps.LoadConfig == nil {
+		deps.LoadConfig = func() (*config.Config, error) { return config.Load("") }
+	}
 	if deps.LiveService == nil {
 		deps.LiveService = newLiveService
 	}
@@ -298,26 +353,56 @@ func registerTools(server *mcp.Server, deps Dependencies) {
 	readRemote := &mcp.ToolAnnotations{ReadOnlyHint: true, IdempotentHint: true, DestructiveHint: boolPointer(false), OpenWorldHint: boolPointer(true)}
 
 	mcp.AddTool(server, &mcp.Tool{
+		Name: "media_setup_get", Description: "Check local Kie authentication without exposing credentials. When setup is required, returns the maintainer referral URL and its required affiliate disclosure.", Annotations: readLocal,
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, _ emptyInput) (*mcp.CallToolResult, setupOutput, error) {
+		cfg, err := deps.LoadConfig()
+		if err != nil {
+			return nil, setupOutput{}, fmt.Errorf("loading Kie configuration: %w", err)
+		}
+		if cfg.CredentialConfigured() {
+			return nil, setupOutput{
+				AuthConfigured: true,
+				NextStep:       "Start or resume a media brief",
+			}, nil
+		}
+		return nil, setupOutput{
+			AuthConfigured:      false,
+			NextStep:            "Run kie-pp-cli auth setup in an interactive terminal",
+			GetAPIKey:           cliutil.KieAPIKeyURL,
+			GetAPIKeyLinkType:   "affiliate",
+			AffiliateDisclosure: cliutil.KieAffiliateDisclosure,
+		}, nil
+	})
+
+	mcp.AddTool(server, &mcp.Tool{
 		Name: "media_brief_start", Description: "Start a durable local image/video brief. Returns exactly one next question for the agent to ask the user.", Annotations: localMutation,
 	}, func(ctx context.Context, _ *mcp.CallToolRequest, input briefStartInput) (*mcp.CallToolResult, media.Turn, error) {
-		brief, err := media.NewBrief(media.BriefInput{
-			Workflow: input.Workflow, Lesson: input.Lesson, Request: input.Request, MediaType: input.MediaType, Purpose: input.Purpose,
-			Platform: input.Platform, AspectRatio: input.AspectRatio, DurationSeconds: input.DurationSeconds,
-			Resolution: input.Resolution, AudioMode: input.AudioMode, VideoMode: input.VideoMode,
-			OutputFormat: input.OutputFormat, ReturnLastFrame: input.ReturnLastFrame, WebSearch: input.WebSearch,
-			Style: input.Style, References: input.References, ReferenceVideos: input.ReferenceVideos,
-			ReferenceAudio: input.ReferenceAudio, FirstFrame: input.FirstFrame, LastFrame: input.LastFrame,
-			IdentityIDs: input.IdentityIDs, Model: input.Model, PreviewModel: input.PreviewModel,
-			ProductionMode: input.ProductionMode,
-		})
+		turn, err := startBrief(deps, input, false)
+		return nil, turn, err
+	})
+
+	mcp.AddTool(server, &mcp.Tool{
+		Name: "media_grill_start", Description: "Start the concise shared media interview. Infers only explicit request facts, returns one material question with rationale, or a ready overridable route.", Annotations: localMutation,
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input briefStartInput) (*mcp.CallToolResult, media.Turn, error) {
+		turn, err := startBrief(deps, input, true)
+		return nil, turn, err
+	})
+
+	mcp.AddTool(server, &mcp.Tool{
+		Name: "media_grill_answer", Description: "Answer exactly one material grill question and return the next question or ready route.", Annotations: localMutation,
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input briefAnswerInput) (*mcp.CallToolResult, media.Turn, error) {
+		turn, err := answerBrief(deps, input)
+		return nil, turn, err
+	})
+
+	mcp.AddTool(server, &mcp.Tool{
+		Name: "media_grill_wrap_up", Description: "Apply visible sensible defaults to remaining questions and return an inspectable plan without making a live call.", Annotations: localMutation,
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input briefGetInput) (*mcp.CallToolResult, media.Turn, error) {
+		store, brief, err := loadBrief(deps, input.BriefID)
 		if err != nil {
 			return nil, media.Turn{}, err
 		}
-		store, err := deps.Store()
-		if err != nil {
-			return nil, media.Turn{}, err
-		}
-		if err := store.VaultBriefReferences(brief); err != nil {
+		if err := media.WrapUpBrief(brief); err != nil {
 			return nil, media.Turn{}, err
 		}
 		if err := store.SaveBrief(brief); err != nil {
@@ -430,22 +515,42 @@ func registerTools(server *mcp.Server, deps Dependencies) {
 	})
 
 	mcp.AddTool(server, &mcp.Tool{
+		Name: "media_capability_list", Description: "List compact, locally classified model routes by capability without loading full model schemas or spending credits.", Annotations: readLocal,
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input capabilityListInput) (*mcp.CallToolResult, capabilityListOutput, error) {
+		registry, err := kiecatalog.LoadCapabilities()
+		if err != nil {
+			return nil, capabilityListOutput{}, err
+		}
+		modelFilter := strings.TrimSpace(input.Model)
+		capabilityFilter := strings.TrimSpace(input.Capability)
+		models := make([]kiecatalog.ModelCapability, 0, len(registry.Models))
+		for _, item := range registry.Models {
+			if modelFilter != "" && item.ModelID != modelFilter {
+				continue
+			}
+			if capabilityFilter != "" && item.PrimaryCapability != capabilityFilter {
+				continue
+			}
+			models = append(models, item)
+		}
+		return nil, capabilityListOutput{Models: models}, nil
+	})
+
+	mcp.AddTool(server, &mcp.Tool{
+		Name: "media_capability_get", Description: "Get one model's primary capability, production fit, proof settings, and routing note. Use media_model_get for its full settings schema.", Annotations: readLocal,
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input modelGetInput) (*mcp.CallToolResult, capabilityOutput, error) {
+		item, err := kiecatalog.GetCapability(input.Model)
+		if err != nil {
+			return nil, capabilityOutput{}, err
+		}
+		return nil, capabilityOutput{Model: *item}, nil
+	})
+
+	mcp.AddTool(server, &mcp.Tool{
 		Name: "media_brief_answer", Description: "Answer the current question for a durable media brief. Returns the next single question or a ready generation plan.", Annotations: localMutation,
 	}, func(ctx context.Context, _ *mcp.CallToolRequest, input briefAnswerInput) (*mcp.CallToolResult, media.Turn, error) {
-		store, brief, err := loadBrief(deps, input.BriefID)
-		if err != nil {
-			return nil, media.Turn{}, err
-		}
-		if err := media.ApplyNextAnswer(brief, input.Answer); err != nil {
-			return nil, media.Turn{}, err
-		}
-		if err := store.VaultBriefReferences(brief); err != nil {
-			return nil, media.Turn{}, err
-		}
-		if err := store.SaveBrief(brief); err != nil {
-			return nil, media.Turn{}, err
-		}
-		return nil, media.TurnFor(brief), nil
+		turn, err := answerBrief(deps, input)
+		return nil, turn, err
 	})
 
 	mcp.AddTool(server, &mcp.Tool{
@@ -627,9 +732,55 @@ func registerTools(server *mcp.Server, deps Dependencies) {
 	})
 
 	mcp.AddTool(server, &mcp.Tool{
-		Name: "media_preview_generate", Description: "Generate the required review image for a ready video brief. This is a separate live action that may consume credits. Poll the returned generation, then display its result URL to the user before requesting approval.", Annotations: liveMutation,
-	}, func(ctx context.Context, _ *mcp.CallToolRequest, input previewInput) (*mcp.CallToolResult, media.Generation, error) {
+		Name: "media_paid_confirm", Description: "Create a 10-minute, single-use confirmation for exactly one reviewed live preview, proof, or final action. This local tool does not call Kie.ai.", Annotations: localMutation,
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input paidConfirmInput) (*mcp.CallToolResult, paidConfirmOutput, error) {
 		store, brief, err := loadBrief(deps, input.BriefID)
+		if err != nil {
+			return nil, paidConfirmOutput{}, err
+		}
+		turn := media.TurnFor(brief)
+		review := turn.PaidAction
+		if review == nil {
+			return nil, paidConfirmOutput{}, fmt.Errorf("brief %s has no paid action available; complete the current %s step first", brief.ID, turn.NextAction)
+		}
+		if review.BlockedReason != "" {
+			return nil, paidConfirmOutput{}, fmt.Errorf("brief %s paid action is blocked: %s", brief.ID, review.BlockedReason)
+		}
+		if input.Scope != review.Scope || input.GenerationKind != review.GenerationKind || input.ExpectedModel != review.Model || input.ExpectedPlanHash != review.PlanHash {
+			return nil, paidConfirmOutput{}, fmt.Errorf("requested paid action is not the brief's current reviewed action; refresh the turn and confirm its exact paid_action")
+		}
+		plan, kind, err := media.PaidPlanForScope(brief, review.Scope)
+		if err != nil {
+			return nil, paidConfirmOutput{}, err
+		}
+		planHash, err := media.PlanFingerprint(plan)
+		if err != nil {
+			return nil, paidConfirmOutput{}, err
+		}
+		if kind != review.GenerationKind || plan.Model != review.Model || planHash != review.PlanHash {
+			return nil, paidConfirmOutput{}, fmt.Errorf("reviewed paid action no longer matches the current kind, model, or plan hash")
+		}
+		confirmation, err := media.NewPaidConfirmation(brief, plan, media.PaidConfirmationRequest{
+			Scope: review.Scope, GenerationKind: kind, ConfirmedBy: "mcp-user",
+			Acknowledged: input.DisclosureAcknowledged,
+		})
+		if err != nil {
+			return nil, paidConfirmOutput{}, err
+		}
+		if err := store.SavePaidConfirmation(confirmation); err != nil {
+			return nil, paidConfirmOutput{}, err
+		}
+		return nil, paidConfirmOutput{ConfirmationID: confirmation.ID, ExpiresAt: confirmation.ExpiresAt, NextAction: paidNextAction(review.Scope)}, nil
+	})
+
+	mcp.AddTool(server, &mcp.Tool{
+		Name: "media_preview_generate", Description: "Generate the required review image for a ready video brief. This is a separate live action that may consume credits. Poll the returned generation, then display its result URL to the user before requesting approval.", Annotations: liveMutation,
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input liveGenerateInput) (*mcp.CallToolResult, media.Generation, error) {
+		store, brief, err := loadBrief(deps, input.BriefID)
+		if err != nil {
+			return nil, media.Generation{}, err
+		}
+		confirmationID, err := requireMCPPaidConfirmation(input.ConfirmationID)
 		if err != nil {
 			return nil, media.Generation{}, err
 		}
@@ -638,7 +789,30 @@ func registerTools(server *mcp.Server, deps Dependencies) {
 			return nil, media.Generation{}, err
 		}
 		defer cleanup()
-		generation, err := service.SubmitPreview(ctx, brief)
+		generation, err := service.SubmitPreview(ctx, brief, confirmationID)
+		if err != nil {
+			return nil, media.Generation{}, err
+		}
+		return nil, *generation, nil
+	})
+
+	mcp.AddTool(server, &mcp.Tool{
+		Name: "media_proof_generate", Description: "Generate the optional paid complete intended shot at the selected model's lowest documented faithful tier. Requires a fresh proof confirmation. Poll the returned generation, then display its result URL before requesting a decision.", Annotations: liveMutation,
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input liveGenerateInput) (*mcp.CallToolResult, media.Generation, error) {
+		store, brief, err := loadBrief(deps, input.BriefID)
+		if err != nil {
+			return nil, media.Generation{}, err
+		}
+		confirmationID, err := requireMCPPaidConfirmation(input.ConfirmationID)
+		if err != nil {
+			return nil, media.Generation{}, err
+		}
+		service, cleanup, err := deps.LiveService(ctx, store)
+		if err != nil {
+			return nil, media.Generation{}, err
+		}
+		defer cleanup()
+		generation, err := service.SubmitProof(ctx, brief, confirmationID)
 		if err != nil {
 			return nil, media.Generation{}, err
 		}
@@ -647,7 +821,7 @@ func registerTools(server *mcp.Server, deps Dependencies) {
 
 	mcp.AddTool(server, &mcp.Tool{
 		Name: "media_preview_approve", Description: "Record explicit user approval of the current preview image. Call only after the host has displayed preview_url and the user has affirmatively approved it.", Annotations: localMutation,
-	}, func(ctx context.Context, _ *mcp.CallToolRequest, input previewInput) (*mcp.CallToolResult, media.Turn, error) {
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input briefGetInput) (*mcp.CallToolResult, media.Turn, error) {
 		store, brief, err := loadBrief(deps, input.BriefID)
 		if err != nil {
 			return nil, media.Turn{}, err
@@ -662,8 +836,26 @@ func registerTools(server *mcp.Server, deps Dependencies) {
 	})
 
 	mcp.AddTool(server, &mcp.Tool{
+		Name: "media_proof_approve", Description: "Record the user's approval after the host displays the completed proof URL. This local decision never authorizes final spend.", Annotations: localMutation,
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input briefGetInput) (*mcp.CallToolResult, media.Turn, error) {
+		return decideProof(deps, input.BriefID, "approve")
+	})
+
+	mcp.AddTool(server, &mcp.Tool{
+		Name: "media_proof_reject", Description: "Reject the current proof and return the brief to proof revision without a live call.", Annotations: localMutation,
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input briefGetInput) (*mcp.CallToolResult, media.Turn, error) {
+		return decideProof(deps, input.BriefID, "reject")
+	})
+
+	mcp.AddTool(server, &mcp.Tool{
+		Name: "media_proof_skip", Description: "Skip the optional proof. This local decision does not authorize or submit the final generation.", Annotations: localMutation,
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input briefGetInput) (*mcp.CallToolResult, media.Turn, error) {
+		return decideProof(deps, input.BriefID, "skip")
+	})
+
+	mcp.AddTool(server, &mcp.Tool{
 		Name: "media_preview_reject", Description: "Reject the current video preview and clear its approval state so the brief can be revised and a new preview generated.", Annotations: localMutation,
-	}, func(ctx context.Context, _ *mcp.CallToolRequest, input previewInput) (*mcp.CallToolResult, media.Turn, error) {
+	}, func(ctx context.Context, _ *mcp.CallToolRequest, input briefGetInput) (*mcp.CallToolResult, media.Turn, error) {
 		store, brief, err := loadBrief(deps, input.BriefID)
 		if err != nil {
 			return nil, media.Turn{}, err
@@ -684,12 +876,16 @@ func registerTools(server *mcp.Server, deps Dependencies) {
 		if err != nil {
 			return nil, media.Generation{}, err
 		}
+		confirmationID, err := requireMCPPaidConfirmation(input.ConfirmationID)
+		if err != nil {
+			return nil, media.Generation{}, err
+		}
 		service, cleanup, err := deps.LiveService(ctx, store)
 		if err != nil {
 			return nil, media.Generation{}, err
 		}
 		defer cleanup()
-		generation, err := service.Submit(ctx, brief)
+		generation, err := service.Submit(ctx, brief, confirmationID)
 		if err != nil {
 			return nil, media.Generation{}, err
 		}
@@ -714,6 +910,106 @@ func registerTools(server *mcp.Server, deps Dependencies) {
 		}
 		return nil, *generation, nil
 	})
+}
+
+func startBrief(deps Dependencies, input briefStartInput, infer bool) (media.Turn, error) {
+	brief, err := media.NewBrief(media.BriefInput{
+		Workflow: input.Workflow, Lesson: input.Lesson, Request: input.Request, MediaType: input.MediaType, Purpose: input.Purpose,
+		Platform: input.Platform, AspectRatio: input.AspectRatio, DurationSeconds: input.DurationSeconds,
+		Resolution: input.Resolution, AudioMode: input.AudioMode, VideoMode: input.VideoMode,
+		OutputFormat: input.OutputFormat, ReturnLastFrame: input.ReturnLastFrame, WebSearch: input.WebSearch,
+		Style: input.Style, References: input.References, ReferenceVideos: input.ReferenceVideos,
+		ReferenceAudio: input.ReferenceAudio, FirstFrame: input.FirstFrame, LastFrame: input.LastFrame,
+		IdentityIDs: input.IdentityIDs, Model: input.Model, PreviewModel: input.PreviewModel,
+		ProductionMode: input.ProductionMode, RightsAcknowledged: input.RightsConfirmed,
+	})
+	if err != nil {
+		return media.Turn{}, err
+	}
+	if infer {
+		if err := media.InferBrief(brief); err != nil {
+			return media.Turn{}, err
+		}
+	}
+	store, err := deps.Store()
+	if err != nil {
+		return media.Turn{}, err
+	}
+	if err := store.VaultBriefReferences(brief); err != nil {
+		return media.Turn{}, err
+	}
+	if err := store.SaveBrief(brief); err != nil {
+		return media.Turn{}, err
+	}
+	return media.TurnFor(brief), nil
+}
+
+func answerBrief(deps Dependencies, input briefAnswerInput) (media.Turn, error) {
+	store, brief, err := loadBrief(deps, input.BriefID)
+	if err != nil {
+		return media.Turn{}, err
+	}
+	answer := strings.TrimSpace(input.Answer)
+	if strings.EqualFold(answer, "wrap up") || strings.EqualFold(answer, "use sensible defaults") {
+		err = media.WrapUpBrief(brief)
+	} else {
+		err = media.ApplyNextAnswer(brief, answer)
+	}
+	if err != nil {
+		return media.Turn{}, err
+	}
+	if err := store.VaultBriefReferences(brief); err != nil {
+		return media.Turn{}, err
+	}
+	if err := store.SaveBrief(brief); err != nil {
+		return media.Turn{}, err
+	}
+	return media.TurnFor(brief), nil
+}
+
+func requireMCPPaidConfirmation(confirmationID string) (string, error) {
+	confirmationID = strings.TrimSpace(confirmationID)
+	if confirmationID == "" {
+		return "", fmt.Errorf("this live action requires a fresh confirmation_id from media_paid_confirm")
+	}
+	return confirmationID, nil
+}
+
+func paidNextAction(scope string) string {
+	switch scope {
+	case media.PaidScopePreview:
+		return "call media_preview_generate with confirmation_id"
+	case media.PaidScopeProof:
+		return "call media_proof_generate with confirmation_id"
+	case media.PaidScopeFinal:
+		return "call media_generate with confirmation_id"
+	default:
+		return "use the confirmation_id for the reviewed paid action"
+	}
+}
+
+func decideProof(deps Dependencies, briefID, decision string) (*mcp.CallToolResult, media.Turn, error) {
+	store, brief, err := loadBrief(deps, briefID)
+	if err != nil {
+		return nil, media.Turn{}, err
+	}
+	switch decision {
+	case "approve":
+		err = media.ApproveVideoProof(brief)
+	case "reject":
+		err = media.RejectVideoProof(brief)
+	case "skip":
+		err = media.SkipVideoProof(brief)
+	default:
+		err = fmt.Errorf("unsupported proof decision %q", decision)
+	}
+	if err != nil {
+		return nil, media.Turn{}, err
+	}
+	if err := store.SaveBrief(brief); err != nil {
+		return nil, media.Turn{}, err
+	}
+	return nil, media.TurnFor(brief), nil
 }
 
 func loadBrief(deps Dependencies, id string) (*media.Store, *media.Brief, error) {

@@ -5,6 +5,10 @@ description: Plan and produce truthful e-commerce marketplace image sets with Ki
 
 # Kie Marketplace Cards
 
+Start with `$kie-grilling`, then route each approved card brief through
+`$kie-image`. Keep product claims, copy, measurements, badges, and final layout
+deterministic and truthful.
+
 Use Kie to generate or edit visuals. Compose exact copy, diagrams, badges, dimensions, and final marketplace canvases locally. Never claim that Kie or this skill certifies marketplace compliance.
 
 Prefer `kie-pp-cli media workflow show marketplace-cards --agent` and `kie-pp-cli create --workflow marketplace-cards ... --agent` to keep repeated orchestration in the CLI. MCP hosts use the same name through `media_workflow_get` and `media_brief_start`.
@@ -37,6 +41,10 @@ kie-pp-cli create --workflow marketplace-cards "<asset-specific visual brief>" -
 For the main image, preserve the actual product and packaging. Do not invent accessories or alter quantity. For secondary cards, separate model-generated imagery from exact local copy and diagrams.
 
 ## Validate
+
+Obtain a fresh paid confirmation before every variant, edit, background removal,
+or upscale. An approval of the set direction is not payment authorization for
+the next asset.
 
 Inspect every final flattened asset for:
 
