@@ -16,7 +16,7 @@ LOCAL AGENT MEDIA FACTORY
 </p>
 
 <p align="center">
-  Seedance 2.5 · CLI · Stateless MCP · 17 agent skills · 129 typed models · 70 API operations · Human approval gates
+  Seedance 2.5 · CLI · Stateless MCP · 18 agent skills · 129 typed models · 70 API operations · Human approval gates
 </p>
 
 <p align="center">
@@ -70,7 +70,7 @@ Higgsfield clone and does not claim unsupported provider features.
 | Creative memory | Private image/video/audio reference vault and consented likeness bundles |
 | Agent access | Compact `--agent` JSON, durable handles, focused MCP, and reusable skills |
 | Focused MCP | 40 media tools over stdio or loopback stateless HTTP using MCP `2026-07-28` |
-| Skills | 17 routed skills: grill, shared director, five capabilities, film, identity, lessons, and outcome workflows |
+| Skills | 18 routed skills: grill, shared director, five capabilities, film, identity, lessons, and outcome workflows |
 | Model evidence | Dated, task-specific rankings with live Kie route availability and explicit proxy warnings |
 | Kie coverage | 70 current API operations plus 129 classified Market models with complete embedded input/settings schemas |
 | Local learning | SQLite-backed recall, teach, playbooks, and command discovery for repeat work |
@@ -221,6 +221,8 @@ The checked-in map currently covers:
 | [Build 3D Games with MCP](https://higgsfield.ai/academy/courses/build-3d-games-mcp) | 10 | 12 min | Beginner |
 | [Direct a cinematic AI car commercial](https://higgsfield.ai/academy/courses/cinematic-car-commercial) | 11 | 35 min | Intermediate |
 | [Direct AI fight scenes through controlled iteration](https://higgsfield.ai/academy/courses/direct-ai-fight-scenes) | 5 | 16 min | Intermediate |
+
+Read the [Motion Lab pipeline](docs/MOTION_LAB.md) to combine code-rendered animation with approved Kie image/video inserts and a reproducible frame audit.
 
 See [Academy-Inspired Production Methods](docs/ACADEMY_METHODS.md) for every
 lesson, source URL, production stage, and safe Kie-native adaptation.
