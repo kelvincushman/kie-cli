@@ -1,6 +1,6 @@
 # Kie Agent Skill Suite
 
-The repository ships 17 small Markdown skills. They teach coding agents how to
+The repository ships 18 small Markdown skills. They teach coding agents how to
 operate the local CLI/MCP safely without embedding Kie.ai's 129 model schemas in
 every prompt. Runtime commands and the generated capability catalog remain the
 source of truth.
@@ -40,6 +40,7 @@ kie-pp-cli grill-me "<what I want to make>" --agent
 | `kie-video-explainer` | Narrated explainer blocks using the film/audio/video skills |
 | `kie-websites` | Kie media assets plus a separate local website build workflow |
 | `kie-youtube-thumbnail` | Truthful thumbnail concepts with deterministic final typography |
+| `kie-motion-lab` | Pure-time code animation, Kie visual inserts, contact sheets, timed revisions and QA/export |
 
 The route returned in `brief.plan` includes `production_skill`,
 `capability_skill`, `rationale`, `cost_status`, and `override_options`. Show this
@@ -116,3 +117,7 @@ clearly when rendering is unavailable.
 Vault reusable media and consented identities locally. Never put secrets in a
 skill prompt, brief, script, storyboard, log, or issue. Local references upload
 only for an explicitly authorized live call.
+
+## Code motion and provider media
+
+Use `skills/kie-motion-lab/SKILL.md` with [Motion Lab: deterministic motion + Kie.ai media](MOTION_LAB.md) for precise typography, frame-addressable animation and video QA. This is an optional code-motion production lane; Kie image/video assets still use the existing preview, proof and fresh-paid-confirmation gates.
